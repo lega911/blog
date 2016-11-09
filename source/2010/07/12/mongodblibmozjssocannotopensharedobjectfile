@@ -1,0 +1,27 @@
+::id 4c3a91371d41c83d36000000
+::date 2010-07-12
+::title MongoDB, libmozjs.so: cannot open shared object file
+::tags mongodb
+::body
+Найдем файл **libmozjs.so** вручную
+[[$ find /usr/ -name libmozjs.so
+/usr/lib/xulrunner-devel-1.9.2.6/sdk/lib/libmozjs.so
+/usr/lib/firefox-3.6.6/libmozjs.so
+/usr/lib/xulrunner-1.9.2.6/libmozjs.so]]
+Сделаем его линк в **/usr/lib/**
+[[$ sudo ln /usr/lib/xulrunner-1.9.2.6/libmozjs.so /usr/lib/libmozjs.so]]
+Теперь нужно перезагрузить сервер mongo или сам linux.
+
+::html
+Найдем файл <b>libmozjs.so</b> вручную<br />
+<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">find</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span> <span class="o">-</span><span class="n">name</span> <span class="n">libmozjs</span><span class="o">.</span><span class="n">so</span>
+<span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">xulrunner</span><span class="o">-</span><span class="n">devel</span><span class="o">-</span><span class="mf">1.9</span><span class="o">.</span><span class="mf">2.6</span><span class="o">/</span><span class="n">sdk</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libmozjs</span><span class="o">.</span><span class="n">so</span>
+<span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">firefox</span><span class="o">-</span><span class="mf">3.6</span><span class="o">.</span><span class="mi">6</span><span class="o">/</span><span class="n">libmozjs</span><span class="o">.</span><span class="n">so</span>
+<span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">xulrunner</span><span class="o">-</span><span class="mf">1.9</span><span class="o">.</span><span class="mf">2.6</span><span class="o">/</span><span class="n">libmozjs</span><span class="o">.</span><span class="n">so</span>
+</pre></div>
+</div><br />
+Сделаем его линк в <b>/usr/lib/</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">sudo</span> <span class="n">ln</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">xulrunner</span><span class="o">-</span><span class="mf">1.9</span><span class="o">.</span><span class="mf">2.6</span><span class="o">/</span><span class="n">libmozjs</span><span class="o">.</span><span class="n">so</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libmozjs</span><span class="o">.</span><span class="n">so</span>
+</pre></div>
+</div><br />
+Теперь нужно перезагрузить сервер mongo или сам linux.<br />

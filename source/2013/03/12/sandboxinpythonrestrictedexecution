@@ -1,0 +1,75 @@
+::id 513f1c677114480f2b000008
+::date 2013-03-12
+::title Sandbox in Python, restricted execution
+::tags python, sandbox
+::body
+Иногда нужна возможность запускать небезопасный (чужой) Python-код. На данный момент есть некие библиотеки которые дают эту возможность, хотя неизвестно как хорошо они ограничивают запускаемый код.
+Так же есть простой способ безопасно выполнять чужой код в python, он привносит некоторые ограничения, но для большинства задач его достаточно.
+
+Пример с **exec**
+[[src = '''
+result = 0
+for i in xrange(100):
+    result += i
+'''
+
+assert '__' not in src, 'Prohibited to use symbols "__"'
+pr = compile(src, '<string>', mode='exec')
+glob = { '__builtins__':{ 'xrange':xrange } }
+exec(pr, glob)
+print glob['result']
+]]
+
+Пример с **eval** (для вычисления выражения)
+[[src = 'max(5,7,3)'
+glob = { '__builtins__':{ 'max':max } }
+assert '__' not in src, 'Prohibited to use symbols "__"'
+print eval(src, glob)
+]]
+
+Основные моменты - это:[[assert '__' not in src, 'Prohibited to use symbols "__"']] - запрет доступа к спец объектам, на подобии: _!^_class_!^_, _!^_base_!^_
+через которые можно получить полный доступ к python
+и [[glob = { '__builtins__':{ 'xrange':xrange } }]] тут мы заменяем весь базовый функционал (import, type...) на нужный/разрешенный функционал.
+
+Так же нельзя давать использовать метод **getattr**.
+
+На данный момент нет известного способа обойти этот "sandbox".
+
+::html
+Иногда нужна возможность запускать небезопасный (чужой) Python-код. На данный момент есть некие библиотеки которые дают эту возможность, хотя неизвестно как хорошо они ограничивают запускаемый код.<br />
+Так же есть простой способ безопасно выполнять чужой код в python, он привносит некоторые ограничения, но для большинства задач его достаточно.<br />
+<br />
+Пример с <b>exec</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">src</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;</span>
+<span class="s">result = 0</span>
+<span class="s">for i in xrange(100):</span>
+<span class="s">    result += i</span>
+<span class="s">&#39;&#39;&#39;</span>
+
+<span class="k">assert</span> <span class="s">&#39;__&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">src</span><span class="p">,</span> <span class="s">&#39;Prohibited to use symbols &quot;__&quot;&#39;</span>
+<span class="n">pr</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s">&#39;&lt;string&gt;&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;exec&#39;</span><span class="p">)</span>
+<span class="n">glob</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#39;__builtins__&#39;</span><span class="p">:{</span> <span class="s">&#39;xrange&#39;</span><span class="p">:</span><span class="nb">xrange</span> <span class="p">}</span> <span class="p">}</span>
+<span class="k">exec</span><span class="p">(</span><span class="n">pr</span><span class="p">,</span> <span class="n">glob</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">glob</span><span class="p">[</span><span class="s">&#39;result&#39;</span><span class="p">]</span>
+</pre></div>
+</div><br />
+<br />
+Пример с <b>eval</b> (для вычисления выражения)<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">src</span> <span class="o">=</span> <span class="s">&#39;max(5,7,3)&#39;</span>
+<span class="n">glob</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#39;__builtins__&#39;</span><span class="p">:{</span> <span class="s">&#39;max&#39;</span><span class="p">:</span><span class="nb">max</span> <span class="p">}</span> <span class="p">}</span>
+<span class="k">assert</span> <span class="s">&#39;__&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">src</span><span class="p">,</span> <span class="s">&#39;Prohibited to use symbols &quot;__&quot;&#39;</span>
+<span class="k">print</span> <span class="nb">eval</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">glob</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<br />
+Основные моменты - это:<div class="codebox"><div class="highlight"><pre><span class="k">assert</span> <span class="s">&#39;__&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">src</span><span class="p">,</span> <span class="s">&#39;Prohibited to use symbols &quot;__&quot;&#39;</span>
+</pre></div>
+</div> - запрет доступа к спец объектам, на подобии: __class__, __base__<br />
+через которые можно получить полный доступ к python<br />
+и <div class="codebox"><div class="highlight"><pre><span class="n">glob</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#39;__builtins__&#39;</span><span class="p">:{</span> <span class="s">&#39;xrange&#39;</span><span class="p">:</span><span class="nb">xrange</span> <span class="p">}</span> <span class="p">}</span>
+</pre></div>
+</div> тут мы заменяем весь базовый функционал (import, type...) на нужный/разрешенный функционал.<br />
+<br />
+Так же нельзя давать использовать метод <b>getattr</b>.<br />
+<br />
+На данный момент нет известного способа обойти этот "sandbox".<br />

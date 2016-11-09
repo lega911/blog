@@ -1,0 +1,39 @@
+::id 4c60bd8b1d41c87cc7000000
+::date 2010-08-10
+::title Регистрация приложения как URL протокол
+::tags windows
+::body
+В ключе реестра **HKEY_CLASSES_ROOT** нужно создать раздел с нужным URL протоколом.
+В данном примере сделан протокол //calc:url//
+
+[[Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\calc]
+@="\"URL:Calc protocol\""
+"URL Protocol"=""
+
+[HKEY_CLASSES_ROOT\calc\shell]
+
+[HKEY_CLASSES_ROOT\calc\shell\open]
+
+[HKEY_CLASSES_ROOT\calc\shell\open\command]
+@="c:\\WINDOWS\\system32\\calc.exe"
+]]
+::html
+В ключе реестра <b>HKEY_CLASSES_ROOT</b> нужно создать раздел с нужным URL протоколом.<br />
+В данном примере сделан протокол <i>calc:url</i><br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">Windows</span> <span class="n">Registry</span> <span class="n">Editor</span> <span class="n">Version</span> <span class="mf">5.00</span>
+
+<span class="p">[</span><span class="n">HKEY_CLASSES_ROOT</span>\<span class="n">calc</span><span class="p">]</span>
+<span class="err">@</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">URL:Calc protocol</span><span class="se">\&quot;</span><span class="s">&quot;</span>
+<span class="s">&quot;URL Protocol&quot;</span><span class="o">=</span><span class="s">&quot;&quot;</span>
+
+<span class="p">[</span><span class="n">HKEY_CLASSES_ROOT</span>\<span class="n">calc</span>\<span class="n">shell</span><span class="p">]</span>
+
+<span class="p">[</span><span class="n">HKEY_CLASSES_ROOT</span>\<span class="n">calc</span>\<span class="n">shell</span>\<span class="nb">open</span><span class="p">]</span>
+
+<span class="p">[</span><span class="n">HKEY_CLASSES_ROOT</span>\<span class="n">calc</span>\<span class="n">shell</span>\<span class="nb">open</span>\<span class="n">command</span><span class="p">]</span>
+<span class="err">@</span><span class="o">=</span><span class="s">&quot;c:</span><span class="se">\\</span><span class="s">WINDOWS</span><span class="se">\\</span><span class="s">system32</span><span class="se">\\</span><span class="s">calc.exe&quot;</span>
+</pre></div>
+</div>

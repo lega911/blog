@@ -1,0 +1,109 @@
+::id 4bfb3c6a1d41c846bc00008f
+::date 2010-03-24
+::title regexp методы в python
+::tags python, regexp
+::body
+Примеры использования основных методов regexp
+
+!findall
+Найти все части текста удовлетворяющие паттерну
+[[>>> s = 'This sample text=123 and test regexp=5, the end'
+>>> re.findall(r'(\w+)=(\d+)',s)
+[('text', '123'), ('regexp', '5')] ]]
+
+!match
+Проверка строки на соответствие паттерну, например нужно проверить корректность формата email
+[[>>> s = 'user@example.com'
+>>> g = re.match(r'[\w\d.\-]+@[\w\d.\-]+',s)
+>>> g.group(0)
+'user@example.com' ]]
+
+!sub
+Замена подстроки,
+пример [/page/17 Подмена текста (функций) на регексах]
+[[>>> re.sub(r'\[(\d+)\]',r'+\1+','hello [123] world!')
+'hello +123+ world!']]
+
+!split
+Разъединить строку подстрокой удовлетворяющий паттерну
+[[>>> s = 'hello world, this regexp'
+>>> re.split(r'\W+',s)
+['hello', 'world', 'this', 'regexp'] ]]
+можно задать максимальное кол-во разъединений **maxsplit**
+[[>>> re.split(r'\W+',s,1)
+['hello', 'world, this regexp'] ]]
+если нужно получить и сами разъединительные подстроки, то нужно использовать группу
+[[>>> re.split(r'(\W+)',s)
+['hello', ' ', 'world', ', ', 'this', ' ', 'regexp'] ]]
+
+!finditer
+Итератор при поиске текста, [/page/92 regexp finditer в python]
+
+!compile
+Компиляция паттерна для дальнейшего и многократного его использования
+[[>>> c = re.compile(r'(\w+)=(\d+)')
+>>> s = 'This sample text=123 and test regexp=5, the end'
+>>> c.findall(s)
+[('text', '123'), ('regexp', '5')] ]]
+
+
+**Подобные заметки**
+[/page/16 Написание регексов (Regexp), примеры]
+[/page/56 Паттерны regexp]
+[/page/92 regexp finditer в python]
+[/page/17 Подмена текста (функций) на регексах]
+[/page/9 Разметка вики синтаксиса на регексах]
+
+::html
+Примеры использования основных методов regexp<br />
+<h3>findall</h3>Найти все части текста удовлетворяющие паттерну<br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&#39;This sample text=123 and test regexp=5, the end&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">r&#39;(\w+)=(\d+)&#39;</span><span class="p">,</span><span class="n">s</span><span class="p">)</span>
+<span class="p">[(</span><span class="s">&#39;text&#39;</span><span class="p">,</span> <span class="s">&#39;123&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;regexp&#39;</span><span class="p">,</span> <span class="s">&#39;5&#39;</span><span class="p">)]</span> 
+</pre></div>
+</div><br />
+<h3>match</h3>Проверка строки на соответствие паттерну, например нужно проверить корректность формата email<br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&#39;user@example.com&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">g</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s">r&#39;[\w\d.\-]+@[\w\d.\-]+&#39;</span><span class="p">,</span><span class="n">s</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">g</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="s">&#39;user@example.com&#39;</span> 
+</pre></div>
+</div><br />
+<h3>sub</h3>Замена подстроки,<br />
+пример <a href="/page/17">Подмена текста (функций) на регексах</a><br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">r&#39;\[(\d+)\]&#39;</span><span class="p">,</span><span class="s">r&#39;+\1+&#39;</span><span class="p">,</span><span class="s">&#39;hello [123] world!&#39;</span><span class="p">)</span>
+<span class="s">&#39;hello +123+ world!&#39;</span>
+</pre></div>
+</div><br />
+<h3>split</h3>Разъединить строку подстрокой удовлетворяющий паттерну<br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&#39;hello world, this regexp&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">r&#39;\W+&#39;</span><span class="p">,</span><span class="n">s</span><span class="p">)</span>
+<span class="p">[</span><span class="s">&#39;hello&#39;</span><span class="p">,</span> <span class="s">&#39;world&#39;</span><span class="p">,</span> <span class="s">&#39;this&#39;</span><span class="p">,</span> <span class="s">&#39;regexp&#39;</span><span class="p">]</span> 
+</pre></div>
+</div><br />
+можно задать максимальное кол-во разъединений <b>maxsplit</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">r&#39;\W+&#39;</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">[</span><span class="s">&#39;hello&#39;</span><span class="p">,</span> <span class="s">&#39;world, this regexp&#39;</span><span class="p">]</span> 
+</pre></div>
+</div><br />
+если нужно получить и сами разъединительные подстроки, то нужно использовать группу<br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">r&#39;(\W+)&#39;</span><span class="p">,</span><span class="n">s</span><span class="p">)</span>
+<span class="p">[</span><span class="s">&#39;hello&#39;</span><span class="p">,</span> <span class="s">&#39; &#39;</span><span class="p">,</span> <span class="s">&#39;world&#39;</span><span class="p">,</span> <span class="s">&#39;, &#39;</span><span class="p">,</span> <span class="s">&#39;this&#39;</span><span class="p">,</span> <span class="s">&#39; &#39;</span><span class="p">,</span> <span class="s">&#39;regexp&#39;</span><span class="p">]</span> 
+</pre></div>
+</div><br />
+<h3>finditer</h3>Итератор при поиске текста, <a href="/page/92">regexp finditer в python</a><br />
+<h3>compile</h3>Компиляция паттерна для дальнейшего и многократного его использования<br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;(\w+)=(\d+)&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&#39;This sample text=123 and test regexp=5, the end&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="p">[(</span><span class="s">&#39;text&#39;</span><span class="p">,</span> <span class="s">&#39;123&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;regexp&#39;</span><span class="p">,</span> <span class="s">&#39;5&#39;</span><span class="p">)]</span> 
+</pre></div>
+</div><br />
+<br />
+<br />
+<b>Подобные заметки</b><br />
+<a href="/page/16">Написание регексов (Regexp), примеры</a><br />
+<a href="/page/56">Паттерны regexp</a><br />
+<a href="/page/92">regexp finditer в python</a><br />
+<a href="/page/17">Подмена текста (функций) на регексах</a><br />
+<a href="/page/9">Разметка вики синтаксиса на регексах</a><br />

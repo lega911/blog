@@ -1,0 +1,79 @@
+::id 50f3ec6c71144856ca000001
+::date 2013-01-14
+::title Настройка для печати в openpyxl (excel)
+::tags xslx, openpyxl, python, excel
+::body
+Пример настройки в **openpyxl**: ориентация страницы //(orientation)//, размер страницы //(paperSize)//, размещение содержимого по страницам, по ширине листа //(fitToPage, fitToHeight)//
+
+[[# coding:utf8
+from openpyxl import Workbook
+from openpyxl.worksheet import PageSetup
+
+book = Workbook()
+
+# Создаем таблицу
+ws = book.create_sheet(0)
+
+# Заполняем
+ws.append([u'1', u'2', u'3'])
+
+# Настройки печати
+ps = PageSetup()
+# Зумировать содержимое по ширине страницы
+ps.fitToPage = True
+ps.fitToHeight = '0'
+# Размер страниц
+ps.paperSize = '9' # A4
+# Ориентация
+ps.orientation = 'landscape'
+ws.page_setup = ps
+
+# Сохранияем
+book.save('filename.xlsx')
+
+# Сохранить в буфер
+'''
+from StringIO import StringIO
+output = StringIO()
+book.save(output)
+buf = output.getvalue()
+''']]
+
+::html
+Пример настройки в <b>openpyxl</b>: ориентация страницы <i>(orientation)</i>, размер страницы <i>(paperSize)</i>, размещение содержимого по страницам, по ширине листа <i>(fitToPage, fitToHeight)</i><br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding:utf8</span>
+<span class="kn">from</span> <span class="nn">openpyxl</span> <span class="kn">import</span> <span class="n">Workbook</span>
+<span class="kn">from</span> <span class="nn">openpyxl.worksheet</span> <span class="kn">import</span> <span class="n">PageSetup</span>
+
+<span class="n">book</span> <span class="o">=</span> <span class="n">Workbook</span><span class="p">()</span>
+
+<span class="c"># Создаем таблицу</span>
+<span class="n">ws</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="n">create_sheet</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c"># Заполняем</span>
+<span class="n">ws</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s">u&#39;1&#39;</span><span class="p">,</span> <span class="s">u&#39;2&#39;</span><span class="p">,</span> <span class="s">u&#39;3&#39;</span><span class="p">])</span>
+
+<span class="c"># Настройки печати</span>
+<span class="n">ps</span> <span class="o">=</span> <span class="n">PageSetup</span><span class="p">()</span>
+<span class="c"># Зумировать содержимое по ширине страницы</span>
+<span class="n">ps</span><span class="o">.</span><span class="n">fitToPage</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">ps</span><span class="o">.</span><span class="n">fitToHeight</span> <span class="o">=</span> <span class="s">&#39;0&#39;</span>
+<span class="c"># Размер страниц</span>
+<span class="n">ps</span><span class="o">.</span><span class="n">paperSize</span> <span class="o">=</span> <span class="s">&#39;9&#39;</span> <span class="c"># A4</span>
+<span class="c"># Ориентация</span>
+<span class="n">ps</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="s">&#39;landscape&#39;</span>
+<span class="n">ws</span><span class="o">.</span><span class="n">page_setup</span> <span class="o">=</span> <span class="n">ps</span>
+
+<span class="c"># Сохранияем</span>
+<span class="n">book</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s">&#39;filename.xlsx&#39;</span><span class="p">)</span>
+
+<span class="c"># Сохранить в буфер</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">from StringIO import StringIO</span>
+<span class="sd">output = StringIO()</span>
+<span class="sd">book.save(output)</span>
+<span class="sd">buf = output.getvalue()</span>
+<span class="sd">&#39;&#39;&#39;</span>
+</pre></div>
+</div><br />

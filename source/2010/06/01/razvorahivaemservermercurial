@@ -1,0 +1,157 @@
+::id 4c049ed31d41c8298f000003
+::date 2010-06-01
+::title Разворачиваем сервер Mercurial
+::tags mercurial, linux
+::body
+Инструкция по установке и настройке Mercurial через Apache //(проверено на ubuntu 10.04)//
+
+!Установка Mercurial и Apache
+[[sudo aptitude install mercurial
+sudo aptitude install apache2 libapache2-mod-wsgi]]
+!Создаем пользователя hg и его папку
+[[sudo useradd hg
+sudo mkdir /home/hg
+sudo chown hg:hg /home/hg
+sudo -u hg mkdir /home/hg/rep /home/hg/www]]
+!Создаем виртуальный хост
+файл: /etc/apache2/sites-available/mercurial[[<VirtualHost *:80>
+    ServerAdmin admin@myhost.ru
+    ServerName hg.myhost.ru
+    DocumentRoot /home/hg/www/
+
+    # настройки wsgi
+    WSGIProcessGroup hg
+    WSGIDaemonProcess hg user=hg group=hg threads=2 maximum-requests=1000
+
+    # путь до скрипта, обрабатывающий wsgi
+    WSGIScriptAlias / /home/hg/rep/hgwebdir.wsgi
+
+    # ограничение доступа к репозиторию
+    <Location />
+        AuthType Basic
+        AuthName "Mercurial repositories"
+        AuthUserFile /home/hg/.hg.htpasswd
+        Require valid-user
+    </Location>
+</VirtualHost>]]
+Подключаем виртуальный хост [[sudo a2ensite mercurial]]
+!Создаем hg (wsgi) приложение
+Файл: /home/hg/rep/hgwebdir.wsgi[[#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import os
+os.environ['HGENCODING'] = 'utf-8'
+
+from mercurial.hgweb.hgwebdir_mod import hgwebdir
+from mercurial.hgweb.request import wsgiapplication
+
+path = os.path.dirname(os.path.abspath(__file__))
+application = hgwebdir(path+'/hgwebdir.conf')]]
+!Создаем репозиторий "myproject"
+[[sudo -u hg hg init /home/hg/rep/myproject]]
+Создаем файл настроек **/home/hg/rep/hgwebdir.conf** с содержимым
+[[
+[web]
+style = coal
+
+[paths]
+myproject = /home/hg/rep/myproject]]в раздел **path** нужно прописывать все созданные репозитории 
+!Добавление пользователей
+Создание файла паролей и добавление первого пользователя
+[[htpasswd -c /home/hg/.hg.htpasswd user1]]
+[[htpasswd /home/hg/.hg.htpasswd user2]]
+
+Перезагружаем Apache
+[[sudo /etc/init.d/apache restart]]
+
+!push через web
+Для того что-бы можно было пушить через apache, нужно в файле репозитория **.hg/hgrc** прописать: [[
+[web]
+allow_push = user1, user2
+#allow_push = *
+push_ssl = false]]в параметре **allow_push** перечислить пользователей либо поставить "*" - все пользователи. параметр **push_ssl = false** дает возможность пушить через http (по умолчанию можно только через https)
+
+Готово.
+
+как [4c08ac431d41c81ce0000000 настроить https]
+[4c0c762f1d41c80f34000000 Скрипт созданий репозиториев на сервере]
+
+::html
+Инструкция по установке и настройке Mercurial через Apache <i>(проверено на ubuntu 10.04)</i><br />
+<h3>Установка Mercurial и Apache</h3><div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">aptitude</span> <span class="n">install</span> <span class="n">mercurial</span>
+<span class="n">sudo</span> <span class="n">aptitude</span> <span class="n">install</span> <span class="n">apache2</span> <span class="n">libapache2</span><span class="o">-</span><span class="n">mod</span><span class="o">-</span><span class="n">wsgi</span>
+</pre></div>
+</div><h3>Создаем пользователя hg и его папку</h3><div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">useradd</span> <span class="n">hg</span>
+<span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hg</span>
+<span class="n">sudo</span> <span class="n">chown</span> <span class="n">hg</span><span class="p">:</span><span class="n">hg</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hg</span>
+<span class="n">sudo</span> <span class="o">-</span><span class="n">u</span> <span class="n">hg</span> <span class="n">mkdir</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hg</span><span class="o">/</span><span class="n">rep</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hg</span><span class="o">/</span><span class="n">www</span>
+</pre></div>
+</div><h3>Создаем виртуальный хост</h3>файл: /etc/apache2/sites-available/mercurial<div class="codebox"><div class="highlight"><pre><span class="o">&lt;</span><span class="n">VirtualHost</span> <span class="o">*</span><span class="p">:</span><span class="mi">80</span><span class="o">&gt;</span>
+    <span class="n">ServerAdmin</span> <span class="n">admin</span><span class="nd">@myhost.ru</span>
+    <span class="n">ServerName</span> <span class="n">hg</span><span class="o">.</span><span class="n">myhost</span><span class="o">.</span><span class="n">ru</span>
+    <span class="n">DocumentRoot</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hg</span><span class="o">/</span><span class="n">www</span><span class="o">/</span>
+
+    <span class="c"># настройки wsgi</span>
+    <span class="n">WSGIProcessGroup</span> <span class="n">hg</span>
+    <span class="n">WSGIDaemonProcess</span> <span class="n">hg</span> <span class="n">user</span><span class="o">=</span><span class="n">hg</span> <span class="n">group</span><span class="o">=</span><span class="n">hg</span> <span class="n">threads</span><span class="o">=</span><span class="mi">2</span> <span class="n">maximum</span><span class="o">-</span><span class="n">requests</span><span class="o">=</span><span class="mi">1000</span>
+
+    <span class="c"># путь до скрипта, обрабатывающий wsgi</span>
+    <span class="n">WSGIScriptAlias</span> <span class="o">/</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hg</span><span class="o">/</span><span class="n">rep</span><span class="o">/</span><span class="n">hgwebdir</span><span class="o">.</span><span class="n">wsgi</span>
+
+    <span class="c"># ограничение доступа к репозиторию</span>
+    <span class="o">&lt;</span><span class="n">Location</span> <span class="o">/&gt;</span>
+        <span class="n">AuthType</span> <span class="n">Basic</span>
+        <span class="n">AuthName</span> <span class="s">&quot;Mercurial repositories&quot;</span>
+        <span class="n">AuthUserFile</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hg</span><span class="o">/.</span><span class="n">hg</span><span class="o">.</span><span class="n">htpasswd</span>
+        <span class="n">Require</span> <span class="n">valid</span><span class="o">-</span><span class="n">user</span>
+    <span class="o">&lt;/</span><span class="n">Location</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">VirtualHost</span><span class="o">&gt;</span>
+</pre></div>
+</div><br />
+Подключаем виртуальный хост <div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">a2ensite</span> <span class="n">mercurial</span>
+</pre></div>
+</div><h3>Создаем hg (wsgi) приложение</h3>Файл: /home/hg/rep/hgwebdir.wsgi<div class="codebox"><div class="highlight"><pre><span class="c">#!/usr/bin/python</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;HGENCODING&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;utf-8&#39;</span>
+
+<span class="kn">from</span> <span class="nn">mercurial.hgweb.hgwebdir_mod</span> <span class="kn">import</span> <span class="n">hgwebdir</span>
+<span class="kn">from</span> <span class="nn">mercurial.hgweb.request</span> <span class="kn">import</span> <span class="n">wsgiapplication</span>
+
+<span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">__file__</span><span class="p">))</span>
+<span class="n">application</span> <span class="o">=</span> <span class="n">hgwebdir</span><span class="p">(</span><span class="n">path</span><span class="o">+</span><span class="s">&#39;/hgwebdir.conf&#39;</span><span class="p">)</span>
+</pre></div>
+</div><h3>Создаем репозиторий "myproject"</h3><div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="o">-</span><span class="n">u</span> <span class="n">hg</span> <span class="n">hg</span> <span class="n">init</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hg</span><span class="o">/</span><span class="n">rep</span><span class="o">/</span><span class="n">myproject</span>
+</pre></div>
+</div><br />
+Создаем файл настроек <b>/home/hg/rep/hgwebdir.conf</b> с содержимым<br />
+<div class="codebox"><div class="highlight"><pre><span class="p">[</span><span class="n">web</span><span class="p">]</span>
+<span class="n">style</span> <span class="o">=</span> <span class="n">coal</span>
+
+<span class="p">[</span><span class="n">paths</span><span class="p">]</span>
+<span class="n">myproject</span> <span class="o">=</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hg</span><span class="o">/</span><span class="n">rep</span><span class="o">/</span><span class="n">myproject</span>
+</pre></div>
+</div>в раздел <b>path</b> нужно прописывать все созданные репозитории <h3>Добавление пользователей</h3>Создание файла паролей и добавление первого пользователя<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">htpasswd</span> <span class="o">-</span><span class="n">c</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hg</span><span class="o">/.</span><span class="n">hg</span><span class="o">.</span><span class="n">htpasswd</span> <span class="n">user1</span>
+</pre></div>
+</div><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">htpasswd</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hg</span><span class="o">/.</span><span class="n">hg</span><span class="o">.</span><span class="n">htpasswd</span> <span class="n">user2</span>
+</pre></div>
+</div><br />
+<br />
+Перезагружаем Apache<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">apache</span> <span class="n">restart</span>
+</pre></div>
+</div><br />
+<h3>push через web</h3>Для того что-бы можно было пушить через apache, нужно в файле репозитория <b>.hg/hgrc</b> прописать: <div class="codebox"><div class="highlight"><pre><span class="p">[</span><span class="n">web</span><span class="p">]</span>
+<span class="n">allow_push</span> <span class="o">=</span> <span class="n">user1</span><span class="p">,</span> <span class="n">user2</span>
+<span class="c">#allow_push = *</span>
+<span class="n">push_ssl</span> <span class="o">=</span> <span class="n">false</span>
+</pre></div>
+</div>в параметре <b>allow_push</b> перечислить пользователей либо поставить "*" - все пользователи. параметр <b>push_ssl = false</b> дает возможность пушить через http (по умолчанию можно только через https)<br />
+<br />
+Готово.<br />
+<br />
+как <a href="4c08ac431d41c81ce0000000">настроить https</a><br />
+<a href="4c0c762f1d41c80f34000000">Скрипт созданий репозиториев на сервере</a><br />

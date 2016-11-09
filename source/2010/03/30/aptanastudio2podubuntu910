@@ -1,0 +1,21 @@
+::id 4bfb3c6a1d41c846bc0000a1
+::date 2010-03-30
+::title Aptana Studio 2 под ubuntu 9.10
+::tags aptana
+::body
+1. Устанавливаем //Sun Java Runtime (JRE)// если его нет, можно через //Центр приложений Ubuntu//
+2. Скачиваем //Aptana// с [http://www.aptana.org/studio/download оф.сайта]
+3. Распаковываем, запускаем файл **AptanaStudio**
+4. Если Aptana работает некоректно (кнопки не кликаются), то создаем файл **start.sh** в папке программы и запускаем его
+[[#!/bin/bash
+export GDK_NATIVE_WINDOWS=true
+./AptanaStudio]]
+
+::html
+1. Устанавливаем <i>Sun Java Runtime (JRE)</i> если его нет, можно через <i>Центр приложений Ubuntu</i><br />
+2. Скачиваем <i>Aptana</i> с <a target=_blank href="http://www.aptana.org/studio/download">оф.сайта</a><br />
+3. Распаковываем, запускаем файл <b>AptanaStudio</b><br />
+4. Если Aptana работает некоректно (кнопки не кликаются), то создаем файл <b>start.sh</b> в папке программы и запускаем его<br />
+<div class="codebox"><pre><code>#!/bin/bash
+export GDK_NATIVE_WINDOWS=true
+./AptanaStudio</code></pre></div><br />

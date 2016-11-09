@@ -1,0 +1,42 @@
+::id 4d1465a31d41c81a2d000005
+::date 2010-12-24
+::title Туннелирование через ssh (проброс порта)
+::tags туннелирование, ssh, linux
+::body
+С помощью **ssh** можно пробросить порт для какого-нибудь сервера (сервиса).
+ 
+**Получение данных через удаленный хост.**
+Задача: мы на хосте hostA:8000 хотим через хост hostB получать данные с хоста ya.ru:80 (http порт 80)
+[[ssh -N -L 8000:ya.ru:80 user@hostB
+]]При этом на хосте hostA создается серверное(LISTEN) соединение на 8000 порту.
+ 
+**Передача данных на удаленный хост.**
+Задача: мы на хосте hostA где хотим с хоста ya.ru:80 передавать данные на хост hostB:8000
+[[ssh -N -R 8000:ya.ru:80 user@hostB
+]]При этом на хосте hostB создается серверное(LISTEN) соединение на 8000 порту.
+
+Ключ -N запрещает выполнять команды (только проброс порта), т.е. вход на удаленный хост не совершается.
+
+Так же можно добавить ключ -f, что переведет процесс в фоновый режим.
+
+[http://www.py-my.ru/post/544c89b73ad2ff5ac508266f Использование SSH как VPN]
+::html
+С помощью <b>ssh</b> можно пробросить порт для какого-нибудь сервера (сервиса).<br />
+ <br />
+<b>Получение данных через удаленный хост.</b><br />
+Задача: мы на хосте hostA:8000 хотим через хост hostB получать данные с хоста ya.ru:80 (http порт 80)<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">ssh</span> <span class="o">-</span><span class="n">N</span> <span class="o">-</span><span class="n">L</span> <span class="mi">8000</span><span class="p">:</span><span class="n">ya</span><span class="o">.</span><span class="n">ru</span><span class="p">:</span><span class="mi">80</span> <span class="n">user</span><span class="nd">@hostB</span>
+</pre></div>
+</div>При этом на хосте hostA создается серверное(LISTEN) соединение на 8000 порту.<br />
+ <br />
+<b>Передача данных на удаленный хост.</b><br />
+Задача: мы на хосте hostA где хотим с хоста ya.ru:80 передавать данные на хост hostB:8000<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">ssh</span> <span class="o">-</span><span class="n">N</span> <span class="o">-</span><span class="n">R</span> <span class="mi">8000</span><span class="p">:</span><span class="n">ya</span><span class="o">.</span><span class="n">ru</span><span class="p">:</span><span class="mi">80</span> <span class="n">user</span><span class="nd">@hostB</span>
+</pre></div>
+</div>При этом на хосте hostB создается серверное(LISTEN) соединение на 8000 порту.<br />
+<br />
+Ключ -N запрещает выполнять команды (только проброс порта), т.е. вход на удаленный хост не совершается.<br />
+<br />
+Так же можно добавить ключ -f, что переведет процесс в фоновый режим.<br />
+<br />
+<a target=_blank href="http://www.py-my.ru/post/544c89b73ad2ff5ac508266f">Использование SSH как VPN</a>

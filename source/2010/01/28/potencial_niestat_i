@@ -1,0 +1,15 @@
+::id 4bfb3c691d41c846bc000021
+::date 2010-01-28
+::title Потенциальные статьи
+::tags статьи
+::body
+ * создание авто бекапов (backup)
+ * развертывание svn и trac
+ * декораторы
+
+
+::html
+<span style="margin-left:5px;">&#8226;</span>&nbsp;создание авто бекапов (backup)
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;развертывание svn и trac
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;декораторы<br />
+<br />

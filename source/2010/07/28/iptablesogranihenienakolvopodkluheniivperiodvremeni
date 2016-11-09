@@ -1,0 +1,35 @@
+::id 4c4f97e91d41c803d3000007
+::date 2010-07-28
+::title iptables, ограничение на кол-во подключений в период времени
+::tags iptables
+::body
+Пример реализует ограничение по количеству подключений в период времени, в разрезе исходящего адреса.
+[[
+# Очищаем таблицу
+iptables -F INPUT
+ 
+# Пропускаем установленные соединения
+iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+ 
+# Ограничение
+iptables -A INPUT -m conntrack --ctstate NEW -p tcp --dport 22 -m hashlimit --hashlimit-upto 5/min --hashlimit-mode srcip --hashlimit-name sshhash -j ACCEPT
+ 
+# Все остальное удаляем
+iptables -P INPUT DROP
+]]
+
+::html
+Пример реализует ограничение по количеству подключений в период времени, в разрезе исходящего адреса.<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># Очищаем таблицу</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">F</span> <span class="n">INPUT</span>
+ 
+<span class="c"># Пропускаем установленные соединения</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">m</span> <span class="n">conntrack</span> <span class="o">--</span><span class="n">ctstate</span> <span class="n">ESTABLISHED</span><span class="p">,</span><span class="n">RELATED</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>
+ 
+<span class="c"># Ограничение</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">m</span> <span class="n">conntrack</span> <span class="o">--</span><span class="n">ctstate</span> <span class="n">NEW</span> <span class="o">-</span><span class="n">p</span> <span class="n">tcp</span> <span class="o">--</span><span class="n">dport</span> <span class="mi">22</span> <span class="o">-</span><span class="n">m</span> <span class="n">hashlimit</span> <span class="o">--</span><span class="n">hashlimit</span><span class="o">-</span><span class="n">upto</span> <span class="mi">5</span><span class="o">/</span><span class="nb">min</span> <span class="o">--</span><span class="n">hashlimit</span><span class="o">-</span><span class="n">mode</span> <span class="n">srcip</span> <span class="o">--</span><span class="n">hashlimit</span><span class="o">-</span><span class="n">name</span> <span class="n">sshhash</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>
+ 
+<span class="c"># Все остальное удаляем</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">P</span> <span class="n">INPUT</span> <span class="n">DROP</span>
+</pre></div>
+</div><br />

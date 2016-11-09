@@ -1,0 +1,12 @@
+::id 4c4702e91d41c856f7000000
+::date 2010-07-21
+::title linux, копирование файла с генерацией имени
+::tags linux, bash
+::body
+[[
+cp /home/user/file1 /home/home/file2_$(date +%G-%m-%d_%H)
+]]
+::html
+<div class="codebox"><div class="highlight"><pre><span class="n">cp</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">file1</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">file2_</span><span class="err">$</span><span class="p">(</span><span class="n">date</span> <span class="o">+%</span><span class="n">G</span><span class="o">-%</span><span class="n">m</span><span class="o">-%</span><span class="n">d_</span><span class="o">%</span><span class="n">H</span><span class="p">)</span>
+</pre></div>
+</div>

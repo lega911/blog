@@ -1,0 +1,87 @@
+::id 4f105d0fbbddbd3a82000003
+::date 2012-01-13
+::title Запись в запущенный openoffice calc из python
+::tags python, openoffice, libreoffice
+::body
+Запускаем openoffice:
+[[soffice "-accept=socket,host=localhost,port=2002;urp;"]]
+
+Подключаемся и пишем:
+[[# coding:utf8
+
+import uno
+
+localContext = uno.getComponentContext()
+resolver = localContext.ServiceManager.createInstanceWithContext(
+            "com.sun.star.bridge.UnoUrlResolver", localContext)
+
+# Подключение к запущенному openoffice
+ctx = resolver.resolve("uno:socket,host=localhost,port=2002;urp;StarOffice.ComponentContext")
+smgr = ctx.ServiceManager
+desktop = smgr.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
+
+# Получить текущй документ
+model = desktop.getCurrentComponent()
+
+# Установить заголовок
+model.setTitle('Hello')
+
+# Получить таблицу
+sheets = model.getSheets()
+sheet1 = getattr(sheets, sheets.ElementNames[0])
+
+# Записать массив    
+sheet1.getCellRangeByPosition(0,5,2,7).setDataArray( ((1, 'hello', 2), (3, 4, 5), ('a', 'b', 'c')) )
+
+# Записать по ячейкам
+for i in xrange(5):
+    for j in xrange(5):
+        cell = sheet1.getCellByPosition(i, j)
+        #cell.setFormula(str(i * j))
+        cell.setValue(i*j)]]
+
+//Проверено на Ubuntu 11.10 + Python 2.7 + LibreOffice 3.4.4//
+
+::html
+Запускаем openoffice:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">soffice</span> <span class="s">&quot;-accept=socket,host=localhost,port=2002;urp;&quot;</span>
+</pre></div>
+</div><br />
+<br />
+Подключаемся и пишем:<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding:utf8</span>
+
+<span class="kn">import</span> <span class="nn">uno</span>
+
+<span class="n">localContext</span> <span class="o">=</span> <span class="n">uno</span><span class="o">.</span><span class="n">getComponentContext</span><span class="p">()</span>
+<span class="n">resolver</span> <span class="o">=</span> <span class="n">localContext</span><span class="o">.</span><span class="n">ServiceManager</span><span class="o">.</span><span class="n">createInstanceWithContext</span><span class="p">(</span>
+            <span class="s">&quot;com.sun.star.bridge.UnoUrlResolver&quot;</span><span class="p">,</span> <span class="n">localContext</span><span class="p">)</span>
+
+<span class="c"># Подключение к запущенному openoffice</span>
+<span class="n">ctx</span> <span class="o">=</span> <span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s">&quot;uno:socket,host=localhost,port=2002;urp;StarOffice.ComponentContext&quot;</span><span class="p">)</span>
+<span class="n">smgr</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">ServiceManager</span>
+<span class="n">desktop</span> <span class="o">=</span> <span class="n">smgr</span><span class="o">.</span><span class="n">createInstanceWithContext</span><span class="p">(</span><span class="s">&quot;com.sun.star.frame.Desktop&quot;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+
+<span class="c"># Получить текущй документ</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">desktop</span><span class="o">.</span><span class="n">getCurrentComponent</span><span class="p">()</span>
+
+<span class="c"># Установить заголовок</span>
+<span class="n">model</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s">&#39;Hello&#39;</span><span class="p">)</span>
+
+<span class="c"># Получить таблицу</span>
+<span class="n">sheets</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">getSheets</span><span class="p">()</span>
+<span class="n">sheet1</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sheets</span><span class="p">,</span> <span class="n">sheets</span><span class="o">.</span><span class="n">ElementNames</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c"># Записать массив    </span>
+<span class="n">sheet1</span><span class="o">.</span><span class="n">getCellRangeByPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">setDataArray</span><span class="p">(</span> <span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;hello&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">))</span> <span class="p">)</span>
+
+<span class="c"># Записать по ячейкам</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="n">cell</span> <span class="o">=</span> <span class="n">sheet1</span><span class="o">.</span><span class="n">getCellByPosition</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+        <span class="c">#cell.setFormula(str(i * j))</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="n">j</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<br />
+<i>Проверено на Ubuntu 11.10 + Python 2.7 + LibreOffice 3.4.4</i><br />

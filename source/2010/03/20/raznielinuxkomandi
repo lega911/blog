@@ -1,0 +1,71 @@
+::id 4bfb3c691d41c846bc000084
+::date 2010-03-20
+::title Разные linux команды
+::tags linux, grep, lspci, shutdown, find, du, команды, kill
+::body
+Остановить процесс и продолжить его выполнение[[kill -SIGSTOP $PID
+kill -SIGCONT $PID]]
+Список оборудования[[lspci]]
+Подробная информация по оборудованию[[sudo lshw]]в удобочитаемом виде[[sudo lshw -html | w3m -T text/html]]
+Найти текст в файлах[[grep -rl 'text' /path]]
+Время работы машины[[uptime]]
+Информация об оперативное памяти[[sudo dmidecode -t memory]]
+Авто выключение машины через 30 мин[[sudo shutdown -P +30]]
+Изменить правило всем папкам и под-папкам с текущей директории[[find ./ -type d -exec chmod 755 {} \;]]
+Доступное место на разделах[[df -h]]
+Определить занимаемое место папками[[du -sh /usr/*]]
+Посмотреть какие библиотеки использует приложение[[ldd /bin/chmod]]
+Запуск команды от имени другой группы[[sg group "command"]]
+Посмотреть открытые файлы процессом[[lsof -p <pid> ]]
+Список запущенных процессов и их команда запуска[[ps x]]
+
+//заметка будет пополнятся//
+
+::html
+Остановить процесс и продолжить его выполнение<div class="codebox"><div class="highlight"><pre><span class="n">kill</span> <span class="o">-</span><span class="n">SIGSTOP</span> <span class="err">$</span><span class="n">PID</span>
+<span class="n">kill</span> <span class="o">-</span><span class="n">SIGCONT</span> <span class="err">$</span><span class="n">PID</span>
+</pre></div>
+</div><br />
+Список оборудования<div class="codebox"><div class="highlight"><pre><span class="n">lspci</span>
+</pre></div>
+</div><br />
+Подробная информация по оборудованию<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">lshw</span>
+</pre></div>
+</div>в удобочитаемом виде<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">lshw</span> <span class="o">-</span><span class="n">html</span> <span class="o">|</span> <span class="n">w3m</span> <span class="o">-</span><span class="n">T</span> <span class="n">text</span><span class="o">/</span><span class="n">html</span>
+</pre></div>
+</div><br />
+Найти текст в файлах<div class="codebox"><div class="highlight"><pre><span class="n">grep</span> <span class="o">-</span><span class="n">rl</span> <span class="s">&#39;text&#39;</span> <span class="o">/</span><span class="n">path</span>
+</pre></div>
+</div><br />
+Время работы машины<div class="codebox"><div class="highlight"><pre><span class="n">uptime</span>
+</pre></div>
+</div><br />
+Информация об оперативное памяти<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">dmidecode</span> <span class="o">-</span><span class="n">t</span> <span class="n">memory</span>
+</pre></div>
+</div><br />
+Авто выключение машины через 30 мин<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">shutdown</span> <span class="o">-</span><span class="n">P</span> <span class="o">+</span><span class="mi">30</span>
+</pre></div>
+</div><br />
+Изменить правило всем папкам и под-папкам с текущей директории<div class="codebox"><div class="highlight"><pre><span class="n">find</span> <span class="o">./</span> <span class="o">-</span><span class="nb">type</span> <span class="n">d</span> <span class="o">-</span><span class="k">exec</span> <span class="n">chmod</span> <span class="mi">755</span> <span class="p">{}</span> \<span class="p">;</span>
+</pre></div>
+</div><br />
+Доступное место на разделах<div class="codebox"><div class="highlight"><pre><span class="n">df</span> <span class="o">-</span><span class="n">h</span>
+</pre></div>
+</div><br />
+Определить занимаемое место папками<div class="codebox"><div class="highlight"><pre><span class="n">du</span> <span class="o">-</span><span class="n">sh</span> <span class="o">/</span><span class="n">usr</span><span class="o">/*</span>
+</pre></div>
+</div><br />
+Посмотреть какие библиотеки использует приложение<div class="codebox"><div class="highlight"><pre><span class="n">ldd</span> <span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">chmod</span>
+</pre></div>
+</div><br />
+Запуск команды от имени другой группы<div class="codebox"><div class="highlight"><pre><span class="n">sg</span> <span class="n">group</span> <span class="s">&quot;command&quot;</span>
+</pre></div>
+</div><br />
+Посмотреть открытые файлы процессом<div class="codebox"><div class="highlight"><pre><span class="n">lsof</span> <span class="o">-</span><span class="n">p</span> <span class="o">&lt;</span><span class="n">pid</span><span class="o">&gt;</span> 
+</pre></div>
+</div><br />
+Список запущенных процессов и их команда запуска<div class="codebox"><div class="highlight"><pre><span class="n">ps</span> <span class="n">x</span>
+</pre></div>
+</div><br />
+<br />
+<i>заметка будет пополнятся</i><br />

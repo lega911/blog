@@ -1,0 +1,149 @@
+::id 4d34926d1d41c819a7000010
+::date 2011-01-18
+::title uWSGI + nginx, установка и настройка
+::tags web, server, uwsgi, nginx, bottle
+::body
+//Все действия проводились на ubuntu server 12.04, 13.04//
+Установка **nginx** описана [4d34854a1d41c819a7000006 тут]
+!Устанавливаем uWSGI
+[[sudo apt-get install uwsgi uwsgi-plugin-python]]
+ 
+!Привязываем к nginx
+Меняем файл **/etc/nginx/sites-available/default** //(но лучше создать отдельный файл вирт.хостов)//
+[[server {
+    listen   80;
+    # access_log /var/log/nginx/test/access_log;
+
+    server_name localhost;
+    location / {
+            root            /var/www/uwsgi;
+            uwsgi_pass      127.0.0.1:3031;
+            include         uwsgi_params;
+    }
+}]]
+Создаем файл **/var/www/uwsgi/index.wsgi** - wsgi приложение
+[[# coding: utf-8
+
+import sys
+import os
+
+path = os.path.dirname(__file__)
+sys.path.append(path)
+os.chdir(path)
+
+def application(environ, start_response):
+    status = '200 OK'
+    output = 'Hello uWSGI!!!'
+
+    response_headers = [('Content-type', 'text/html; charset=utf-8'),
+                        ('Content-Length', str(len(output)))]
+    start_response(status, response_headers)
+
+    return [output]
+]]
+Запускаем **uWSGI** сервер:
+[[uwsgi_python27 --socket 127.0.0.1:3031 --file /var/www/uwsgi/index.wsgi --chdir /var/www/uwsgi -p 2 --threads 5 -b 8192]]
+**Авто рестарт** приложения можно получить указав параметр для uwsgi_python27, нужно указать имя файла при изменении которого перезагружать приолжение: [[--touch-reload=/var/www/uwsgi/index.wsgi]]
+
+Применяем настройки **nginx**
+[[
+sudo /etc/init.d/nginx reload]]
+Готово, можно проверять по адресу [http://localhost/ http://localhost/]
+
+
+!Пример wsgi приложения на web-bottle
+Нужно установить webbottle
+[[sudo easy_install bottle]]
+Приложение **/var/www/uwsgi/index.wsgi**
+[[import os
+os.chdir(os.path.dirname(__file__))
+
+from bottle import get, default_app
+
+@get('/')
+def main():
+    return 'Main page'
+
+@get('/:name')
+def main(name):
+    return 'Page: ' + name
+
+application = default_app()]]
+После этого нужно перезапустить uwsgi_python27
+
+::html
+<i>Все действия проводились на ubuntu server 12.04, 13.04</i><br />
+Установка <b>nginx</b> описана <a href="4d34854a1d41c819a7000006">тут</a><h3>Устанавливаем uWSGI</h3><div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">uwsgi</span> <span class="n">uwsgi</span><span class="o">-</span><span class="n">plugin</span><span class="o">-</span><span class="n">python</span>
+</pre></div>
+</div><br />
+ <h3>Привязываем к nginx</h3>Меняем файл <b>/etc/nginx/sites-available/default</b> <i>(но лучше создать отдельный файл вирт.хостов)</i><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">server</span> <span class="p">{</span>
+    <span class="n">listen</span>   <span class="mi">80</span><span class="p">;</span>
+    <span class="c"># access_log /var/log/nginx/test/access_log;</span>
+
+    <span class="n">server_name</span> <span class="n">localhost</span><span class="p">;</span>
+    <span class="n">location</span> <span class="o">/</span> <span class="p">{</span>
+            <span class="n">root</span>            <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">uwsgi</span><span class="p">;</span>
+            <span class="n">uwsgi_pass</span>      <span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">3031</span><span class="p">;</span>
+            <span class="n">include</span>         <span class="n">uwsgi_params</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div><br />
+Создаем файл <b>/var/www/uwsgi/index.wsgi</b> - wsgi приложение<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf-8</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">environ</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="s">&#39;200 OK&#39;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="s">&#39;Hello uWSGI!!!&#39;</span>
+
+    <span class="n">response_headers</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;Content-type&#39;</span><span class="p">,</span> <span class="s">&#39;text/html; charset=utf-8&#39;</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s">&#39;Content-Length&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">)))]</span>
+    <span class="n">start_response</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">response_headers</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">output</span><span class="p">]</span>
+</pre></div>
+</div><br />
+Запускаем <b>uWSGI</b> сервер:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">uwsgi_python27</span> <span class="o">--</span><span class="n">socket</span> <span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">3031</span> <span class="o">--</span><span class="nb">file</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">uwsgi</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">wsgi</span> <span class="o">--</span><span class="n">chdir</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">uwsgi</span> <span class="o">-</span><span class="n">p</span> <span class="mi">2</span> <span class="o">--</span><span class="n">threads</span> <span class="mi">5</span> <span class="o">-</span><span class="n">b</span> <span class="mi">8192</span>
+</pre></div>
+</div><br />
+<b>Авто рестарт</b> приложения можно получить указав параметр для uwsgi_python27, нужно указать имя файла при изменении которого перезагружать приолжение: <div class="codebox"><div class="highlight"><pre><span class="o">--</span><span class="n">touch</span><span class="o">-</span><span class="nb">reload</span><span class="o">=/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">uwsgi</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">wsgi</span>
+</pre></div>
+</div><br />
+<br />
+Применяем настройки <b>nginx</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">nginx</span> <span class="nb">reload</span>
+</pre></div>
+</div><br />
+Готово, можно проверять по адресу <a target=_blank href="http://localhost/">http://localhost/</a><br />
+<br />
+<h3>Пример wsgi приложения на web-bottle</h3>Нужно установить webbottle<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">easy_install</span> <span class="n">bottle</span>
+</pre></div>
+</div><br />
+Приложение <b>/var/www/uwsgi/index.wsgi</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">))</span>
+
+<span class="kn">from</span> <span class="nn">bottle</span> <span class="kn">import</span> <span class="n">get</span><span class="p">,</span> <span class="n">default_app</span>
+
+<span class="nd">@get</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">&#39;Main page&#39;</span>
+
+<span class="nd">@get</span><span class="p">(</span><span class="s">&#39;/:name&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">&#39;Page: &#39;</span> <span class="o">+</span> <span class="n">name</span>
+
+<span class="n">application</span> <span class="o">=</span> <span class="n">default_app</span><span class="p">()</span>
+</pre></div>
+</div><br />
+После этого нужно перезапустить uwsgi_python27<br />

@@ -1,0 +1,143 @@
+::id 4bfb3c691d41c846bc00003b
+::date 2010-02-02
+::title wiki на bottle (python) за 23 минуты
+::tags wiki, web, sqlite, python, video, bottle
+::body
+Простая вики на фремворке bottle
+
+//Видео убрано в связи с переездом на новый движок//
+
+Исходник:
+[[# coding: utf-8
+
+from bottle import run, route, debug, redirect, request
+import sqlite3
+import re
+
+def template(name,content):
+    return '<html><body><h1>%s</h1>%s</body></html>' % (name,content)
+
+def wiki(content):
+    content = content.replace('\n','<br/>\n')
+    content = re.sub(r'\[(.+?)\]', r'<a href="\1">\1</a>', content)
+    content = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', content)
+    return content
+
+def dbInit():
+    conn = sqlite3.connect('wiki.db')
+    cur = conn.cursor()
+    cur.execute('CREATE TABLE IF NOT EXISTS pages(name TEXT, content TEXT)')
+    conn.commit()
+
+def dbGetPage(name):
+    conn = sqlite3.connect('wiki.db')
+    cur = conn.cursor()
+    cur.execute('SELECT content FROM pages WHERE name=?', (name,))
+    r = cur.fetchone()
+    if r: return r[0]
+    return ''
+
+def dbSavePage(name,content):
+    conn = sqlite3.connect('wiki.db')
+    cur = conn.cursor()
+    cur.execute('SELECT name FROM pages WHERE name=?', (name,))
+    r = cur.fetchone()
+    if r: # page exsist
+        cur.execute('UPDATE pages SET content=? WHERE name=?', (content,name))
+    else:
+        cur.execute('INSERT INTO pages (name,content) VALUES(?,?)', (name,content))
+    conn.commit()
+
+@route('/')
+@route('/:name')
+def index(name='main'):
+    content = dbGetPage(name)
+    if not content: content = 'page not found. <a href="/edit/%s">create %s page?</a>' % (name,name)
+    else: content = wiki(content) + '<hr/><a href="/edit/%s">edit</a>' % name
+    return template(name, content)
+
+@route('/edit/:name')
+def edit(name):
+    content = dbGetPage(name)
+    content = '<form method=POST action="/save/%s"><textarea cols=60 rows=20 name=content>%s</textarea><input type=submit /></form>' % (name,content)
+    return template(name, content)
+
+@route('/save/:name', method='POST')
+def save(name):
+    content = request.POST.get('content','')
+    dbSavePage(name, content)
+    redirect('/%s' % name, 303)
+
+dbInit()
+debug(True)
+run(port=8080,reloader=True)]]
+
+::html
+Простая вики на фремворке bottle<br />
+<br />
+<i>Видео убрано в связи с переездом на новый движок</i><br />
+<br />
+Исходник:<br />
+<div class="codebox"><pre><code># coding: utf-8
+
+from bottle import run, route, debug, redirect, request
+import sqlite3
+import re
+
+def template(name,content):
+    return '&lt;html&gt;&lt;body&gt;&lt;h1&gt;%s&lt;/h1&gt;%s&lt;/body&gt;&lt;/html&gt;' % (name,content)
+
+def wiki(content):
+    content = content.replace('\n','&lt;br/&gt;\n')
+    content = re.sub(r'\[(.+?)\]', r'&lt;a href="\1"&gt;\1&lt;/a&gt;', content)
+    content = re.sub(r'\*\*(.+?)\*\*', r'&lt;b&gt;\1&lt;/b&gt;', content)
+    return content
+
+def dbInit():
+    conn = sqlite3.connect('wiki.db')
+    cur = conn.cursor()
+    cur.execute('CREATE TABLE IF NOT EXISTS pages(name TEXT, content TEXT)')
+    conn.commit()
+
+def dbGetPage(name):
+    conn = sqlite3.connect('wiki.db')
+    cur = conn.cursor()
+    cur.execute('SELECT content FROM pages WHERE name=?', (name,))
+    r = cur.fetchone()
+    if r: return r[0]
+    return ''
+
+def dbSavePage(name,content):
+    conn = sqlite3.connect('wiki.db')
+    cur = conn.cursor()
+    cur.execute('SELECT name FROM pages WHERE name=?', (name,))
+    r = cur.fetchone()
+    if r: # page exsist
+        cur.execute('UPDATE pages SET content=? WHERE name=?', (content,name))
+    else:
+        cur.execute('INSERT INTO pages (name,content) VALUES(?,?)', (name,content))
+    conn.commit()
+
+@route('/')
+@route('/:name')
+def index(name='main'):
+    content = dbGetPage(name)
+    if not content: content = 'page not found. &lt;a href="/edit/%s"&gt;create %s page?&lt;/a&gt;' % (name,name)
+    else: content = wiki(content) + '&lt;hr/&gt;&lt;a href="/edit/%s"&gt;edit&lt;/a&gt;' % name
+    return template(name, content)
+
+@route('/edit/:name')
+def edit(name):
+    content = dbGetPage(name)
+    content = '&lt;form method=POST action="/save/%s"&gt;&lt;textarea cols=60 rows=20 name=content&gt;%s&lt;/textarea&gt;&lt;input type=submit /&gt;&lt;/form&gt;' % (name,content)
+    return template(name, content)
+
+@route('/save/:name', method='POST')
+def save(name):
+    content = request.POST.get('content','')
+    dbSavePage(name, content)
+    redirect('/%s' % name, 303)
+
+dbInit()
+debug(True)
+run(port=8080,reloader=True)</code></pre></div><br />

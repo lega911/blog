@@ -1,0 +1,154 @@
+::id 50fe762371144856ca000006
+::date 2013-01-22
+::title Настраиваем pyodbc в linux ubuntu
+::tags python, pyodbc, sql, mssql, linux
+::body
+Доступ к MSSQL через pyodbc в linux с поддержкой кириллицы.
+//Все действия производились в ubuntu server 12.04 64bit//
+ 
+Устанавливаем unixodbc, freetds и pyodbc[[sudo aptitude install unixodbc unixodbc-dev freetds-dev tdsodbc python-dev
+sudo easy_install pyodbc]]
+
+Настраиваем конфигурацию:
+**/etc/odbcinst.ini**[[!^[ODBC]
+Trace = Yes
+TraceFile = /tmp/odbc.log
+
+[FreeTDS]
+Description = TDS driver (Sybase/MS SQL)
+Driver = /usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so
+Setup = /usr/lib/x86_64-linux-gnu/odbc/libtdsS.so
+UsageCount = 1]]
+
+**/etc/odbc.ini**, (dsn записи)
+[[!^[srv-db4]
+Description=srv-db4
+Driver=FreeTDS
+Servername=srv-db4
+
+[srv-db2]
+Driver=/usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so
+Servername=srv-db2]]
+
+**/etc/freetds/freetds.conf** + список серверов
+[[!^[global]
+tds version = 8.0
+port = 1433
+
+# Command and connection timeouts
+; timeout = 10
+; connect timeout = 10
+
+# If you get out-of-memory errors, it may mean that your client
+# is trying to allocate a huge buffer for a TEXT field.
+# Try setting ‘text size’ to a more reasonable limit
+text size = 64512
+
+try server login = yes
+try domain login = no
+client charset = UTF-8
+
+[srv-db4]
+host = 192.168.1.1
+port = 1433
+tds version = 8.0
+
+[srv-db2]
+host = srv-db2]]
+
+**Скрипт для проверки:**
+[[# coding: utf8
+
+import pyodbc
+
+cnx = pyodbc.connect("DSN=srv-db4;DATABASE=database;UID=username;PWD=password")
+
+cursor = cnx.cursor()
+cursor.execute("select top 5 * from table;")
+for row in cursor:
+    print row
+]]
+
+Так же можно все параметры указать в **pyodbc.connect**
+[[pyodbc.connect("DRIVER=FreeTDS;SERVER=192.168.1.1;PORT=1433;DATABASE=db_name;UID=user_name;PWD=password;TDS_Version=8.0;ClientCharset=UTF8;")]]
+
+::html
+Доступ к MSSQL через pyodbc в linux с поддержкой кириллицы.<br />
+<i>Все действия производились в ubuntu server 12.04 64bit</i><br />
+ <br />
+Устанавливаем unixodbc, freetds и pyodbc<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">aptitude</span> <span class="n">install</span> <span class="n">unixodbc</span> <span class="n">unixodbc</span><span class="o">-</span><span class="n">dev</span> <span class="n">freetds</span><span class="o">-</span><span class="n">dev</span> <span class="n">tdsodbc</span> <span class="n">python</span><span class="o">-</span><span class="n">dev</span>
+<span class="n">sudo</span> <span class="n">easy_install</span> <span class="n">pyodbc</span>
+</pre></div>
+</div><br />
+<br />
+Настраиваем конфигурацию:<br />
+<b>/etc/odbcinst.ini</b><div class="codebox"><div class="highlight"><pre><span class="p">[</span><span class="n">ODBC</span><span class="p">]</span>
+<span class="n">Trace</span> <span class="o">=</span> <span class="n">Yes</span>
+<span class="n">TraceFile</span> <span class="o">=</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">odbc</span><span class="o">.</span><span class="n">log</span>
+
+<span class="p">[</span><span class="n">FreeTDS</span><span class="p">]</span>
+<span class="n">Description</span> <span class="o">=</span> <span class="n">TDS</span> <span class="n">driver</span> <span class="p">(</span><span class="n">Sybase</span><span class="o">/</span><span class="n">MS</span> <span class="n">SQL</span><span class="p">)</span>
+<span class="n">Driver</span> <span class="o">=</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">x86_64</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">gnu</span><span class="o">/</span><span class="n">odbc</span><span class="o">/</span><span class="n">libtdsodbc</span><span class="o">.</span><span class="n">so</span>
+<span class="n">Setup</span> <span class="o">=</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">x86_64</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">gnu</span><span class="o">/</span><span class="n">odbc</span><span class="o">/</span><span class="n">libtdsS</span><span class="o">.</span><span class="n">so</span>
+<span class="n">UsageCount</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div><br />
+<br />
+<b>/etc/odbc.ini</b>, (dsn записи)<br />
+<div class="codebox"><div class="highlight"><pre><span class="p">[</span><span class="n">srv</span><span class="o">-</span><span class="n">db4</span><span class="p">]</span>
+<span class="n">Description</span><span class="o">=</span><span class="n">srv</span><span class="o">-</span><span class="n">db4</span>
+<span class="n">Driver</span><span class="o">=</span><span class="n">FreeTDS</span>
+<span class="n">Servername</span><span class="o">=</span><span class="n">srv</span><span class="o">-</span><span class="n">db4</span>
+
+<span class="p">[</span><span class="n">srv</span><span class="o">-</span><span class="n">db2</span><span class="p">]</span>
+<span class="n">Driver</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">x86_64</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">gnu</span><span class="o">/</span><span class="n">odbc</span><span class="o">/</span><span class="n">libtdsodbc</span><span class="o">.</span><span class="n">so</span>
+<span class="n">Servername</span><span class="o">=</span><span class="n">srv</span><span class="o">-</span><span class="n">db2</span>
+</pre></div>
+</div><br />
+<br />
+<b>/etc/freetds/freetds.conf</b> + список серверов<br />
+<div class="codebox"><div class="highlight"><pre><span class="p">[</span><span class="k">global</span><span class="p">]</span>
+<span class="n">tds</span> <span class="n">version</span> <span class="o">=</span> <span class="mf">8.0</span>
+<span class="n">port</span> <span class="o">=</span> <span class="mi">1433</span>
+
+<span class="c"># Command and connection timeouts</span>
+<span class="p">;</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="p">;</span> <span class="n">connect</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="c"># If you get out-of-memory errors, it may mean that your client</span>
+<span class="c"># is trying to allocate a huge buffer for a TEXT field.</span>
+<span class="c"># Try setting ‘text size’ to a more reasonable limit</span>
+<span class="n">text</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">64512</span>
+
+<span class="k">try</span> <span class="n">server</span> <span class="n">login</span> <span class="o">=</span> <span class="n">yes</span>
+<span class="k">try</span> <span class="n">domain</span> <span class="n">login</span> <span class="o">=</span> <span class="n">no</span>
+<span class="n">client</span> <span class="n">charset</span> <span class="o">=</span> <span class="n">UTF</span><span class="o">-</span><span class="mi">8</span>
+
+<span class="p">[</span><span class="n">srv</span><span class="o">-</span><span class="n">db4</span><span class="p">]</span>
+<span class="n">host</span> <span class="o">=</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">1.1</span>
+<span class="n">port</span> <span class="o">=</span> <span class="mi">1433</span>
+<span class="n">tds</span> <span class="n">version</span> <span class="o">=</span> <span class="mf">8.0</span>
+
+<span class="p">[</span><span class="n">srv</span><span class="o">-</span><span class="n">db2</span><span class="p">]</span>
+<span class="n">host</span> <span class="o">=</span> <span class="n">srv</span><span class="o">-</span><span class="n">db2</span>
+</pre></div>
+</div><br />
+<br />
+<b>Скрипт для проверки:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">import</span> <span class="nn">pyodbc</span>
+
+<span class="n">cnx</span> <span class="o">=</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;DSN=srv-db4;DATABASE=database;UID=username;PWD=password&quot;</span><span class="p">)</span>
+
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">cnx</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;select top 5 * from table;&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cursor</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">row</span>
+</pre></div>
+</div><br />
+<br />
+Так же можно все параметры указать в <b>pyodbc.connect</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">pyodbc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;DRIVER=FreeTDS;SERVER=192.168.1.1;PORT=1433;DATABASE=db_name;UID=user_name;PWD=password;TDS_Version=8.0;ClientCharset=UTF8;&quot;</span><span class="p">)</span>
+</pre></div>
+</div><br />

@@ -1,0 +1,21 @@
+::id 4fc5b974bbddbd6327000000
+::date 2012-05-30
+::title Запуск процесса на определенном ядре
+::tags taskset, linux
+::body
+Для этого можно воспользоватся командой **taskset**, первый параметр - маска доступности ядер, 0x00000003 - запуск на 1 и 2 ядре.
+В некоторых случаях ограничением процесса одним ядром дает большую производительность.
+
+[[
+taskset 0x00000001 google-chrome
+taskset 0x00000003 google-chrome
+]]
+
+::html
+Для этого можно воспользоватся командой <b>taskset</b>, первый параметр - маска доступности ядер, 0x00000003 - запуск на 1 и 2 ядре.<br />
+В некоторых случаях ограничением процесса одним ядром дает большую производительность.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">taskset</span> <span class="mh">0x00000001</span> <span class="n">google</span><span class="o">-</span><span class="n">chrome</span>
+<span class="n">taskset</span> <span class="mh">0x00000003</span> <span class="n">google</span><span class="o">-</span><span class="n">chrome</span>
+</pre></div>
+</div><br />

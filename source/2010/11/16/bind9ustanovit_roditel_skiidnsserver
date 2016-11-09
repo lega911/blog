@@ -1,0 +1,19 @@
+::id 4ce25de11d41c83a43000001
+::date 2010-11-16
+::title bind9, установить родительский DNS сервер
+::tags bind, dns, linux
+::body
+Если bind в кеше не может найти адрес по домену, то он обращается к "родительскому" DNS серверу, его можно указать, для этого в файл **/etc/bind/named.conf.options** (для ubuntu) нужно прописать адрес DNS сервера, в секцию **options**
+[[options {
+    ...
+    forwarders { 8.8.8.8; };
+};
+]]8.8.8.8 - google DNS
+
+::html
+Если bind в кеше не может найти адрес по домену, то он обращается к "родительскому" DNS серверу, его можно указать, для этого в файл <b>/etc/bind/named.conf.options</b> (для ubuntu) нужно прописать адрес DNS сервера, в секцию <b>options</b><br />
+<div class="codebox"><pre><code>options {
+    ...
+    forwarders { 8.8.8.8; };
+};
+</code></pre></div>8.8.8.8 - google DNS<br />

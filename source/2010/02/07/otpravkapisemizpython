@@ -1,0 +1,87 @@
+::id 4bfb3c691d41c846bc000049
+::date 2010-02-07
+::title Отправка писем из python
+::tags python, mail, smtp
+::body
+В данной заметке показано как отправлять почту через питон с акаунта на гугле
+
+В настройках акаунта на gmail нужно разрешить отправку писем (и прием) через smtp.
+[[# coding: utf-8
+
+import smtplib
+from email.MIMEText import MIMEText
+
+# отправитель
+me = 'support.tonics@gmail.com'
+# получатель
+you = 'destination@mail.ru'
+# текст письма
+text = 'Тестовое письмо!\nОтправка письма из python'
+# заголовок письма
+subj = 'Тестовое письмо'
+
+# SMTP-сервер
+server = "smtp.gmail.com"
+port = 25
+user_name = "support.tonics@gmail.com"
+user_passwd = "password"
+
+# формирование сообщения
+msg = MIMEText(text, "", "utf-8")
+msg['Subject'] = subj
+msg['From'] = me
+msg['To'] = you
+
+# отправка
+s = smtplib.SMTP(server, port)
+s.ehlo()
+s.starttls()
+s.ehlo()
+s.login(user_name, user_passwd)
+s.sendmail(me, you, msg.as_string())
+s.quit()]]
+
+подобное [/page/88 Отправка письма нескольким отправителям и подключение файлов из Python]
+
+::html
+В данной заметке показано как отправлять почту через питон с акаунта на гугле<br />
+<br />
+В настройках акаунта на gmail нужно разрешить отправку писем (и прием) через smtp.<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf-8</span>
+
+<span class="kn">import</span> <span class="nn">smtplib</span>
+<span class="kn">from</span> <span class="nn">email.MIMEText</span> <span class="kn">import</span> <span class="n">MIMEText</span>
+
+<span class="c"># отправитель</span>
+<span class="n">me</span> <span class="o">=</span> <span class="s">&#39;support.tonics@gmail.com&#39;</span>
+<span class="c"># получатель</span>
+<span class="n">you</span> <span class="o">=</span> <span class="s">&#39;destination@mail.ru&#39;</span>
+<span class="c"># текст письма</span>
+<span class="n">text</span> <span class="o">=</span> <span class="s">&#39;Тестовое письмо!</span><span class="se">\n</span><span class="s">Отправка письма из python&#39;</span>
+<span class="c"># заголовок письма</span>
+<span class="n">subj</span> <span class="o">=</span> <span class="s">&#39;Тестовое письмо&#39;</span>
+
+<span class="c"># SMTP-сервер</span>
+<span class="n">server</span> <span class="o">=</span> <span class="s">&quot;smtp.gmail.com&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="n">user_name</span> <span class="o">=</span> <span class="s">&quot;support.tonics@gmail.com&quot;</span>
+<span class="n">user_passwd</span> <span class="o">=</span> <span class="s">&quot;password&quot;</span>
+
+<span class="c"># формирование сообщения</span>
+<span class="n">msg</span> <span class="o">=</span> <span class="n">MIMEText</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;utf-8&quot;</span><span class="p">)</span>
+<span class="n">msg</span><span class="p">[</span><span class="s">&#39;Subject&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subj</span>
+<span class="n">msg</span><span class="p">[</span><span class="s">&#39;From&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">me</span>
+<span class="n">msg</span><span class="p">[</span><span class="s">&#39;To&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">you</span>
+
+<span class="c"># отправка</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">smtplib</span><span class="o">.</span><span class="n">SMTP</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">ehlo</span><span class="p">()</span>
+<span class="n">s</span><span class="o">.</span><span class="n">starttls</span><span class="p">()</span>
+<span class="n">s</span><span class="o">.</span><span class="n">ehlo</span><span class="p">()</span>
+<span class="n">s</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">user_name</span><span class="p">,</span> <span class="n">user_passwd</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">sendmail</span><span class="p">(</span><span class="n">me</span><span class="p">,</span> <span class="n">you</span><span class="p">,</span> <span class="n">msg</span><span class="o">.</span><span class="n">as_string</span><span class="p">())</span>
+<span class="n">s</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div><br />
+<br />
+подобное <a href="/page/88">Отправка письма нескольким отправителям и подключение файлов из Python</a><br />

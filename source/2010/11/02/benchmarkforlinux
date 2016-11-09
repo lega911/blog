@@ -1,0 +1,18 @@
+::id 4cd02eb51d41c8341c000000
+::date 2010-11-02
+::title benchmark for linux
+::tags sysbench, benchmark, linux
+::body
+!Установка
+[[sudo apt-get install sysbench]]
+!Тест процессора
+[[nice -20 sysbench --test=cpu --cpu-max-prime=40000 --num-threads=8 run]]
+параметром **--num-threads=8** можно задать кол-во одновременных потоков
+
+::html
+<h3>Установка</h3><div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">sysbench</span>
+</pre></div>
+</div><h3>Тест процессора</h3><div class="codebox"><div class="highlight"><pre><span class="n">nice</span> <span class="o">-</span><span class="mi">20</span> <span class="n">sysbench</span> <span class="o">--</span><span class="n">test</span><span class="o">=</span><span class="n">cpu</span> <span class="o">--</span><span class="n">cpu</span><span class="o">-</span><span class="nb">max</span><span class="o">-</span><span class="n">prime</span><span class="o">=</span><span class="mi">40000</span> <span class="o">--</span><span class="n">num</span><span class="o">-</span><span class="n">threads</span><span class="o">=</span><span class="mi">8</span> <span class="n">run</span>
+</pre></div>
+</div><br />
+параметром <b>--num-threads=8</b> можно задать кол-во одновременных потоков<br />

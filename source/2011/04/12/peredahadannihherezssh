@@ -1,0 +1,45 @@
+::id 4da3e5741d41c87185000007
+::date 2011-04-12
+::title Передача данных через ssh
+::tags ssh, linux, dd
+::body
+Несколько примеров передачи текста/данных по ssh.
+ 
+[[echo 'hello' | ssh user@remote_host "cat > /tmp/test"]]Передаем строку 'hello' на удаленный хост //remote_host//, на удаленном хосте принимаем строку и записываем её в файл //!^/tmp/test//.
+
+[[ssh user@remote_host "cat /tmp/test"]]Вывести содержимое, удаленного файла, на экран.
+
+[[cat file.dat | gzip | ssh user@remote_host "cat | gunzip > /tmp/file.dat"]]Считываем файл, пакуем, отправляем на удаленный хост, распаковываем и сохраняем.
+
+[[dd if=/dev/sda1 | ssh user@remote_host "dd of=/home/user/sda1.img"]]Отправляем образ диска на удаленный хост.
+
+//ps: для копирования файлов по ssh, существует утилита **scp**//
+
+по теме:
+[4c063a5f1d41c867ae000000 ssh без ввода пароля]
+[4d9561441d41c81a44000002 rsync, синхронизация через ssh]
+
+::html
+Несколько примеров передачи текста/данных по ssh.<br />
+ <br />
+<div class="codebox"><div class="highlight"><pre><span class="n">echo</span> <span class="s">&#39;hello&#39;</span> <span class="o">|</span> <span class="n">ssh</span> <span class="n">user</span><span class="nd">@remote_host</span> <span class="s">&quot;cat &gt; /tmp/test&quot;</span>
+</pre></div>
+</div>Передаем строку 'hello' на удаленный хост <i>remote_host</i>, на удаленном хосте принимаем строку и записываем её в файл <i>/tmp/test</i>.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">ssh</span> <span class="n">user</span><span class="nd">@remote_host</span> <span class="s">&quot;cat /tmp/test&quot;</span>
+</pre></div>
+</div>Вывести содержимое, удаленного файла, на экран.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">cat</span> <span class="nb">file</span><span class="o">.</span><span class="n">dat</span> <span class="o">|</span> <span class="n">gzip</span> <span class="o">|</span> <span class="n">ssh</span> <span class="n">user</span><span class="nd">@remote_host</span> <span class="s">&quot;cat | gunzip &gt; /tmp/file.dat&quot;</span>
+</pre></div>
+</div>Считываем файл, пакуем, отправляем на удаленный хост, распаковываем и сохраняем.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">dd</span> <span class="k">if</span><span class="o">=/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda1</span> <span class="o">|</span> <span class="n">ssh</span> <span class="n">user</span><span class="nd">@remote_host</span> <span class="s">&quot;dd of=/home/user/sda1.img&quot;</span>
+</pre></div>
+</div>Отправляем образ диска на удаленный хост.<br />
+<br />
+<i>ps: для копирования файлов по ssh, существует утилита <b>scp</b></i><br />
+<br />
+по теме:<br />
+<a href="4c063a5f1d41c867ae000000">ssh без ввода пароля</a><br />
+<a href="4d9561441d41c81a44000002">rsync, синхронизация через ssh</a><br />

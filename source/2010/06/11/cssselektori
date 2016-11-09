@@ -1,0 +1,22 @@
+::id 4c11cf0b1d41c80f3400000c
+::date 2010-06-11
+::title CSS селекторы
+::tags css
+::body
+Основные css селекторы
+#|* {}|Все элементы
+||div {}|Все **div** элементы
+||div, span {}|Все **div** и **span** элементы
+||div span {}|Все **span** элементы которые внутри **div** элементов
+||div > span {}|Все **span** элементы с родителем **div**
+||.class {}|Все элементы с классом **class**
+||div.class {}|Все элементы **div** с классом **class**
+||!^#itemid {}|Все элементы с id="itemid"
+||div#itemid {}|Все **div** элементы с id="itemid"
+||div[attr]|Все **div** элементы с атрибутом **attr**
+||div[attr='val']|Все **div** элементы с атрибутом **attr='val'**
+|#
+
+::html
+Основные css селекторы<br />
+<table class="pymark_table"><tr><td>* {}</td><td>Все элементы</td></tr><tr><td>div {}</td><td>Все <b>div</b> элементы</td></tr><tr><td>div, span {}</td><td>Все <b>div</b> и <b>span</b> элементы</td></tr><tr><td>div span {}</td><td>Все <b>span</b> элементы которые внутри <b>div</b> элементов</td></tr><tr><td>div &gt; span {}</td><td>Все <b>span</b> элементы с родителем <b>div</b></td></tr><tr><td>.class {}</td><td>Все элементы с классом <b>class</b></td></tr><tr><td>div.class {}</td><td>Все элементы <b>div</b> с классом <b>class</b></td></tr><tr><td>#itemid {}</td><td>Все элементы с id="itemid"</td></tr><tr><td>div#itemid {}</td><td>Все <b>div</b> элементы с id="itemid"</td></tr><tr><td>div[attr]</td><td>Все <b>div</b> элементы с атрибутом <b>attr</b></td></tr><tr><td>div[attr='val']</td><td>Все <b>div</b> элементы с атрибутом <b>attr='val'</b></td></tr></table><br />

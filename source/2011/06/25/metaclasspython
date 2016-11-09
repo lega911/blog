@@ -1,0 +1,302 @@
+::id 4e04bc2c1d41c86c33000000
+::date 2011-06-25
+::title Metaclass python
+::tags python, metaclass
+::body
+Класс позволяет создать экземпляры класса, метакласс позволяет контролировать создание класса и его экземпляры.
+Метакласс может являтся фабрикой классов.
+//Примеры для Python 2.7//
+
+!Рассмотрим методы создания класса:
+Создаем класс с типом **type**:
+[[class A(object):
+    pass]]
+Аналогично предыдущему:
+[[B = type('B',(object,),{})]]
+Аналогично предыдущему, но явно указываем тип **type**
+[[C = type.__new__(type, 'C', (object,), {} )]]
+Создадим свой тип **Meta**, и сделаем с помощью его класс
+[[class Meta(type):
+    pass
+D = type.__new__( Meta , 'D', (object,), {} )]]
+Посмотрим типы наших классов:
+[[class A(object):
+    pass
+B = type('B',(object,),{})
+C = type.__new__(type, 'C', (object,), {} )
+
+class Meta(type):
+    pass
+D = type.__new__( Meta , 'D', (object,), {} )
+
+print A, type(A)
+print B, type(B)
+print C, type(C)
+print D, type(D)]]**Результат**[[
+<class '__main__.A'> <type 'type'>
+<class '__main__.B'> <type 'type'>
+<class '__main__.C'> <type 'type'>
+<class '__main__.D'> <class '__main__.Meta'>]]Классы A, B, C имеют тип **type**, Класс D имеет тип **Meta**.
+**Meta** является метакласом, позволяет контролировать создание класса и его экземпляры.
+
+!Создание экземпляра класса
+[[a = A()]]
+Аналогично предыдущему:
+[[a = type.__call__(A)]]
+
+!Переопределение методов метакласса
+Как мы видим, у типа **type** есть 3 интересных метода:
+**type._!^_new_!^_** (создание класса)
+**type._!^_init_!^_** (инициализация класса)
+**type._!^_call_!^_** (создание экземпляра),
+в нашем метаклассе **Meta** их можно переопределить, при этом в создаваемом классе нужно будет указать **__metaclass__**
+[[class Meta(type):
+    def __new__(cls, name, base, dic):
+        print 'new:  %r = %r = %r' % (cls, name, base)
+        return type.__new__(cls,name,base,dic)
+    def __init__(cls, *args, **kwargs):
+        print 'init:', cls
+    def __call__(cls):
+        print 'call:', cls
+        return type(cls)
+
+print 'Make class'
+class Base():
+    __metaclass__ = Meta
+
+class Foo(Base):
+    pass
+
+print 'Make instance'
+b = Base()
+f = Foo()]]**Результат**[[Make class
+new:  <class '__main__.Meta'> = 'Base' = ()
+init: <class '__main__.Base'>
+new:  <class '__main__.Meta'> = 'Foo' = (<class '__main__.Base'>,)
+init: <class '__main__.Foo'>
+Make instance
+call: <class '__main__.Base'>
+call: <class '__main__.Foo'>]]Метакласс передается по наследству, поэтому его в класс Foo не нужно указывать т.к. он отнаследован от Base.
+
+!Примеры
+Расширение класса при создании
+[[class Car():
+    def name(self):
+        print 'Car'
+class Bus():
+    def name(self):
+        print 'Bus'
+
+class Meta(type):
+    def __new__(cls, name, base, dic):
+        if (len(base) == 2) and (type(base[1]) == str):
+            base = ( base[0], globals()[base[1]!^] )
+        dic['color'] = 'red'
+        return type.__new__(cls,name,base,dic)
+
+class Base():
+    __metaclass__ = Meta
+
+class Machine(Base,'Bus'):
+    speed = 100
+
+m = Machine()
+m.name()
+print m.speed
+print m.color]]**Результат**[[Bus
+100
+red]]
+
+Расширение класса при создании экземпляра
+[[class Meta(type):
+    def __call__(cls, arg):
+        t = type(arg)               # Определяем тип параметра
+        t2 = type('t2',(cls,t), {}) # Создаем класс на основе обрабатываемого класса и типа входящего параметра
+        i = t.__new__(t2, arg)      # Создаем экземпляр типа входного параметра ( + инициализация типов int, str...)
+        t.__init__(i, arg)          # Инициализация
+        return i
+
+class Base():
+    __metaclass__ = Meta
+
+class Combine(Base):
+    def name(self):
+        print 'Combine\n'
+
+a = Combine(10)
+print a
+a.name()
+
+b = Combine([1,2,3])
+print b
+b.name()
+
+c = Combine({ 'id':'hello' })
+print c
+c.name()]]**Результат**[[10
+Combine
+
+[1, 2, 3]
+Combine
+
+{'id': 'hello'}
+Combine]]
+
+::html
+Класс позволяет создать экземпляры класса, метакласс позволяет контролировать создание класса и его экземпляры.<br />
+Метакласс может являтся фабрикой классов.<br />
+<i>Примеры для Python 2.7</i><br />
+<h3>Рассмотрим методы создания класса:</h3>Создаем класс с типом <b>type</b>:<br />
+<div class="codebox"><div class="highlight"><pre><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div><br />
+Аналогично предыдущему:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">B</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="s">&#39;B&#39;</span><span class="p">,(</span><span class="nb">object</span><span class="p">,),{})</span>
+</pre></div>
+</div><br />
+Аналогично предыдущему, но явно указываем тип <b>type</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">C</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nb">object</span><span class="p">,),</span> <span class="p">{}</span> <span class="p">)</span>
+</pre></div>
+</div><br />
+Создадим свой тип <b>Meta</b>, и сделаем с помощью его класс<br />
+<div class="codebox"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Meta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="n">D</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span> <span class="n">Meta</span> <span class="p">,</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nb">object</span><span class="p">,),</span> <span class="p">{}</span> <span class="p">)</span>
+</pre></div>
+</div><br />
+Посмотрим типы наших классов:<br />
+<div class="codebox"><div class="highlight"><pre><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="n">B</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="s">&#39;B&#39;</span><span class="p">,(</span><span class="nb">object</span><span class="p">,),{})</span>
+<span class="n">C</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nb">object</span><span class="p">,),</span> <span class="p">{}</span> <span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Meta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="n">D</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span> <span class="n">Meta</span> <span class="p">,</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nb">object</span><span class="p">,),</span> <span class="p">{}</span> <span class="p">)</span>
+
+<span class="k">print</span> <span class="n">A</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">B</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">C</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">D</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+</pre></div>
+</div><b>Результат</b><div class="codebox"><div class="highlight"><pre><span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">__main__</span><span class="o">.</span><span class="n">A</span><span class="s">&#39;&gt; &lt;type &#39;</span><span class="nb">type</span><span class="s">&#39;&gt;</span>
+<span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">__main__</span><span class="o">.</span><span class="n">B</span><span class="s">&#39;&gt; &lt;type &#39;</span><span class="nb">type</span><span class="s">&#39;&gt;</span>
+<span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">__main__</span><span class="o">.</span><span class="n">C</span><span class="s">&#39;&gt; &lt;type &#39;</span><span class="nb">type</span><span class="s">&#39;&gt;</span>
+<span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">__main__</span><span class="o">.</span><span class="n">D</span><span class="s">&#39;&gt; &lt;class &#39;</span><span class="n">__main__</span><span class="o">.</span><span class="n">Meta</span><span class="s">&#39;&gt;</span>
+</pre></div>
+</div>Классы A, B, C имеют тип <b>type</b>, Класс D имеет тип <b>Meta</b>.<br />
+<b>Meta</b> является метакласом, позволяет контролировать создание класса и его экземпляры.<br />
+<h3>Создание экземпляра класса</h3><div class="codebox"><div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
+</pre></div>
+</div><br />
+Аналогично предыдущему:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">__call__</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<h3>Переопределение методов метакласса</h3>Как мы видим, у типа <b>type</b> есть 3 интересных метода:<br />
+<b>type.__new__</b> (создание класса)<br />
+<b>type.__init__</b> (инициализация класса)<br />
+<b>type.__call__</b> (создание экземпляра),<br />
+в нашем метаклассе <b>Meta</b> их можно переопределить, при этом в создаваемом классе нужно будет указать <b><u>metaclass</u></b><br />
+<div class="codebox"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Meta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">dic</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&#39;new:  </span><span class="si">%r</span><span class="s"> = </span><span class="si">%r</span><span class="s"> = </span><span class="si">%r</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">base</span><span class="p">,</span><span class="n">dic</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&#39;init:&#39;</span><span class="p">,</span> <span class="n">cls</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&#39;call:&#39;</span><span class="p">,</span> <span class="n">cls</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s">&#39;Make class&#39;</span>
+<span class="k">class</span> <span class="nc">Base</span><span class="p">():</span>
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">Meta</span>
+
+<span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">print</span> <span class="s">&#39;Make instance&#39;</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">Base</span><span class="p">()</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">Foo</span><span class="p">()</span>
+</pre></div>
+</div><b>Результат</b><div class="codebox"><div class="highlight"><pre><span class="n">Make</span> <span class="k">class</span>
+<span class="nc">new</span><span class="p">:</span>  <span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">__main__</span><span class="o">.</span><span class="n">Meta</span><span class="s">&#39;&gt; = &#39;</span><span class="n">Base</span><span class="s">&#39; = ()</span>
+<span class="n">init</span><span class="p">:</span> <span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">__main__</span><span class="o">.</span><span class="n">Base</span><span class="s">&#39;&gt;</span>
+<span class="n">new</span><span class="p">:</span>  <span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">__main__</span><span class="o">.</span><span class="n">Meta</span><span class="s">&#39;&gt; = &#39;</span><span class="n">Foo</span><span class="s">&#39; = (&lt;class &#39;</span><span class="n">__main__</span><span class="o">.</span><span class="n">Base</span><span class="s">&#39;&gt;,)</span>
+<span class="n">init</span><span class="p">:</span> <span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">__main__</span><span class="o">.</span><span class="n">Foo</span><span class="s">&#39;&gt;</span>
+<span class="n">Make</span> <span class="n">instance</span>
+<span class="n">call</span><span class="p">:</span> <span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">__main__</span><span class="o">.</span><span class="n">Base</span><span class="s">&#39;&gt;</span>
+<span class="n">call</span><span class="p">:</span> <span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">__main__</span><span class="o">.</span><span class="n">Foo</span><span class="s">&#39;&gt;</span>
+</pre></div>
+</div>Метакласс передается по наследству, поэтому его в класс Foo не нужно указывать т.к. он отнаследован от Base.<br />
+<h3>Примеры</h3>Расширение класса при создании<br />
+<div class="codebox"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Car</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&#39;Car&#39;</span>
+<span class="k">class</span> <span class="nc">Bus</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&#39;Bus&#39;</span>
+
+<span class="k">class</span> <span class="nc">Meta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">dic</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">base</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">base</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="p">(</span> <span class="n">base</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">base</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="p">)</span>
+        <span class="n">dic</span><span class="p">[</span><span class="s">&#39;color&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;red&#39;</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">base</span><span class="p">,</span><span class="n">dic</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Base</span><span class="p">():</span>
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">Meta</span>
+
+<span class="k">class</span> <span class="nc">Machine</span><span class="p">(</span><span class="n">Base</span><span class="p">,</span><span class="s">&#39;Bus&#39;</span><span class="p">):</span>
+    <span class="n">speed</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">Machine</span><span class="p">()</span>
+<span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">m</span><span class="o">.</span><span class="n">speed</span>
+<span class="k">print</span> <span class="n">m</span><span class="o">.</span><span class="n">color</span>
+</pre></div>
+</div><b>Результат</b><div class="codebox"><div class="highlight"><pre><span class="n">Bus</span>
+<span class="mi">100</span>
+<span class="n">red</span>
+</pre></div>
+</div><br />
+<br />
+Расширение класса при создании экземпляра<br />
+<div class="codebox"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Meta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>               <span class="c"># Определяем тип параметра</span>
+        <span class="n">t2</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="s">&#39;t2&#39;</span><span class="p">,(</span><span class="n">cls</span><span class="p">,</span><span class="n">t</span><span class="p">),</span> <span class="p">{})</span> <span class="c"># Создаем класс на основе обрабатываемого класса и типа входящего параметра</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>      <span class="c"># Создаем экземпляр типа входного параметра ( + инициализация типов int, str...)</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>          <span class="c"># Инициализация</span>
+        <span class="k">return</span> <span class="n">i</span>
+
+<span class="k">class</span> <span class="nc">Base</span><span class="p">():</span>
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">Meta</span>
+
+<span class="k">class</span> <span class="nc">Combine</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&#39;Combine</span><span class="se">\n</span><span class="s">&#39;</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">Combine</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">a</span>
+<span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+
+<span class="n">b</span> <span class="o">=</span> <span class="n">Combine</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="k">print</span> <span class="n">b</span>
+<span class="n">b</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">Combine</span><span class="p">({</span> <span class="s">&#39;id&#39;</span><span class="p">:</span><span class="s">&#39;hello&#39;</span> <span class="p">})</span>
+<span class="k">print</span> <span class="n">c</span>
+<span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+</pre></div>
+</div><b>Результат</b><div class="codebox"><div class="highlight"><pre><span class="mi">10</span>
+<span class="n">Combine</span>
+
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">Combine</span>
+
+<span class="p">{</span><span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;hello&#39;</span><span class="p">}</span>
+<span class="n">Combine</span>
+</pre></div>
+</div><br />

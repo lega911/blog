@@ -1,0 +1,27 @@
+::id 4bfb3c6a1d41c846bc0000ad
+::date 2010-04-02
+::title Добавить пользователя в linux
+::tags linux, user, useradd, usermod
+::body
+**Добавляем пользователя**[[useradd -m myuser]]
+**Задаем пароль**[[passwd myuser]]
+**Добавляем пользователя в группу админов**[[usermod -a -G admin myuser]]Список всех групп и привязанных к ним пользователям можно посмотреть в файле **/etc/group**
+
+
+**Задать оболочку bash для учётной записи**[[usermod -s /bin/bash myuser]]
+
+::html
+<b>Добавляем пользователя</b><div class="codebox"><div class="highlight"><pre><span class="n">useradd</span> <span class="o">-</span><span class="n">m</span> <span class="n">myuser</span>
+</pre></div>
+</div><br />
+<b>Задаем пароль</b><div class="codebox"><div class="highlight"><pre><span class="n">passwd</span> <span class="n">myuser</span>
+</pre></div>
+</div><br />
+<b>Добавляем пользователя в группу админов</b><div class="codebox"><div class="highlight"><pre><span class="n">usermod</span> <span class="o">-</span><span class="n">a</span> <span class="o">-</span><span class="n">G</span> <span class="n">admin</span> <span class="n">myuser</span>
+</pre></div>
+</div>Список всех групп и привязанных к ним пользователям можно посмотреть в файле <b>/etc/group</b><br />
+<br />
+<br />
+<b>Задать оболочку bash для учётной записи</b><div class="codebox"><div class="highlight"><pre><span class="n">usermod</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">bash</span> <span class="n">myuser</span>
+</pre></div>
+</div><br />

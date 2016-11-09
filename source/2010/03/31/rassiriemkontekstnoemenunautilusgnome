@@ -1,0 +1,45 @@
+::id 4bfb3c6a1d41c846bc0000a6
+::date 2010-03-31
+::title Расширяем контекстное меню Nautilus, Gnome
+::tags nautilius, gnome
+::body
+!Создание шаблона файла в контекстное меню Nautilus
+Для этого нужно файлы шаблонов или пустые файлы добавить в папку **Шаблоны** которая находится в домашней папке
+
+
+
+!Добавить команду в контекстное меню
+Для этого поместите запускаемый файл (скрипт) в папку **.gnome2/nautilus-scripts** своей домашней папки
+[http://gnome-look.org/index.php?xcontentmode=188 Готовые скрипты]
+
+
+Создание скрипта для вызова консоли в текущей папке
+[[cd ~/.gnome2/nautilus-scripts
+echo '#!/bin/sh' > console
+echo 'gnome-terminal --working-directory="$PWD"' >> console
+chmod +x console]]
+
+
+!Добавить пункт в меню "Переход" и в диалоговое окно открытия/сохранения
+Открываем файл **.gtk-bookmarks** из домашней папки и дописываем строку в http формате (путь название), пример:[[file:///home/user/My%20Project This my project]]
+
+
+::html
+<h3>Создание шаблона файла в контекстное меню Nautilus</h3><br />
+Для этого нужно файлы шаблонов или пустые файлы добавить в папку <b>Шаблоны</b> которая находится в домашней папке<br />
+<br />
+<br />
+<h3>Добавить команду в контекстное меню</h3><br />
+Для этого поместите запускаемый файл (скрипт) в папку <b>.gnome2/nautilus-scripts</b> своей домашней папки<br />
+<a target=_blank href="http://gnome-look.org/index.php?xcontentmode=188">Готовые скрипты</a><br />
+<br />
+<br />
+Создание скрипта для вызова консоли в текущей папке<br />
+<div class="codebox"><pre><code>cd ~/.gnome2/nautilus-scripts
+echo '#!/bin/sh' &gt; console
+echo 'gnome-terminal --working-directory="$PWD"' &gt;&gt; console
+chmod +x console</code></pre></div><br />
+<br />
+<h3>Добавить пункт в меню "Переход" и в диалоговое окно открытия/сохранения</h3><br />
+Открываем файл <b>.gtk-bookmarks</b> из домашней папки и дописываем строку в http формате (путь название), пример:<div class="codebox"><pre><code>file:///home/user/My%20Project This my project</code></pre></div><br />
+<br />

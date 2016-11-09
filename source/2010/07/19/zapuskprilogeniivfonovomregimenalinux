@@ -1,0 +1,14 @@
+::id 4c43cd971d41c84109000000
+::date 2010-07-19
+::title Запуск приложения в фоновом режиме на linux
+::tags службы, linux
+::body
+Пример
+[[
+nohup ping example.com &
+]]
+::html
+Пример<br />
+<div class="codebox"><pre><code>
+nohup ping example.com &amp;
+</code></pre></div>

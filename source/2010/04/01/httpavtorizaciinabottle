@@ -1,0 +1,83 @@
+::id 4bfb3c6a1d41c846bc0000ab
+::date 2010-04-01
+::title HTTP Авторизация на bottle
+::tags web, bottle
+::body
+Пример простой HTTP авторизации
+
+[[# coding: utf8
+
+from bottle import run, route, abort, response, request
+
+USER = 'user'
+PASW = 'pasw'
+
+def login():
+    if ('auto' in request.COOKIES) and (request.COOKIES['auto'] == '1'): return
+    try:
+        h = request.header['Authorization']
+        if h[:6] == 'Basic ':
+            login,pasw = h[6:].decode('base64').split(':')
+            if (login == USER) and (pasw == PASW):
+                response.set_cookie('auto', '1')
+                return
+    except:
+        pass
+    response.header['WWW-Authenticate'] = 'Basic realm="Control Panel"'
+    abort(401)
+
+@route('/logout')    
+def logout():
+    response.set_cookie('auto', '')
+    return 'logout ok'
+
+@route('/')
+def main():
+    login()
+    return 'Hello world<br/><a href="/logout">logout</a>'
+
+run(port=8080)]]
+
+
+Пример авторизации с уникальными куками (более-менее надежная авторизация) [58 Простая авторизация в web]
+
+::html
+Пример простой HTTP авторизации<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">from</span> <span class="nn">bottle</span> <span class="kn">import</span> <span class="n">run</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">abort</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">request</span>
+
+<span class="n">USER</span> <span class="o">=</span> <span class="s">&#39;user&#39;</span>
+<span class="n">PASW</span> <span class="o">=</span> <span class="s">&#39;pasw&#39;</span>
+
+<span class="k">def</span> <span class="nf">login</span><span class="p">():</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s">&#39;auto&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">COOKIES</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">COOKIES</span><span class="p">[</span><span class="s">&#39;auto&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;1&#39;</span><span class="p">):</span> <span class="k">return</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s">&#39;Authorization&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">h</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;Basic &#39;</span><span class="p">:</span>
+            <span class="n">login</span><span class="p">,</span><span class="n">pasw</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&#39;base64&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;:&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">login</span> <span class="o">==</span> <span class="n">USER</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">pasw</span> <span class="o">==</span> <span class="n">PASW</span><span class="p">):</span>
+                <span class="n">response</span><span class="o">.</span><span class="n">set_cookie</span><span class="p">(</span><span class="s">&#39;auto&#39;</span><span class="p">,</span> <span class="s">&#39;1&#39;</span><span class="p">)</span>
+                <span class="k">return</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s">&#39;WWW-Authenticate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;Basic realm=&quot;Control Panel&quot;&#39;</span>
+    <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">)</span>
+
+<span class="nd">@route</span><span class="p">(</span><span class="s">&#39;/logout&#39;</span><span class="p">)</span>    
+<span class="k">def</span> <span class="nf">logout</span><span class="p">():</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">set_cookie</span><span class="p">(</span><span class="s">&#39;auto&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&#39;logout ok&#39;</span>
+
+<span class="nd">@route</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">login</span><span class="p">()</span>
+    <span class="k">return</span> <span class="s">&#39;Hello world&lt;br/&gt;&lt;a href=&quot;/logout&quot;&gt;logout&lt;/a&gt;&#39;</span>
+
+<span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<br />
+<br />
+Пример авторизации с уникальными куками (более-менее надежная авторизация) <a href="58">Простая авторизация в web</a><br />

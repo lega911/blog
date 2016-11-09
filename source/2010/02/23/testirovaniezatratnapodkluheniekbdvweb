@@ -1,0 +1,207 @@
+::id 4bfb3c691d41c846bc000070
+::date 2010-02-23
+::title Тестирование затрат на подключение к БД в web
+::tags web, sqlite, mysql, timeit
+::body
+Существую некоторые web-платформы которые не позволяют держать открытое соединение к БД, например когда для каждого соединения создается поток.  В этом случае нужно производить подключение к БД на каждое обращение клиента либо делать "вешний" механизм поддержки открытого соединения. В данной заметке производится измерение затрат на подключение к БД.
+
+!sqlite3
+**Исходник:**
+[[def connect():
+    import sqlite3
+    con = sqlite3.connect('sample.db')
+
+from timeit import Timer
+t = Timer("connect()", "from __main__ import connect")
+print t.timeit(number=100000)]]на моем хосте 100к подключений в среднем занимают 5,3 сек (0,053мс на подключение), если сравнить с временем генерации главной страницы (4мс на моем сайте), то подключение занимает **1,3%** от времени генерации станицы.
+Итого можно считать то время подключения к БД sqlite не дает существенную нагрузку.
+
+!MySQL 5.1.37
+[[from timeit import Timer
+t = Timer('_mysql.connect("localhost","user","1","test")', "import _mysql")
+print t.timeit(number=100000) ]]
+Затраченное время в среднем составило 10.30 сек, это 0.1 мс на подключение
+
+!Перенесем на "реальный" стенд
+Apache/2.2.12 + [/tag/wsgi WSGI] + MySQL 5.1.37
+БД: 200к простых записей
+**Код с поддержкой открытого соединения**
+[[# coding: utf-8
+
+import _mysql
+import time
+import random
+
+db=_mysql.connect("localhost","user","x","test")
+
+def application(environ, start_response):
+    status = '200 OK' 
+    output = 'Hello world!!!<br/>'
+    
+    t1 = time.time()
+    
+    global db
+    db.query('SELECT * FROM data WHERE val<%d' % random.randrange(1000,90000))
+    r = db.store_result()
+    
+    output += 'time: %.2f<br/>' % ( (time.time() - t1) * 1000,)
+    for row in r.fetch_row():
+        pass
+        
+    response_headers = [('Content-type', 'text/html; charset=utf-8'),
+                        ('Content-Length', str(len(output)))]
+    start_response(status, response_headers)
+    return [output] ]]
+**Код с открытием соединения при каждом подключении**
+[[# coding: utf-8
+
+def application(environ, start_response):
+    import _mysql
+    import time
+    import random
+
+    status = '200 OK' 
+    output = 'Hello world!!!<br/>'
+    
+    db=_mysql.connect("localhost","user","x","test")
+
+    t1 = time.time()
+    db.query('SELECT * FROM data WHERE val<%d' % random.randrange(1000,90000))
+    r = db.store_result()
+    
+    output += 'time: %.2f<br/>' % ( (time.time() - t1) * 1000,)
+    for row in r.fetch_row():
+        pass
+        
+    db.close()
+    
+    response_headers = [('Content-type', 'text/html; charset=utf-8'),
+                        ('Content-Length', str(len(output)))]
+    start_response(status, response_headers)
+    return [output] ]]
+!Результаты
+С поддержкой открытого соединения
+[[ Complete requests:      10000
+Failed requests:        2575
+   (Connect: 0, Receive: 0, Length: 2575, Exceptions: 0)
+Write errors:           0
+Total transferred:      2247425 bytes
+HTML transferred:       347425 bytes
+Requests per second:    72.84 [#/sec] (mean)
+Time per request:       13.729 [ms] (mean) ]]
+С открытием соединения при каждом подключении
+[[ Complete requests:      10000
+Failed requests:        1882
+   (Connect: 0, Receive: 0, Length: 1882, Exceptions: 0)
+Write errors:           0
+Total transferred:      2248118 bytes
+HTML transferred:       348118 bytes
+Requests per second:    64.71 [#/sec] (mean)
+Time per request:       15.452 [ms] (mean) ]]
+**Итого:** С поддержкой открытого соединения больше выигрыш составил 12,5% (при повышенном //Failed requests//)
+
+**Резюме:** Где есть возможность держать открытое соединение - там нужно это использовать, где нет такой возможности то лучше использовать открытие соединения на каждом подключении вместо "костыля" для поддержки открытого соединения из вне т.к. затраты на подключение не слишком большие и будут уменьшаться в процентном соотношении по мере роста БД, или лучше стоит подумать о смене "платформы"
+
+::html
+Существую некоторые web-платформы которые не позволяют держать открытое соединение к БД, например когда для каждого соединения создается поток.  В этом случае нужно производить подключение к БД на каждое обращение клиента либо делать "вешний" механизм поддержки открытого соединения. В данной заметке производится измерение затрат на подключение к БД.<br />
+<h3>sqlite3</h3><b>Исходник:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="k">def</span> <span class="nf">connect</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">sqlite3</span>
+    <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&#39;sample.db&#39;</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">Timer</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">(</span><span class="s">&quot;connect()&quot;</span><span class="p">,</span> <span class="s">&quot;from __main__ import connect&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="mi">100000</span><span class="p">)</span>
+</pre></div>
+</div>на моем хосте 100к подключений в среднем занимают 5,3 сек (0,053мс на подключение), если сравнить с временем генерации главной страницы (4мс на моем сайте), то подключение занимает <b>1,3%</b> от времени генерации станицы.<br />
+Итого можно считать то время подключения к БД sqlite не дает существенную нагрузку.<br />
+<h3>MySQL 5.1.37</h3><div class="codebox"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">Timer</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">(</span><span class="s">&#39;_mysql.connect(&quot;localhost&quot;,&quot;user&quot;,&quot;1&quot;,&quot;test&quot;)&#39;</span><span class="p">,</span> <span class="s">&quot;import _mysql&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="mi">100000</span><span class="p">)</span> 
+</pre></div>
+</div><br />
+Затраченное время в среднем составило 10.30 сек, это 0.1 мс на подключение<br />
+<h3>Перенесем на "реальный" стенд</h3>Apache/2.2.12 + <a href="/tag/wsgi">WSGI</a> + MySQL 5.1.37<br />
+БД: 200к простых записей<br />
+<b>Код с поддержкой открытого соединения</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf-8</span>
+
+<span class="kn">import</span> <span class="nn">_mysql</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="n">db</span><span class="o">=</span><span class="n">_mysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;localhost&quot;</span><span class="p">,</span><span class="s">&quot;user&quot;</span><span class="p">,</span><span class="s">&quot;x&quot;</span><span class="p">,</span><span class="s">&quot;test&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">environ</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="s">&#39;200 OK&#39;</span> 
+    <span class="n">output</span> <span class="o">=</span> <span class="s">&#39;Hello world!!!&lt;br/&gt;&#39;</span>
+    
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    
+    <span class="k">global</span> <span class="n">db</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&#39;SELECT * FROM data WHERE val&lt;</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">90000</span><span class="p">))</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">store_result</span><span class="p">()</span>
+    
+    <span class="n">output</span> <span class="o">+=</span> <span class="s">&#39;time: </span><span class="si">%.2f</span><span class="s">&lt;br/&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">fetch_row</span><span class="p">():</span>
+        <span class="k">pass</span>
+        
+    <span class="n">response_headers</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;Content-type&#39;</span><span class="p">,</span> <span class="s">&#39;text/html; charset=utf-8&#39;</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s">&#39;Content-Length&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">)))]</span>
+    <span class="n">start_response</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">response_headers</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">output</span><span class="p">]</span> 
+</pre></div>
+</div><br />
+<b>Код с открытием соединения при каждом подключении</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf-8</span>
+
+<span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">environ</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">_mysql</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+    <span class="kn">import</span> <span class="nn">random</span>
+
+    <span class="n">status</span> <span class="o">=</span> <span class="s">&#39;200 OK&#39;</span> 
+    <span class="n">output</span> <span class="o">=</span> <span class="s">&#39;Hello world!!!&lt;br/&gt;&#39;</span>
+    
+    <span class="n">db</span><span class="o">=</span><span class="n">_mysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;localhost&quot;</span><span class="p">,</span><span class="s">&quot;user&quot;</span><span class="p">,</span><span class="s">&quot;x&quot;</span><span class="p">,</span><span class="s">&quot;test&quot;</span><span class="p">)</span>
+
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&#39;SELECT * FROM data WHERE val&lt;</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">90000</span><span class="p">))</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">store_result</span><span class="p">()</span>
+    
+    <span class="n">output</span> <span class="o">+=</span> <span class="s">&#39;time: </span><span class="si">%.2f</span><span class="s">&lt;br/&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">fetch_row</span><span class="p">():</span>
+        <span class="k">pass</span>
+        
+    <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+    <span class="n">response_headers</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;Content-type&#39;</span><span class="p">,</span> <span class="s">&#39;text/html; charset=utf-8&#39;</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s">&#39;Content-Length&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">)))]</span>
+    <span class="n">start_response</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">response_headers</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">output</span><span class="p">]</span> 
+</pre></div>
+</div><h3>Результаты</h3>С поддержкой открытого соединения<br />
+<div class="codebox"><div class="highlight"><pre> <span class="n">Complete</span> <span class="n">requests</span><span class="p">:</span>      <span class="mi">10000</span>
+<span class="n">Failed</span> <span class="n">requests</span><span class="p">:</span>        <span class="mi">2575</span>
+   <span class="p">(</span><span class="n">Connect</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Receive</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Length</span><span class="p">:</span> <span class="mi">2575</span><span class="p">,</span> <span class="n">Exceptions</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">Write</span> <span class="n">errors</span><span class="p">:</span>           <span class="mi">0</span>
+<span class="n">Total</span> <span class="n">transferred</span><span class="p">:</span>      <span class="mi">2247425</span> <span class="nb">bytes</span>
+<span class="n">HTML</span> <span class="n">transferred</span><span class="p">:</span>       <span class="mi">347425</span> <span class="nb">bytes</span>
+<span class="n">Requests</span> <span class="n">per</span> <span class="n">second</span><span class="p">:</span>    <span class="mf">72.84</span> <span class="p">[</span><span class="c">#/sec] (mean)</span>
+<span class="n">Time</span> <span class="n">per</span> <span class="n">request</span><span class="p">:</span>       <span class="mf">13.729</span> <span class="p">[</span><span class="n">ms</span><span class="p">]</span> <span class="p">(</span><span class="n">mean</span><span class="p">)</span> 
+</pre></div>
+</div><br />
+С открытием соединения при каждом подключении<br />
+<div class="codebox"><div class="highlight"><pre> <span class="n">Complete</span> <span class="n">requests</span><span class="p">:</span>      <span class="mi">10000</span>
+<span class="n">Failed</span> <span class="n">requests</span><span class="p">:</span>        <span class="mi">1882</span>
+   <span class="p">(</span><span class="n">Connect</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Receive</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Length</span><span class="p">:</span> <span class="mi">1882</span><span class="p">,</span> <span class="n">Exceptions</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">Write</span> <span class="n">errors</span><span class="p">:</span>           <span class="mi">0</span>
+<span class="n">Total</span> <span class="n">transferred</span><span class="p">:</span>      <span class="mi">2248118</span> <span class="nb">bytes</span>
+<span class="n">HTML</span> <span class="n">transferred</span><span class="p">:</span>       <span class="mi">348118</span> <span class="nb">bytes</span>
+<span class="n">Requests</span> <span class="n">per</span> <span class="n">second</span><span class="p">:</span>    <span class="mf">64.71</span> <span class="p">[</span><span class="c">#/sec] (mean)</span>
+<span class="n">Time</span> <span class="n">per</span> <span class="n">request</span><span class="p">:</span>       <span class="mf">15.452</span> <span class="p">[</span><span class="n">ms</span><span class="p">]</span> <span class="p">(</span><span class="n">mean</span><span class="p">)</span> 
+</pre></div>
+</div><br />
+<b>Итого:</b> С поддержкой открытого соединения больше выигрыш составил 12,5% (при повышенном <i>Failed requests</i>)<br />
+<br />
+<b>Резюме:</b> Где есть возможность держать открытое соединение - там нужно это использовать, где нет такой возможности то лучше использовать открытие соединения на каждом подключении вместо "костыля" для поддержки открытого соединения из вне т.к. затраты на подключение не слишком большие и будут уменьшаться в процентном соотношении по мере роста БД, или лучше стоит подумать о смене "платформы"<br />

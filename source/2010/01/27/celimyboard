@@ -1,0 +1,19 @@
+::id 4bfb3c691d41c846bc00000a
+::date 2010-01-27
+::title Цели myBoard
+::tags myboard, цель
+::body
+**Цель разработки**
+
+ * Получить простой сайт для записей, инструкций и т.п.
+ * Применить навыки нового движка [http://bottle.paws.de/ Bootle]
+ * Что-б не простаивал мой хост с динамическим ip и днс
+
+
+::html
+<b>Цель разработки</b><br />
+
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;Получить простой сайт для записей, инструкций и т.п.
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;Применить навыки нового движка <a target=_blank href="http://bottle.paws.de/">Bootle</a>
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;Что-б не простаивал мой хост с динамическим ip и днс<br />
+<br />

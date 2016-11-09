@@ -1,0 +1,47 @@
+::id 4e0d40421d41c81105000000
+::date 2011-07-01
+::title Полезные библиотеки js
+::tags javascript, jquery
+::body
+**Шаблонизаторы**
+[http://api.jquery.com/category/plugins/templates/ jquery-tmpl]
+[http://icanhazjs.com/ ICanHaz.js]
+[https://github.com/janl/mustache.js mustache.js]
+
+**Разное**
+[http://zeptojs.com/ Zepto.js]
+Минималистический JS-framework, jQuery совместимый синтаксис.
+
+[http://documentcloud.github.com/underscore/ Underscore.js]
+Библиотека функций для работы с массивами, коллекциями, ф-ми и т.п.
+
+[http://www.openjs.com/scripts/events/keyboard_shortcuts/ Keyboard Shortcuts]
+Добавление горячих клавиш.
+
+
+**jQuery плагины**
+[http://harvesthq.github.com/chosen/ Выпадающий список, список с мульти-выбором]
+
+//Список будет пополняться//
+
+::html
+<b>Шаблонизаторы</b><br />
+<a target=_blank href="http://api.jquery.com/category/plugins/templates/">jquery-tmpl</a><br />
+<a target=_blank href="http://icanhazjs.com/">ICanHaz.js</a><br />
+<a target=_blank href="https://github.com/janl/mustache.js">mustache.js</a><br />
+<br />
+<b>Разное</b><br />
+<a target=_blank href="http://zeptojs.com/">Zepto.js</a><br />
+Минималистический JS-framework, jQuery совместимый синтаксис.<br />
+<br />
+<a target=_blank href="http://documentcloud.github.com/underscore/">Underscore.js</a><br />
+Библиотека функций для работы с массивами, коллекциями, ф-ми и т.п.<br />
+<br />
+<a target=_blank href="http://www.openjs.com/scripts/events/keyboard_shortcuts/">Keyboard Shortcuts</a><br />
+Добавление горячих клавиш.<br />
+<br />
+<br />
+<b>jQuery плагины</b><br />
+<a target=_blank href="http://harvesthq.github.com/chosen/">Выпадающий список, список с мульти-выбором</a><br />
+<br />
+<i>Список будет пополняться</i><br />

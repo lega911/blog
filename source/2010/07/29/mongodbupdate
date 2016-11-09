@@ -1,0 +1,38 @@
+::id 4c51556f1d41c818c5000000
+::date 2010-07-29
+::title MongoDB, update
+::tags mongodb, update
+::body
+Пример обновления записей, общий вид функции
+[[db.collection.update(query,data,upsert,multi)]]#|
+||**query**|Запрос
+||**data**|Данные
+||**upsert**|Создать документ, если ни один не найден по текущему запросу (true/false)
+||**multi**|Обновить все документы удовлетворяющие запросу (true/false)
+|#
+
+**Примеры**
+[[
+db.users.update({ 'login':'user' },
+    { '$set':{ 'when':'now' }, '$inc':{ 'count':1 }  })]]В результате север у одного элемента с login='user', установит значение when='now', а реквизит count увеличит на 1, в случае если этих реквизитов не существует - он их создаст и count будет равным 1.
+Если элементов с login='user' нет, то никаких изменений не будет, если нужно что-б элемент создался если он отсутствует нужно последим параметром указать true
+[[
+db.users.update({ 'login':'user' },
+    { '$set':{ 'when':'now' }, '$inc':{ 'count':1 }  }, true)]]
+
+::html
+Пример обновления записей, общий вид функции<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">upsert</span><span class="p">,</span><span class="n">multi</span><span class="p">)</span>
+</pre></div>
+</div><table class="pymark_table"><tr><td></td></tr><tr><td><b>query</b></td><td>Запрос</td></tr><tr><td><b>data</b></td><td>Данные</td></tr><tr><td><b>upsert</b></td><td>Создать документ, если ни один не найден по текущему запросу (true/false)</td></tr><tr><td><b>multi</b></td><td>Обновить все документы удовлетворяющие запросу (true/false)</td></tr></table><br />
+<br />
+<b>Примеры</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">update</span><span class="p">({</span> <span class="s">&#39;login&#39;</span><span class="p">:</span><span class="s">&#39;user&#39;</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="s">&#39;$set&#39;</span><span class="p">:{</span> <span class="s">&#39;when&#39;</span><span class="p">:</span><span class="s">&#39;now&#39;</span> <span class="p">},</span> <span class="s">&#39;$inc&#39;</span><span class="p">:{</span> <span class="s">&#39;count&#39;</span><span class="p">:</span><span class="mi">1</span> <span class="p">}</span>  <span class="p">})</span>
+</pre></div>
+</div>В результате север у одного элемента с login='user', установит значение when='now', а реквизит count увеличит на 1, в случае если этих реквизитов не существует - он их создаст и count будет равным 1.<br />
+Если элементов с login='user' нет, то никаких изменений не будет, если нужно что-б элемент создался если он отсутствует нужно последим параметром указать true<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">update</span><span class="p">({</span> <span class="s">&#39;login&#39;</span><span class="p">:</span><span class="s">&#39;user&#39;</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="s">&#39;$set&#39;</span><span class="p">:{</span> <span class="s">&#39;when&#39;</span><span class="p">:</span><span class="s">&#39;now&#39;</span> <span class="p">},</span> <span class="s">&#39;$inc&#39;</span><span class="p">:{</span> <span class="s">&#39;count&#39;</span><span class="p">:</span><span class="mi">1</span> <span class="p">}</span>  <span class="p">},</span> <span class="n">true</span><span class="p">)</span>
+</pre></div>
+</div><br />

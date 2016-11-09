@@ -1,0 +1,29 @@
+::id 4bfb3c691d41c846bc00006e
+::date 2010-02-23
+::title python в gedit
+::tags python, gedit
+::body
+В редакторе gedit есть модуль "Консоль python", включить её можно через "Правка - Параметры - Модули - Консоль python", далее "Вид - Нижняя панель", и снизу редактора должна появиться консоль python.
+
+Примеры команд:
+[[# текущий активный документ
+d = window.get_active_document()
+
+# установить текст, список текущей папки
+d.set_text( '\n'.join(os.listdir('./')) )
+
+# получить текст
+print d.get_text(d.get_start_iter(),d.get_end_iter())]]
+
+::html
+В редакторе gedit есть модуль "Консоль python", включить её можно через "Правка - Параметры - Модули - Консоль python", далее "Вид - Нижняя панель", и снизу редактора должна появиться консоль python.<br />
+<br />
+Примеры команд:<br />
+<div class="codebox"><pre><code># текущий активный документ
+d = window.get_active_document()
+
+# установить текст, список текущей папки
+d.set_text( '\n'.join(os.listdir('./')) )
+
+# получить текст
+print d.get_text(d.get_start_iter(),d.get_end_iter())</code></pre></div><br />

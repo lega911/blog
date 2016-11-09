@@ -1,0 +1,74 @@
+::id 4bff54ee1d41c86fa3000000
+::date 2010-05-28
+::title MongoDB подсчет суммы
+::tags mongodb
+::body
+В данном примере показано 2 метода получения суммы по атрибуту: через группировку и выполнение ф-ии подсчета на стороне сервера с помощью java-script
+
+[[# coding: utf8
+
+from pymongo import Connection
+from pymongo.code import Code
+
+con = Connection()
+con.drop_database('test')
+db = con.test
+
+db.posts.insert({ 'shows':1 })
+db.posts.insert({ 'shows':3 })
+db.posts.insert({ 'shows':4 })
+db.posts.insert({ 'shows':7 })
+
+print db.posts.group(
+                key = {},
+                condition = {},
+                initial = {'sum':0},
+                reduce = 'function(doc, out){ out.sum+=doc.shows }',
+                );
+
+print db.eval(''' function() {
+        var sum = 0;
+        db.posts.find().forEach(
+            function(obj) {
+                sum += obj.shows;
+            } )
+        return sum; } ''')]]**Результат**
+[[ [ {u'sum': 15.0} ]
+15.0]]
+::html
+В данном примере показано 2 метода получения суммы по атрибуту: через группировку и выполнение ф-ии подсчета на стороне сервера с помощью java-script<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">Connection</span>
+<span class="kn">from</span> <span class="nn">pymongo.code</span> <span class="kn">import</span> <span class="n">Code</span>
+
+<span class="n">con</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">()</span>
+<span class="n">con</span><span class="o">.</span><span class="n">drop_database</span><span class="p">(</span><span class="s">&#39;test&#39;</span><span class="p">)</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">test</span>
+
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;shows&#39;</span><span class="p">:</span><span class="mi">1</span> <span class="p">})</span>
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;shows&#39;</span><span class="p">:</span><span class="mi">3</span> <span class="p">})</span>
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;shows&#39;</span><span class="p">:</span><span class="mi">4</span> <span class="p">})</span>
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;shows&#39;</span><span class="p">:</span><span class="mi">7</span> <span class="p">})</span>
+
+<span class="k">print</span> <span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">group</span><span class="p">(</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="p">{},</span>
+                <span class="n">condition</span> <span class="o">=</span> <span class="p">{},</span>
+                <span class="n">initial</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;sum&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">},</span>
+                <span class="nb">reduce</span> <span class="o">=</span> <span class="s">&#39;function(doc, out){ out.sum+=doc.shows }&#39;</span><span class="p">,</span>
+                <span class="p">);</span>
+
+<span class="k">print</span> <span class="n">db</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s">&#39;&#39;&#39; function() {</span>
+<span class="s">        var sum = 0;</span>
+<span class="s">        db.posts.find().forEach(</span>
+<span class="s">            function(obj) {</span>
+<span class="s">                sum += obj.shows;</span>
+<span class="s">            } )</span>
+<span class="s">        return sum; } &#39;&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+</div><b>Результат</b><br />
+<div class="codebox"><div class="highlight"><pre> <span class="p">[</span> <span class="p">{</span><span class="s">u&#39;sum&#39;</span><span class="p">:</span> <span class="mf">15.0</span><span class="p">}</span> <span class="p">]</span>
+<span class="mf">15.0</span>
+</pre></div>
+</div>

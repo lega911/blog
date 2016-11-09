@@ -1,0 +1,61 @@
+::id 507c3f1ebbddbd6a6b000000
+::date 2012-10-15
+::title async mysql для tornado web
+::tags python, tornado, mysql, async
+::body
+Один из способов - использовать эту библиотеку: [https://github.com/lega911/async-mysql async-mysql]
+Подключение и выполнение запроса будут выглядеть примерно так:
+[[db = AsyncMysql(host='127.0.0.1', db='demo_db') 
+result, error = yield db.tquery('select * from table limit %s, %s', [0,5])]]
+Библиотека основана на threads pool (пул потоков).
+
+**Полный пример**
+[[import tornado.ioloop
+from tornado import gen
+from async_mysql import AsyncMysql
+
+ioloop = tornado.ioloop.IOLoop.instance()
+
+db = AsyncMysql(host='127.0.0.1', port=3306, db='demo', pool_size=5)
+
+@gen.engine
+def go():
+    result, error = yield db.tquery('select * from demo limit %s, %s', [0,5])
+    print result, error
+    
+    ioloop.stop()
+    db.stop()
+
+ioloop.add_callback(go)
+ioloop.start()]]
+
+::html
+Один из способов - использовать эту библиотеку: <a target=_blank href="https://github.com/lega911/async-mysql">async-mysql</a><br />
+Подключение и выполнение запроса будут выглядеть примерно так:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span> <span class="o">=</span> <span class="n">AsyncMysql</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="s">&#39;demo_db&#39;</span><span class="p">)</span> 
+<span class="n">result</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">db</span><span class="o">.</span><span class="n">tquery</span><span class="p">(</span><span class="s">&#39;select * from table limit </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+</div><br />
+Библиотека основана на threads pool (пул потоков).<br />
+<br />
+<b>Полный пример</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">tornado.ioloop</span>
+<span class="kn">from</span> <span class="nn">tornado</span> <span class="kn">import</span> <span class="n">gen</span>
+<span class="kn">from</span> <span class="nn">async_mysql</span> <span class="kn">import</span> <span class="n">AsyncMysql</span>
+
+<span class="n">ioloop</span> <span class="o">=</span> <span class="n">tornado</span><span class="o">.</span><span class="n">ioloop</span><span class="o">.</span><span class="n">IOLoop</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
+
+<span class="n">db</span> <span class="o">=</span> <span class="n">AsyncMysql</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">3306</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="s">&#39;demo&#39;</span><span class="p">,</span> <span class="n">pool_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="nd">@gen.engine</span>
+<span class="k">def</span> <span class="nf">go</span><span class="p">():</span>
+    <span class="n">result</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">db</span><span class="o">.</span><span class="n">tquery</span><span class="p">(</span><span class="s">&#39;select * from demo limit </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+    <span class="k">print</span> <span class="n">result</span><span class="p">,</span> <span class="n">error</span>
+    
+    <span class="n">ioloop</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+
+<span class="n">ioloop</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="n">go</span><span class="p">)</span>
+<span class="n">ioloop</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div><br />

@@ -1,0 +1,67 @@
+::id 4d2304b81d41c81282000000
+::date 2011-01-04
+::title Настройка моста bridge для kvm
+::tags bridge, kvm, virtual
+::body
+Краткая инструкция по настройке бриджа для **kvm**
+
+Добавляем бридж в файл интерфейсов **/etc/network/interfaces**, после изменения он должен выглядеть примерно так:
+[[auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet manual
+
+auto br0
+iface br0 inet dhcp
+        bridge_ports eth0
+        bridge_stp off
+        bridge_fd 0
+        bridge_maxwait 0]]ip бриджа определяется по DHCP, для настройки статического ip [https://help.ubuntu.com/community/KVM/Networking см сюда]
+
+**Перезагружаем сеть**
+[[sudo /etc/init.d/networking restart
+]]
+Бридж готов, теперь настраиваем ВМ.
+В конфигурации ВМ нужно изменить с:
+[[    <interface type='network'>
+      <mac address='00:11:22:33:44:55'/>
+      <source network='default'/>
+    </interface>]]на:[[    <interface type='bridge'>
+      <mac address='00:11:22:33:44:55'/>
+      <source bridge='br0'/>
+    </interface>]]
+
+источник [https://help.ubuntu.com/community/KVM/Networking help.ubuntu.com/community/KVM/Networking]
+
+::html
+Краткая инструкция по настройке бриджа для <b>kvm</b><br />
+<br />
+Добавляем бридж в файл интерфейсов <b>/etc/network/interfaces</b>, после изменения он должен выглядеть примерно так:<br />
+<div class="codebox"><pre><code>auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet manual
+
+auto br0
+iface br0 inet dhcp
+        bridge_ports eth0
+        bridge_stp off
+        bridge_fd 0
+        bridge_maxwait 0</code></pre></div>ip бриджа определяется по DHCP, для настройки статического ip <a target=_blank href="https://help.ubuntu.com/community/KVM/Networking">см сюда</a><br />
+<br />
+<b>Перезагружаем сеть</b><br />
+<div class="codebox"><pre><code>sudo /etc/init.d/networking restart
+</code></pre></div><br />
+Бридж готов, теперь настраиваем ВМ.<br />
+В конфигурации ВМ нужно изменить с:<br />
+<div class="codebox"><pre><code>    &lt;interface type='network'&gt;
+      &lt;mac address='00:11:22:33:44:55'/&gt;
+      &lt;source network='default'/&gt;
+    &lt;/interface&gt;</code></pre></div>на:<div class="codebox"><pre><code>    &lt;interface type='bridge'&gt;
+      &lt;mac address='00:11:22:33:44:55'/&gt;
+      &lt;source bridge='br0'/&gt;
+    &lt;/interface&gt;</code></pre></div><br />
+<br />
+источник <a target=_blank href="https://help.ubuntu.com/community/KVM/Networking">help.ubuntu.com/community/KVM/Networking</a><br />

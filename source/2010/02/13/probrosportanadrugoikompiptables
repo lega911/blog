@@ -1,0 +1,45 @@
+::id 4bfb3c691d41c846bc00005b
+::date 2010-02-13
+::title Проброс порта на другой комп, iptables
+::tags iptables, linux
+::body
+В примере показано как можно пробросить порт rdp(3389) на хост другой подсети
+
+192.168.100.1 - внешний ip, eth1
+192.168.1.1 - внутренний ip, eth0
+[[iptables -t nat -A PREROUTING -p tcp -d 192.168.100.1 --dport 3389 -j DNAT --to-destination 192.168.1.1:3389
+iptables -A FORWARD -i eth1 -o eth0 -d 192.168.1.1 -p tcp --dport 3389 -j ACCEPT]]
+
+
+!Проброс в одной локальной сети
+Сервер А на который обращается клиент: 172.16.111.2, port 21
+Сервер В куда пересылаем трафик: 172.16.36.5, port 10021
+[[iptables -t nat -A PREROUTING -p tcp -d 172.16.111.2 --dport 21 -j DNAT --to-destination 172.16.36.5:10021
+iptables -t nat -A POSTROUTING -p tcp --dst 172.16.36.5 --dport 10021 -j SNAT --to-source 172.16.111.2
+iptables -A FORWARD -d 172.16.36.5 -p tcp --dport 10021 -j ACCEPT]]
+Описание:
+Пакет прилетает на сервер А в цепочку PREROUTING, правило (DNAT) изменяет адрес назначения с 172.16.11.2:21 на 172.16.36.5:10021.
+Таким образом пакет не попадает на сервер А, и переходит в цепочку POSTROUTING, тут мы меняем исходящий адрес (SNAT) с адреса клиента на адрес сервера А 172.16.111.2, что-бы сервер В отправил ответный пакет на сервер А.
+3 правило пропускает пакет модифицированный правилом 1.
+
+::html
+В примере показано как можно пробросить порт rdp(3389) на хост другой подсети<br />
+<br />
+192.168.100.1 - внешний ip, eth1<br />
+192.168.1.1 - внутренний ip, eth0<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">t</span> <span class="n">nat</span> <span class="o">-</span><span class="n">A</span> <span class="n">PREROUTING</span> <span class="o">-</span><span class="n">p</span> <span class="n">tcp</span> <span class="o">-</span><span class="n">d</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">100.1</span> <span class="o">--</span><span class="n">dport</span> <span class="mi">3389</span> <span class="o">-</span><span class="n">j</span> <span class="n">DNAT</span> <span class="o">--</span><span class="n">to</span><span class="o">-</span><span class="n">destination</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">1.1</span><span class="p">:</span><span class="mi">3389</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">FORWARD</span> <span class="o">-</span><span class="n">i</span> <span class="n">eth1</span> <span class="o">-</span><span class="n">o</span> <span class="n">eth0</span> <span class="o">-</span><span class="n">d</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">1.1</span> <span class="o">-</span><span class="n">p</span> <span class="n">tcp</span> <span class="o">--</span><span class="n">dport</span> <span class="mi">3389</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>
+</pre></div>
+</div><br />
+<br />
+<h3>Проброс в одной локальной сети</h3>Сервер А на который обращается клиент: 172.16.111.2, port 21<br />
+Сервер В куда пересылаем трафик: 172.16.36.5, port 10021<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">t</span> <span class="n">nat</span> <span class="o">-</span><span class="n">A</span> <span class="n">PREROUTING</span> <span class="o">-</span><span class="n">p</span> <span class="n">tcp</span> <span class="o">-</span><span class="n">d</span> <span class="mf">172.16</span><span class="o">.</span><span class="mf">111.2</span> <span class="o">--</span><span class="n">dport</span> <span class="mi">21</span> <span class="o">-</span><span class="n">j</span> <span class="n">DNAT</span> <span class="o">--</span><span class="n">to</span><span class="o">-</span><span class="n">destination</span> <span class="mf">172.16</span><span class="o">.</span><span class="mf">36.5</span><span class="p">:</span><span class="mi">10021</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">t</span> <span class="n">nat</span> <span class="o">-</span><span class="n">A</span> <span class="n">POSTROUTING</span> <span class="o">-</span><span class="n">p</span> <span class="n">tcp</span> <span class="o">--</span><span class="n">dst</span> <span class="mf">172.16</span><span class="o">.</span><span class="mf">36.5</span> <span class="o">--</span><span class="n">dport</span> <span class="mi">10021</span> <span class="o">-</span><span class="n">j</span> <span class="n">SNAT</span> <span class="o">--</span><span class="n">to</span><span class="o">-</span><span class="n">source</span> <span class="mf">172.16</span><span class="o">.</span><span class="mf">111.2</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">FORWARD</span> <span class="o">-</span><span class="n">d</span> <span class="mf">172.16</span><span class="o">.</span><span class="mf">36.5</span> <span class="o">-</span><span class="n">p</span> <span class="n">tcp</span> <span class="o">--</span><span class="n">dport</span> <span class="mi">10021</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>
+</pre></div>
+</div><br />
+Описание:<br />
+Пакет прилетает на сервер А в цепочку PREROUTING, правило (DNAT) изменяет адрес назначения с 172.16.11.2:21 на 172.16.36.5:10021.<br />
+Таким образом пакет не попадает на сервер А, и переходит в цепочку POSTROUTING, тут мы меняем исходящий адрес (SNAT) с адреса клиента на адрес сервера А 172.16.111.2, что-бы сервер В отправил ответный пакет на сервер А.<br />
+3 правило пропускает пакет модифицированный правилом 1.<br />

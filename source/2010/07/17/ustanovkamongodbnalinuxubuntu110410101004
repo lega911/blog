@@ -1,0 +1,35 @@
+::id 4c4191e71d41c82d48000009
+::date 2010-07-17
+::title Установка mongoDB на linux ubuntu 11.04 / 10.10 / 10.04
+::tags mongodb, linux, install
+::body
+Нужно выполнить от рута
+[[$ apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+$ echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" >> /etc/apt/sources.list.d/10gen.list
+$ sudo apt-get update
+$ sudo apt-get install mongodb-10gen]]
+
+**Старая версия**
+Нужно выполнить от рута[[
+$ apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+$ echo "deb http://downloads.mongodb.org/distros/ubuntu 10.4 10gen" >> /etc/apt/sources.list.d/10gen.list
+$ sudo aptitude update
+$ sudo aptitude install mongodb-stable
+]]для ubuntu 10.10, меняем в ссылке символы 10.4 на 10.10
+
+::html
+Нужно выполнить от рута<br />
+<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">apt</span><span class="o">-</span><span class="n">key</span> <span class="n">adv</span> <span class="o">--</span><span class="n">keyserver</span> <span class="n">keyserver</span><span class="o">.</span><span class="n">ubuntu</span><span class="o">.</span><span class="n">com</span> <span class="o">--</span><span class="n">recv</span> <span class="mi">7</span><span class="n">F0CEB10</span>
+<span class="err">$</span> <span class="n">echo</span> <span class="s">&quot;deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">apt</span><span class="o">/</span><span class="n">sources</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="mi">10</span><span class="n">gen</span><span class="o">.</span><span class="n">list</span>
+<span class="err">$</span> <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+<span class="err">$</span> <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">mongodb</span><span class="o">-</span><span class="mi">10</span><span class="n">gen</span>
+</pre></div>
+</div><br />
+<br />
+<b>Старая версия</b><br />
+Нужно выполнить от рута<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">apt</span><span class="o">-</span><span class="n">key</span> <span class="n">adv</span> <span class="o">--</span><span class="n">keyserver</span> <span class="n">keyserver</span><span class="o">.</span><span class="n">ubuntu</span><span class="o">.</span><span class="n">com</span> <span class="o">--</span><span class="n">recv</span> <span class="mi">7</span><span class="n">F0CEB10</span>
+<span class="err">$</span> <span class="n">echo</span> <span class="s">&quot;deb http://downloads.mongodb.org/distros/ubuntu 10.4 10gen&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">apt</span><span class="o">/</span><span class="n">sources</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="mi">10</span><span class="n">gen</span><span class="o">.</span><span class="n">list</span>
+<span class="err">$</span> <span class="n">sudo</span> <span class="n">aptitude</span> <span class="n">update</span>
+<span class="err">$</span> <span class="n">sudo</span> <span class="n">aptitude</span> <span class="n">install</span> <span class="n">mongodb</span><span class="o">-</span><span class="n">stable</span>
+</pre></div>
+</div>для ubuntu 10.10, меняем в ссылке символы 10.4 на 10.10<br />

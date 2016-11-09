@@ -1,0 +1,39 @@
+::id 4bfb3c691d41c846bc00006c
+::date 2010-02-22
+::title Сжатие данных в python
+::tags python, zip
+::body
+Запаковать и распаковать данные в питоне можно через encode/decode
+
+Пример
+[[s = 'hello world!!! Привет'
+a = s.encode('bz2')
+b = s.encode('zip')
+c = s.encode('hex')
+d = s.encode('base64')
+###
+print a.decode('bz2')
+print b.decode('zip')
+print c.decode('hex')
+print d.decode('base64')]]
+в добавок:
+**hex** - преобразование в hex строку
+**base64** - преобразование в MIME base64
+
+::html
+Запаковать и распаковать данные в питоне можно через encode/decode<br />
+<br />
+Пример<br />
+<div class="codebox"><pre><code>s = 'hello world!!! Привет'
+a = s.encode('bz2')
+b = s.encode('zip')
+c = s.encode('hex')
+d = s.encode('base64')
+###
+print a.decode('bz2')
+print b.decode('zip')
+print c.decode('hex')
+print d.decode('base64')</code></pre></div><br />
+в добавок:<br />
+<b>hex</b> - преобразование в hex строку<br />
+<b>base64</b> - преобразование в MIME base64<br />

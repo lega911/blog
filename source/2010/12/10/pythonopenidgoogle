@@ -1,0 +1,355 @@
+::id 4d02746f1d41c818cf000004
+::date 2010-12-10
+::title python openid google
+::tags python, web, google, openid
+::body
+Пример **OpenID** потребителя (клиента) в качестве web-сервера, получение имени пользователя, почтового ящика и пр.
+**Проверено на:** google, yandex, vkontakte
+[http://openid.net/get-an-openid/ Популярные OpenID провайдеры]
+
+Для работы скрипта нужен **python-openid**
+[[sudo apt-get install python-openid
+]]//для ubuntu/debian//
+Запускайте скрипт и открывайте браузер по адресу [http://localhost:8001 localhost:8081]
+[file:%id%/openid_consumer.py исходный код] //(данный код периодический меняю - добавляю поддержку разных порталов)//
+[[#!/usr/bin/env python
+# coding: utf8
+
+import cgi
+import urlparse
+import cgitb
+import sys
+
+from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
+
+SERVER_OPENID = 'https://www.google.com/accounts/o8/id'
+#SERVER_OPENID = 'http://openid.yandex.ru/'
+#SERVER_OPENID = 'http://vkontakteid.ru/'
+
+# Проверка наличия openid
+try:
+    import openid
+except ImportError:
+    sys.stderr.write("Failed to import the OpenID library")
+    sys.exit(1)
+
+from openid.consumer import consumer
+from openid.extensions import sreg, ax
+
+class OpenIDHTTPServer(HTTPServer):
+    def __init__(self, host, *args, **kwargs):
+        HTTPServer.__init__(self, *args, **kwargs)
+        if self.server_port != 80: self.base_url = ('http://%s:%s/' % (host, self.server_port))
+        else: self.base_url = 'http://%s/' % host
+
+class OpenIDRequestHandler(BaseHTTPRequestHandler):
+    # Обработка запросов к серверу
+    def do_GET(self):
+        try:
+            self.parsed_uri = urlparse.urlparse(self.path)
+            self.query = {}
+            for k, v in cgi.parse_qsl(self.parsed_uri[4]):
+                self.query[k] = v.decode('utf-8')
+            
+            path = self.parsed_uri[2]
+            if path == '/': self.render()
+            elif path == '/verify': self.doVerify()
+            elif path == '/process': self.doProcess()
+            elif path == '/affiliate': self.doAffiliate()
+            else: self.render('not found',status=403)
+        except (KeyboardInterrupt, SystemExit):
+            raise
+        except: self.render(cgitb.html(sys.exc_info(), context=10), 500)
+    # Отрисовка страницы
+    def render(self, message=None, status=200, ax_response=None, sreg_response=None):
+        self.send_response(status)
+        self.end_headers()
+        self.wfile.write('<html><head><meta http-equiv="content-type" content="text/html;charset=utf-8"/></head><body>')
+        if message: self.wfile.write(message)
+        else: self.wfile.write("""<form method="get" accept-charset="UTF-8" action="/verify">
+            Identifier:<input type="text" name="openid_identifier"
+            value='""" + SERVER_OPENID + """' />
+            <input type="submit" value="Verify" /></form>""")
+        self.wfile.write("</body></html>")
+        if ax_response: self.renderAX(ax_response)
+        if sreg_response: self.renderSREG(sreg_response)
+    # Отрисовка параметров пользователя
+    def renderAX(self,ax_response):
+        self.wfile.write('<h1>AX Data</h1>')
+        for field_name, v in ax_response.data.items():
+            field_name = field_name.encode('utf8')
+            value = cgi.escape(v[0].encode('utf8') if v else '')
+            self.wfile.write('%s = %s<br/>' % (field_name, value))
+    def renderSREG(self,sreg_response):
+        self.wfile.write('<h1>SREG Data</h1>')
+        for field_name, v in sreg_response.data.items():
+            value = cgi.escape(v.encode('UTF-8') if v else '')
+            self.wfile.write('%s = %s<br/>' % (field_name, value))
+    # Отправка запроса на авторизацию
+    def doVerify(self):
+        openid_url = self.query['openid_identifier']
+        if not openid_url:
+            self.render('Enter an OpenID Identifier to verify.')
+            return
+
+        oidconsumer = consumer.Consumer({}, None)
+        try:
+            request = oidconsumer.begin(openid_url)
+        except consumer.DiscoveryFailure, exc:
+            fetch_error_string = 'Error in discovery: %s' % ( cgi.escape(str(exc[0])) )
+            self.render(fetch_error_string)
+        else:
+            if request is None:
+                msg = 'No OpenID services found for <code>%s</code>' % ( cgi.escape(openid_url),)
+                self.render(msg)
+            else:
+                self.requestReg(request)
+                
+                trust_root = self.server.base_url
+                return_to = urlparse.urljoin(self.server.base_url, 'process')
+                print return_to
+                if request.shouldSendRedirect():
+                    redirect_url = request.redirectURL(trust_root, return_to)
+                    self.send_response(302)
+                    self.send_header('Location', redirect_url)
+                    self.writeUserHeader()
+                    self.end_headers()
+                else:
+                    form_html = request.htmlMarkup(
+                        trust_root, return_to,
+                        form_tag_attrs={'id':'openid_message'})
+                    self.wfile.write(form_html)
+    # Настройка параметров от сервера OpenID
+    def requestReg(self, request):
+        if request.endpoint.supportsType(ax.AXMessage.ns_uri):
+            fetch_request = ax.FetchRequest()
+            for (attr, alias) in [
+                ('http://axschema.org/contact/email', 'email'),
+                ('http://axschema.org/namePerson', 'fullname'),
+                ('http://axschema.org/namePerson/first', 'firstname'),
+                ('http://axschema.org/namePerson/last', 'lastname'),
+                ('http://axschema.org/pref/language', 'language'),
+                ('http://axschema.org/contact/country/home', 'country')]:
+                fetch_request.add(ax.AttrInfo(attr, alias=alias, required=True))
+            request.addExtension(fetch_request)
+        else:
+            request.addExtension(sreg.SRegRequest(optional=['email', 'fullname', 'nickname'
+                                                            # for vkontakte
+                                                            ,'gender','country']))
+    # Обработка ответа от сервера OpenID
+    def doProcess(self):
+        oidconsumer = consumer.Consumer({}, None)
+        
+        url = 'http://'+self.headers.get('Host')+self.path
+        info = oidconsumer.complete(self.query, url)
+
+        ax_response = None
+        sreg_response = None
+        display_identifier = info.getDisplayIdentifier()
+
+        if info.status == consumer.FAILURE and display_identifier:
+            fmt = "Verification of %s failed: %s"
+            message = fmt % (cgi.escape(display_identifier), info.message)
+        elif info.status == consumer.SUCCESS:
+            fmt = "You have successfully verified %s as your identity."
+            message = fmt % (cgi.escape(display_identifier),)
+            ax_response = ax.FetchResponse.fromSuccessResponse(info)
+            sreg_response = sreg.SRegResponse.fromSuccessResponse(info)
+            
+            if info.endpoint.canonicalID:
+                message += ("  This is an i-name, and its persistent ID is %s"
+                            % (cgi.escape(info.endpoint.canonicalID),))
+            message += '<br/>'
+        elif info.status == consumer.CANCEL:
+            message = 'Verification cancelled'
+        elif info.status == consumer.SETUP_NEEDED:
+            if info.setup_url: message = '<a href=%s>Setup needed</a>' % ( '"%s"' % cgi.escape(info.setup_url, 1) ,)
+            else: message = 'Setup needed'
+        else: message = 'Verification failed.'
+        
+        self.render(message, ax_response=ax_response, sreg_response=sreg_response)
+      
+if __name__ == '__main__':
+    host = 'localhost'
+    addr = (host, 8001)
+    server = OpenIDHTTPServer(host, addr, OpenIDRequestHandler)
+    print server.base_url
+    server.serve_forever()
+]]
+
+::html
+Пример <b>OpenID</b> потребителя (клиента) в качестве web-сервера, получение имени пользователя, почтового ящика и пр.<br />
+<b>Проверено на:</b> google, yandex, vkontakte<br />
+<a target=_blank href="http://openid.net/get-an-openid/">Популярные OpenID провайдеры</a><br />
+<br />
+Для работы скрипта нужен <b>python-openid</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">openid</span>
+</pre></div>
+</div><i>для ubuntu/debian</i><br />
+Запускайте скрипт и открывайте браузер по адресу <a target=_blank href="http://localhost:8001">localhost:8081</a><br />
+<a href="/uploads/4d02746f1d41c818cf000004/openid_consumer.py">исходный код</a> <i>(данный код периодический меняю - добавляю поддержку разных порталов)</i><br />
+<div class="codebox"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+<span class="c"># coding: utf8</span>
+
+<span class="kn">import</span> <span class="nn">cgi</span>
+<span class="kn">import</span> <span class="nn">urlparse</span>
+<span class="kn">import</span> <span class="nn">cgitb</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">BaseHTTPServer</span> <span class="kn">import</span> <span class="n">HTTPServer</span><span class="p">,</span> <span class="n">BaseHTTPRequestHandler</span>
+
+<span class="n">SERVER_OPENID</span> <span class="o">=</span> <span class="s">&#39;https://www.google.com/accounts/o8/id&#39;</span>
+<span class="c">#SERVER_OPENID = &#39;http://openid.yandex.ru/&#39;</span>
+<span class="c">#SERVER_OPENID = &#39;http://vkontakteid.ru/&#39;</span>
+
+<span class="c"># Проверка наличия openid</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">openid</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;Failed to import the OpenID library&quot;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">openid.consumer</span> <span class="kn">import</span> <span class="n">consumer</span>
+<span class="kn">from</span> <span class="nn">openid.extensions</span> <span class="kn">import</span> <span class="n">sreg</span><span class="p">,</span> <span class="n">ax</span>
+
+<span class="k">class</span> <span class="nc">OpenIDHTTPServer</span><span class="p">(</span><span class="n">HTTPServer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">HTTPServer</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">server_port</span> <span class="o">!=</span> <span class="mi">80</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;http://</span><span class="si">%s</span><span class="s">:</span><span class="si">%s</span><span class="s">/&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">server_port</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="s">&#39;http://</span><span class="si">%s</span><span class="s">/&#39;</span> <span class="o">%</span> <span class="n">host</span>
+
+<span class="k">class</span> <span class="nc">OpenIDRequestHandler</span><span class="p">(</span><span class="n">BaseHTTPRequestHandler</span><span class="p">):</span>
+    <span class="c"># Обработка запросов к серверу</span>
+    <span class="k">def</span> <span class="nf">do_GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parsed_uri</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cgi</span><span class="o">.</span><span class="n">parse_qsl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parsed_uri</span><span class="p">[</span><span class="mi">4</span><span class="p">]):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
+            
+            <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parsed_uri</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="s">&#39;/&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">path</span> <span class="o">==</span> <span class="s">&#39;/verify&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">doVerify</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">path</span> <span class="o">==</span> <span class="s">&#39;/process&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">doProcess</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">path</span> <span class="o">==</span> <span class="s">&#39;/affiliate&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">doAffiliate</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="s">&#39;not found&#39;</span><span class="p">,</span><span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">KeyboardInterrupt</span><span class="p">,</span> <span class="ne">SystemExit</span><span class="p">):</span>
+            <span class="k">raise</span>
+        <span class="k">except</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">cgitb</span><span class="o">.</span><span class="n">html</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">(),</span> <span class="n">context</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span> <span class="mi">500</span><span class="p">)</span>
+    <span class="c"># Отрисовка страницы</span>
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">ax_response</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sreg_response</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send_response</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_headers</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&lt;html&gt;&lt;head&gt;&lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html;charset=utf-8&quot;/&gt;&lt;/head&gt;&lt;body&gt;&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">message</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">wfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">wfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;&quot;&quot;&lt;form method=&quot;get&quot; accept-charset=&quot;UTF-8&quot; action=&quot;/verify&quot;&gt;</span>
+<span class="s">            Identifier:&lt;input type=&quot;text&quot; name=&quot;openid_identifier&quot;</span>
+<span class="s">            value=&#39;&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">SERVER_OPENID</span> <span class="o">+</span> <span class="s">&quot;&quot;&quot;&#39; /&gt;</span>
+<span class="s">            &lt;input type=&quot;submit&quot; value=&quot;Verify&quot; /&gt;&lt;/form&gt;&quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ax_response</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderAX</span><span class="p">(</span><span class="n">ax_response</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sreg_response</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderSREG</span><span class="p">(</span><span class="n">sreg_response</span><span class="p">)</span>
+    <span class="c"># Отрисовка параметров пользователя</span>
+    <span class="k">def</span> <span class="nf">renderAX</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ax_response</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&lt;h1&gt;AX Data&lt;/h1&gt;&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ax_response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">field_name</span> <span class="o">=</span> <span class="n">field_name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf8&#39;</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">cgi</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">v</span> <span class="k">else</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s"> = </span><span class="si">%s</span><span class="s">&lt;br/&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">renderSREG</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sreg_response</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&lt;h1&gt;SREG Data&lt;/h1&gt;&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">sreg_response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">cgi</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;UTF-8&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">v</span> <span class="k">else</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s"> = </span><span class="si">%s</span><span class="s">&lt;br/&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+    <span class="c"># Отправка запроса на авторизацию</span>
+    <span class="k">def</span> <span class="nf">doVerify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">openid_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">[</span><span class="s">&#39;openid_identifier&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">openid_url</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="s">&#39;Enter an OpenID Identifier to verify.&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">oidconsumer</span> <span class="o">=</span> <span class="n">consumer</span><span class="o">.</span><span class="n">Consumer</span><span class="p">({},</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">oidconsumer</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="n">openid_url</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">consumer</span><span class="o">.</span><span class="n">DiscoveryFailure</span><span class="p">,</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">fetch_error_string</span> <span class="o">=</span> <span class="s">&#39;Error in discovery: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">cgi</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">fetch_error_string</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s">&#39;No OpenID services found for &lt;code&gt;</span><span class="si">%s</span><span class="s">&lt;/code&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">cgi</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">openid_url</span><span class="p">),)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">requestReg</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+                
+                <span class="n">trust_root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">base_url</span>
+                <span class="n">return_to</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">base_url</span><span class="p">,</span> <span class="s">&#39;process&#39;</span><span class="p">)</span>
+                <span class="k">print</span> <span class="n">return_to</span>
+                <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">shouldSendRedirect</span><span class="p">():</span>
+                    <span class="n">redirect_url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">redirectURL</span><span class="p">(</span><span class="n">trust_root</span><span class="p">,</span> <span class="n">return_to</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">send_response</span><span class="p">(</span><span class="mi">302</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">send_header</span><span class="p">(</span><span class="s">&#39;Location&#39;</span><span class="p">,</span> <span class="n">redirect_url</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">writeUserHeader</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">end_headers</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">form_html</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">htmlMarkup</span><span class="p">(</span>
+                        <span class="n">trust_root</span><span class="p">,</span> <span class="n">return_to</span><span class="p">,</span>
+                        <span class="n">form_tag_attrs</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;id&#39;</span><span class="p">:</span><span class="s">&#39;openid_message&#39;</span><span class="p">})</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">wfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">form_html</span><span class="p">)</span>
+    <span class="c"># Настройка параметров от сервера OpenID</span>
+    <span class="k">def</span> <span class="nf">requestReg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">supportsType</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">AXMessage</span><span class="o">.</span><span class="n">ns_uri</span><span class="p">):</span>
+            <span class="n">fetch_request</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">FetchRequest</span><span class="p">()</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">alias</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span>
+                <span class="p">(</span><span class="s">&#39;http://axschema.org/contact/email&#39;</span><span class="p">,</span> <span class="s">&#39;email&#39;</span><span class="p">),</span>
+                <span class="p">(</span><span class="s">&#39;http://axschema.org/namePerson&#39;</span><span class="p">,</span> <span class="s">&#39;fullname&#39;</span><span class="p">),</span>
+                <span class="p">(</span><span class="s">&#39;http://axschema.org/namePerson/first&#39;</span><span class="p">,</span> <span class="s">&#39;firstname&#39;</span><span class="p">),</span>
+                <span class="p">(</span><span class="s">&#39;http://axschema.org/namePerson/last&#39;</span><span class="p">,</span> <span class="s">&#39;lastname&#39;</span><span class="p">),</span>
+                <span class="p">(</span><span class="s">&#39;http://axschema.org/pref/language&#39;</span><span class="p">,</span> <span class="s">&#39;language&#39;</span><span class="p">),</span>
+                <span class="p">(</span><span class="s">&#39;http://axschema.org/contact/country/home&#39;</span><span class="p">,</span> <span class="s">&#39;country&#39;</span><span class="p">)]:</span>
+                <span class="n">fetch_request</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">AttrInfo</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="n">alias</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">addExtension</span><span class="p">(</span><span class="n">fetch_request</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">addExtension</span><span class="p">(</span><span class="n">sreg</span><span class="o">.</span><span class="n">SRegRequest</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;email&#39;</span><span class="p">,</span> <span class="s">&#39;fullname&#39;</span><span class="p">,</span> <span class="s">&#39;nickname&#39;</span>
+                                                            <span class="c"># for vkontakte</span>
+                                                            <span class="p">,</span><span class="s">&#39;gender&#39;</span><span class="p">,</span><span class="s">&#39;country&#39;</span><span class="p">]))</span>
+    <span class="c"># Обработка ответа от сервера OpenID</span>
+    <span class="k">def</span> <span class="nf">doProcess</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">oidconsumer</span> <span class="o">=</span> <span class="n">consumer</span><span class="o">.</span><span class="n">Consumer</span><span class="p">({},</span> <span class="bp">None</span><span class="p">)</span>
+        
+        <span class="n">url</span> <span class="o">=</span> <span class="s">&#39;http://&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;Host&#39;</span><span class="p">)</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">oidconsumer</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+
+        <span class="n">ax_response</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">sreg_response</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">display_identifier</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">getDisplayIdentifier</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">consumer</span><span class="o">.</span><span class="n">FAILURE</span> <span class="ow">and</span> <span class="n">display_identifier</span><span class="p">:</span>
+            <span class="n">fmt</span> <span class="o">=</span> <span class="s">&quot;Verification of </span><span class="si">%s</span><span class="s"> failed: </span><span class="si">%s</span><span class="s">&quot;</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">fmt</span> <span class="o">%</span> <span class="p">(</span><span class="n">cgi</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">display_identifier</span><span class="p">),</span> <span class="n">info</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">info</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">consumer</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
+            <span class="n">fmt</span> <span class="o">=</span> <span class="s">&quot;You have successfully verified </span><span class="si">%s</span><span class="s"> as your identity.&quot;</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">fmt</span> <span class="o">%</span> <span class="p">(</span><span class="n">cgi</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">display_identifier</span><span class="p">),)</span>
+            <span class="n">ax_response</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">FetchResponse</span><span class="o">.</span><span class="n">fromSuccessResponse</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+            <span class="n">sreg_response</span> <span class="o">=</span> <span class="n">sreg</span><span class="o">.</span><span class="n">SRegResponse</span><span class="o">.</span><span class="n">fromSuccessResponse</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">canonicalID</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">+=</span> <span class="p">(</span><span class="s">&quot;  This is an i-name, and its persistent ID is </span><span class="si">%s</span><span class="s">&quot;</span>
+                            <span class="o">%</span> <span class="p">(</span><span class="n">cgi</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">canonicalID</span><span class="p">),))</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s">&#39;&lt;br/&gt;&#39;</span>
+        <span class="k">elif</span> <span class="n">info</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">consumer</span><span class="o">.</span><span class="n">CANCEL</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s">&#39;Verification cancelled&#39;</span>
+        <span class="k">elif</span> <span class="n">info</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">consumer</span><span class="o">.</span><span class="n">SETUP_NEEDED</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">setup_url</span><span class="p">:</span> <span class="n">message</span> <span class="o">=</span> <span class="s">&#39;&lt;a href=</span><span class="si">%s</span><span class="s">&gt;Setup needed&lt;/a&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="s">&#39;&quot;</span><span class="si">%s</span><span class="s">&quot;&#39;</span> <span class="o">%</span> <span class="n">cgi</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">setup_url</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="p">,)</span>
+            <span class="k">else</span><span class="p">:</span> <span class="n">message</span> <span class="o">=</span> <span class="s">&#39;Setup needed&#39;</span>
+        <span class="k">else</span><span class="p">:</span> <span class="n">message</span> <span class="o">=</span> <span class="s">&#39;Verification failed.&#39;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">ax_response</span><span class="o">=</span><span class="n">ax_response</span><span class="p">,</span> <span class="n">sreg_response</span><span class="o">=</span><span class="n">sreg_response</span><span class="p">)</span>
+      
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="s">&#39;localhost&#39;</span>
+    <span class="n">addr</span> <span class="o">=</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="mi">8001</span><span class="p">)</span>
+    <span class="n">server</span> <span class="o">=</span> <span class="n">OpenIDHTTPServer</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">addr</span><span class="p">,</span> <span class="n">OpenIDRequestHandler</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">server</span><span class="o">.</span><span class="n">base_url</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+</pre></div>
+</div><br />

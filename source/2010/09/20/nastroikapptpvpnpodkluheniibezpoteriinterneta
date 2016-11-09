@@ -1,0 +1,91 @@
+::id 4c9772a41d41c86466000000
+::date 2010-09-20
+::title Настройка pptp (vpn) подключения без потери интернета
+::tags pptp, route, vpn, linux
+::body
+Настройка vpn и роутов в 3 шага, проверено на ubuntu 10.04
+
+1. Пропишите в файле **/etc/ppp/chap-secrets** логин и пароль:
+[[user * password]]
+2. Создайте файл подключения **/etc/ppp/peers/myvpn**:
+[[remotename myvpn
+pty "pptp --loglevel 1 vpn.mywork.ru --nolaunchpppd"
+name user
+noauth
+debug
+nodetach
+lock
+#defaultroute
+#replacedefaultroute
+noccp]]//user// - имя пользователя из //etc/ppp/chap-secrets//
+Уже можно подключаться:
+[[sudo pon myvpn # подключение
+sudo poff myvpn # отключение]]При подключении посмотрите каким устройством создастся vpn соединение (ppp0, ppp1, ...) например выполнив //ifconfig//
+
+3. Прописываем роуты, подсети за vpn
+Файл **/etc/ppp/ip-up.d/myvpn**
+[[#!/bin/sh
+route add -net 172.12.0.0 netmask 255.255.0.0 dev ppp1
+route add -net 192.168.100.0 netmask 255.255.255.0 dev ppp1]]//ppp1// - укажите свое устройство соединения vpn, см. предыдущий пункт.
+Файл **/etc/ppp/ip-down.d/myvpn**
+[[#!/bin/sh
+route del 172.12.0.0
+route del 192.168.100.0
+route del vpn.mywork.ru]]
+Делаем их запускаемыми:
+[[sudo chmod +x /etc/ppp/ip-up.d/myvpn /etc/ppp/ip-down.d/myvpn]]
+
+Готово.
+[[sudo pon myvpn # подключение
+sudo poff myvpn # отключение]]
+
+::html
+Настройка vpn и роутов в 3 шага, проверено на ubuntu 10.04<br />
+<br />
+1. Пропишите в файле <b>/etc/ppp/chap-secrets</b> логин и пароль:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">user</span> <span class="o">*</span> <span class="n">password</span>
+</pre></div>
+</div><br />
+2. Создайте файл подключения <b>/etc/ppp/peers/myvpn</b>:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">remotename</span> <span class="n">myvpn</span>
+<span class="n">pty</span> <span class="s">&quot;pptp --loglevel 1 vpn.mywork.ru --nolaunchpppd&quot;</span>
+<span class="n">name</span> <span class="n">user</span>
+<span class="n">noauth</span>
+<span class="n">debug</span>
+<span class="n">nodetach</span>
+<span class="n">lock</span>
+<span class="c">#defaultroute</span>
+<span class="c">#replacedefaultroute</span>
+<span class="n">noccp</span>
+</pre></div>
+</div><i>user</i> - имя пользователя из <i>etc/ppp/chap-secrets</i><br />
+Уже можно подключаться:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">pon</span> <span class="n">myvpn</span> <span class="c"># подключение</span>
+<span class="n">sudo</span> <span class="n">poff</span> <span class="n">myvpn</span> <span class="c"># отключение</span>
+</pre></div>
+</div>При подключении посмотрите каким устройством создастся vpn соединение (ppp0, ppp1, ...) например выполнив <i>ifconfig</i><br />
+<br />
+3. Прописываем роуты, подсети за vpn<br />
+Файл <b>/etc/ppp/ip-up.d/myvpn</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="c">#!/bin/sh</span>
+<span class="n">route</span> <span class="n">add</span> <span class="o">-</span><span class="n">net</span> <span class="mf">172.12</span><span class="o">.</span><span class="mf">0.0</span> <span class="n">netmask</span> <span class="mf">255.255</span><span class="o">.</span><span class="mf">0.0</span> <span class="n">dev</span> <span class="n">ppp1</span>
+<span class="n">route</span> <span class="n">add</span> <span class="o">-</span><span class="n">net</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">100.0</span> <span class="n">netmask</span> <span class="mf">255.255</span><span class="o">.</span><span class="mf">255.0</span> <span class="n">dev</span> <span class="n">ppp1</span>
+</pre></div>
+</div><i>ppp1</i> - укажите свое устройство соединения vpn, см. предыдущий пункт.<br />
+Файл <b>/etc/ppp/ip-down.d/myvpn</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="c">#!/bin/sh</span>
+<span class="n">route</span> <span class="k">del</span> <span class="mf">172.12</span><span class="o">.</span><span class="mf">0.0</span>
+<span class="n">route</span> <span class="k">del</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">100.0</span>
+<span class="n">route</span> <span class="k">del</span> <span class="n">vpn</span><span class="o">.</span><span class="n">mywork</span><span class="o">.</span><span class="n">ru</span>
+</pre></div>
+</div><br />
+Делаем их запускаемыми:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ppp</span><span class="o">/</span><span class="n">ip</span><span class="o">-</span><span class="n">up</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">myvpn</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ppp</span><span class="o">/</span><span class="n">ip</span><span class="o">-</span><span class="n">down</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">myvpn</span>
+</pre></div>
+</div><br />
+<br />
+Готово.<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">pon</span> <span class="n">myvpn</span> <span class="c"># подключение</span>
+<span class="n">sudo</span> <span class="n">poff</span> <span class="n">myvpn</span> <span class="c"># отключение</span>
+</pre></div>
+</div><br />

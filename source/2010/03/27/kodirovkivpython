@@ -1,0 +1,265 @@
+::id 4bfb3c6a1d41c846bc00009b
+::date 2010-03-27
+::title Кодировки в python
+::tags python, кодировки
+::body
+//прочтение статьи занимает 4мин, с обдумыванием - 10мин :)//
+//примечание: данная статья относится к// **python 2.x**, но для python 3.x принцип тот же
+!Общее
+В python есть 2 объекта работающими с текстом: unicode и str, объект **unicode** хранит символы в формате (кодировке) [http://ru.wikipedia.org/wiki/%D0%AE%D0%BD%D0%B8%D0%BA%D0%BE%D0%B4 unicode], объект **str** является набором байт/символов в которых python хранит остальные кодировки (utf8, cp1251, cp866, koi8-r и др).
+
+Кодировку unicode можно считать **рабочей** кодировкой питона т.к. она предназначена для её использования в самом скрипте - для разных операций над строками.
+**Внешняя** кодировка //(объект str)// предназначена для хранения и передачи текстовой информации вне скрипта, например для сохранения в файл или передачи по сети. Поэтому в данной статье я её назвал внешней. Самой используемой кодировкой в мире является **utf8** и число приложений переходящих на эту кодировку растет каждый день, таким образом превращаясь в "стандарт". Эта кодировка хороша тем что для хранения текста она занимает оптимальное кол-во памяти и с помощью её можно закодировать почти все языки мира ( в отличие от cp1251 и подобных однобайтовых кодировок). **Поэтому рекомендуется везде использовать utf8, и при написании скриптов.**
+
+!Использование
+**Скрипт питона**, в самом начале скрипта указываем кодировку файла и сохраняем в ней файл
+[[# coding: utf8]]либо[[# -*- coding: utf-8 -*- ]]для того что-бы интерпретатор python понял в какой кодировке файл
+
+
+**Строки в скрипте**
+Строки в скрипте хранятся байтами, от кавычки до кавычки:
+[[print 'Привет']] = 6 байт при cp1251
+ = 12 байт при utf8
+
+Если перед строкой добавить символ **u**, то при запуске скрипта, эта байтовая строка будет декодирована в unicode из кодировки указанной в начале:[[# coding:utf8
+print u'Привет']]и если кодировка содержимого в файле отличается от указанной, то в строке могут быть "битые символы"
+
+
+**Загрузка и сохранение файла**
+[[# coding: utf8
+
+# Загружаем файл с кодировкай utf8
+text = open('file.txt','r').read()
+
+# Декодируем из utf8 в unicode - из внешней в рабочую
+text = text.decode('utf8')
+
+# Работаем с текстом
+text += text
+
+# Кодируем тест из unicode в utf8 - из рабочей во внешнюю
+text = text.encode('utf8')
+
+# Сохраняем в файл с кодировкий utf8
+open('file.txt','w').write(text)]]
+
+**Текст в скрипте**
+[[# coding: utf8
+
+a = 'Текст в utf8'
+b = u'Текст в unicode'
+# Эквивалентно: b = 'Текст в unicode'.decode('utf8')
+# т.к. сам скрипт хранится в utf8
+
+print 'a =',type(a),a
+# декодируем из utf-8 в unicode и далее unicode в cp866 (кодировка консоли winXP ru)
+print 'a2 =',type(a),a.decode('utf8').encode('cp866')
+print 'b =',type(b),b]]Процедуре **print** текст желательно передавать в рабочей кодировке либо кодировать в кодировку ОС.
+Результат скрипта при запуске из консоли windows XP:
+[[a = <type 'str'> ╨в╨╡╨║╤Б╤В ╨▓ utf8
+a2 = <type 'str'> Текст в utf8
+b = <type 'unicode'> Текст в unicode]]В последней строке **print** преобразовал unicode в cp866 автоматический, см. следующий пункт
+
+
+**Авто-преобразование кодировки**
+В некоторых случаях для упрощения разработки python делает преобразование кодировки, пример с методом **print** можно посмотреть в предыдущем пункте.
+В примере ниже, python сам переводит utf8 в unicode - приводит к одной кодировке для того что-бы сложить строки.
+[[# coding: utf8
+
+# Устанавливаем стандартную внешнюю кодировку = utf8
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
+a = 'Текст в utf8'
+b = u'Текст в unicode'
+c = a + b
+
+print 'a =',type(a),a
+print 'b =',type(b),b
+print 'c =',type(c),c]]Результат[[a = <type 'str'> Текст в utf8
+b = <type 'unicode'> Текст в unicode
+c = <type 'unicode'> Текст в utf8Текст в unicode]]Как видим результирующая строка "c" в unicode. Если бы кодировки строк совпадали то авто-перекодирования не произошло бы и результирующая строка содержала кодировку слагаемых строк.
+Авто-перекодирование обычно срабатывает когда происходит взаимодействие разных кодировок.
+
+
+**Пример авто-преобразования кодировок в сравнении**
+[[# coding: utf8
+
+# Устанавливаем стандартную внешнюю кодировку = utf8
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
+print '1. utf8 and unicode', 'true' if u'Слово'.encode('utf8') == u'Слово' else 'false'
+print '2. utf8 and cp1251', 'true' if u'Слово'.encode('utf8') == u'Слово'.encode('cp1251') else 'false'
+print '3. cp1251 and unicode', 'true' if u'Слово'.encode('cp1251') == u'Слово' else 'false']]
+Результат
+[[1. utf8 and unicode true
+2. utf8 and cp1251 false
+script.py:10: UnicodeWarning: Unicode equal comparison failed to convert both arguments to Unicode - interpreting them as being unequal
+  print '3. cp1251 and unicode', 'true' if u'Слово'.encode('cp1251') == u'Слово' else 'false'
+3. cp1251 and unicode false]]В сравнении 1, кодировка utf8 преобразовалась в unicode и сравнение произошло корректно.
+В сравнении 2, сравниваются кодировки одного вида - обе внешние, т.к. кодированы они в разных кодировках условие выдало что они не равны.
+В сравнении 3, выпало предупреждение из за того что выполняется сравнение кодировок разного вида - рабочая и внешняя, а авто-декодирование не произошло т.к. стандартная внешняя кодировка = utf8, и декодировать строку в кодировке cp1251 методом utf8 питон не смог.
+
+
+**Вывод списков**
+[[# coding: utf8
+
+d = ['Тест','списка']
+
+print '1',d
+print '2',d.__repr__()
+print '3',','.join(d)]]Результат:[[1 ['\xd0\xa2\xd0\xb5\xd1\x81\xd1\x82', '\xd1\x81\xd0\xbf\xd0\xb8\xd1\x81\xd0\xba\xd0\xb0']
+2 ['\xd0\xa2\xd0\xb5\xd1\x81\xd1\x82', '\xd1\x81\xd0\xbf\xd0\xb8\xd1\x81\xd0\xba\xd0\xb0']
+3 Тест,списка]]При выводе списка, происходит вызов [{__repr__}]() который возвращает внутреннее представление этого спиcка - print 1 и 2 являются аналогичными. Для корректного вывода списка, его нужно преобразовать в строку - print 3.
+
+**Установка внешней кодировки при запуске**
+[[PYTHONIOENCODING=utf8 python 1.py]]
+
+
+//статья будет дополняться...//
+
+::html
+<i>прочтение статьи занимает 4мин, с обдумыванием - 10мин :)</i><br />
+<i>примечание: данная статья относится к</i> <b>python 2.x</b>, но для python 3.x принцип тот же<h3>Общее</h3>В python есть 2 объекта работающими с текстом: unicode и str, объект <b>unicode</b> хранит символы в формате (кодировке) <a target=_blank href="http://ru.wikipedia.org/wiki/%D0%AE%D0%BD%D0%B8%D0%BA%D0%BE%D0%B4">unicode</a>, объект <b>str</b> является набором байт/символов в которых python хранит остальные кодировки (utf8, cp1251, cp866, koi8-r и др).<br />
+<br />
+Кодировку unicode можно считать <b>рабочей</b> кодировкой питона т.к. она предназначена для её использования в самом скрипте - для разных операций над строками.<br />
+<b>Внешняя</b> кодировка <i>(объект str)</i> предназначена для хранения и передачи текстовой информации вне скрипта, например для сохранения в файл или передачи по сети. Поэтому в данной статье я её назвал внешней. Самой используемой кодировкой в мире является <b>utf8</b> и число приложений переходящих на эту кодировку растет каждый день, таким образом превращаясь в "стандарт". Эта кодировка хороша тем что для хранения текста она занимает оптимальное кол-во памяти и с помощью её можно закодировать почти все языки мира ( в отличие от cp1251 и подобных однобайтовых кодировок). <b>Поэтому рекомендуется везде использовать utf8, и при написании скриптов.</b><br />
+<h3>Использование</h3><b>Скрипт питона</b>, в самом начале скрипта указываем кодировку файла и сохраняем в ней файл<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+</pre></div>
+</div>либо<div class="codebox"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*- </span>
+</pre></div>
+</div>для того что-бы интерпретатор python понял в какой кодировке файл<br />
+<br />
+<br />
+<b>Строки в скрипте</b><br />
+Строки в скрипте хранятся байтами, от кавычки до кавычки:<br />
+<div class="codebox"><div class="highlight"><pre><span class="k">print</span> <span class="s">&#39;Привет&#39;</span>
+</pre></div>
+</div> = 6 байт при cp1251<br />
+ = 12 байт при utf8<br />
+<br />
+Если перед строкой добавить символ <b>u</b>, то при запуске скрипта, эта байтовая строка будет декодирована в unicode из кодировки указанной в начале:<div class="codebox"><div class="highlight"><pre><span class="c"># coding:utf8</span>
+<span class="k">print</span> <span class="s">u&#39;Привет&#39;</span>
+</pre></div>
+</div>и если кодировка содержимого в файле отличается от указанной, то в строке могут быть "битые символы"<br />
+<br />
+<br />
+<b>Загрузка и сохранение файла</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="c"># Загружаем файл с кодировкай utf8</span>
+<span class="n">text</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;file.txt&#39;</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="c"># Декодируем из utf8 в unicode - из внешней в рабочую</span>
+<span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&#39;utf8&#39;</span><span class="p">)</span>
+
+<span class="c"># Работаем с текстом</span>
+<span class="n">text</span> <span class="o">+=</span> <span class="n">text</span>
+
+<span class="c"># Кодируем тест из unicode в utf8 - из рабочей во внешнюю</span>
+<span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf8&#39;</span><span class="p">)</span>
+
+<span class="c"># Сохраняем в файл с кодировкий utf8</span>
+<span class="nb">open</span><span class="p">(</span><span class="s">&#39;file.txt&#39;</span><span class="p">,</span><span class="s">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<br />
+<b>Текст в скрипте</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="s">&#39;Текст в utf8&#39;</span>
+<span class="n">b</span> <span class="o">=</span> <span class="s">u&#39;Текст в unicode&#39;</span>
+<span class="c"># Эквивалентно: b = &#39;Текст в unicode&#39;.decode(&#39;utf8&#39;)</span>
+<span class="c"># т.к. сам скрипт хранится в utf8</span>
+
+<span class="k">print</span> <span class="s">&#39;a =&#39;</span><span class="p">,</span><span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="n">a</span>
+<span class="c"># декодируем из utf-8 в unicode и далее unicode в cp866 (кодировка консоли winXP ru)</span>
+<span class="k">print</span> <span class="s">&#39;a2 =&#39;</span><span class="p">,</span><span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="n">a</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&#39;utf8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;cp866&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&#39;b =&#39;</span><span class="p">,</span><span class="nb">type</span><span class="p">(</span><span class="n">b</span><span class="p">),</span><span class="n">b</span>
+</pre></div>
+</div>Процедуре <b>print</b> текст желательно передавать в рабочей кодировке либо кодировать в кодировку ОС.<br />
+Результат скрипта при запуске из консоли windows XP:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;str&#39;</span><span class="o">&gt;</span> <span class="err">╨в╨╡╨║╤Б╤В</span> <span class="err">╨▓</span> <span class="n">utf8</span>
+<span class="n">a2</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;str&#39;</span><span class="o">&gt;</span> <span class="err">Текст</span> <span class="err">в</span> <span class="n">utf8</span>
+<span class="n">b</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;unicode&#39;</span><span class="o">&gt;</span> <span class="err">Текст</span> <span class="err">в</span> <span class="nb">unicode</span>
+</pre></div>
+</div>В последней строке <b>print</b> преобразовал unicode в cp866 автоматический, см. следующий пункт<br />
+<br />
+<br />
+<b>Авто-преобразование кодировки</b><br />
+В некоторых случаях для упрощения разработки python делает преобразование кодировки, пример с методом <b>print</b> можно посмотреть в предыдущем пункте.<br />
+В примере ниже, python сам переводит utf8 в unicode - приводит к одной кодировке для того что-бы сложить строки.<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="c"># Устанавливаем стандартную внешнюю кодировку = utf8</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="nb">reload</span><span class="p">(</span><span class="n">sys</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">setdefaultencoding</span><span class="p">(</span><span class="s">&#39;utf8&#39;</span><span class="p">)</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="s">&#39;Текст в utf8&#39;</span>
+<span class="n">b</span> <span class="o">=</span> <span class="s">u&#39;Текст в unicode&#39;</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="k">print</span> <span class="s">&#39;a =&#39;</span><span class="p">,</span><span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="n">a</span>
+<span class="k">print</span> <span class="s">&#39;b =&#39;</span><span class="p">,</span><span class="nb">type</span><span class="p">(</span><span class="n">b</span><span class="p">),</span><span class="n">b</span>
+<span class="k">print</span> <span class="s">&#39;c =&#39;</span><span class="p">,</span><span class="nb">type</span><span class="p">(</span><span class="n">c</span><span class="p">),</span><span class="n">c</span>
+</pre></div>
+</div>Результат<div class="codebox"><div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;str&#39;</span><span class="o">&gt;</span> <span class="err">Текст</span> <span class="err">в</span> <span class="n">utf8</span>
+<span class="n">b</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;unicode&#39;</span><span class="o">&gt;</span> <span class="err">Текст</span> <span class="err">в</span> <span class="nb">unicode</span>
+<span class="n">c</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;unicode&#39;</span><span class="o">&gt;</span> <span class="err">Текст</span> <span class="err">в</span> <span class="n">utf8</span><span class="err">Текст</span> <span class="err">в</span> <span class="nb">unicode</span>
+</pre></div>
+</div>Как видим результирующая строка "c" в unicode. Если бы кодировки строк совпадали то авто-перекодирования не произошло бы и результирующая строка содержала кодировку слагаемых строк.<br />
+Авто-перекодирование обычно срабатывает когда происходит взаимодействие разных кодировок.<br />
+<br />
+<br />
+<b>Пример авто-преобразования кодировок в сравнении</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="c"># Устанавливаем стандартную внешнюю кодировку = utf8</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="nb">reload</span><span class="p">(</span><span class="n">sys</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">setdefaultencoding</span><span class="p">(</span><span class="s">&#39;utf8&#39;</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s">&#39;1. utf8 and unicode&#39;</span><span class="p">,</span> <span class="s">&#39;true&#39;</span> <span class="k">if</span> <span class="s">u&#39;Слово&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf8&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s">u&#39;Слово&#39;</span> <span class="k">else</span> <span class="s">&#39;false&#39;</span>
+<span class="k">print</span> <span class="s">&#39;2. utf8 and cp1251&#39;</span><span class="p">,</span> <span class="s">&#39;true&#39;</span> <span class="k">if</span> <span class="s">u&#39;Слово&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf8&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s">u&#39;Слово&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;cp1251&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s">&#39;false&#39;</span>
+<span class="k">print</span> <span class="s">&#39;3. cp1251 and unicode&#39;</span><span class="p">,</span> <span class="s">&#39;true&#39;</span> <span class="k">if</span> <span class="s">u&#39;Слово&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;cp1251&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s">u&#39;Слово&#39;</span> <span class="k">else</span> <span class="s">&#39;false&#39;</span>
+</pre></div>
+</div><br />
+Результат<br />
+<div class="codebox"><div class="highlight"><pre><span class="mf">1.</span> <span class="n">utf8</span> <span class="ow">and</span> <span class="nb">unicode</span> <span class="n">true</span>
+<span class="mf">2.</span> <span class="n">utf8</span> <span class="ow">and</span> <span class="n">cp1251</span> <span class="n">false</span>
+<span class="n">script</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">10</span><span class="p">:</span> <span class="ne">UnicodeWarning</span><span class="p">:</span> <span class="n">Unicode</span> <span class="n">equal</span> <span class="n">comparison</span> <span class="n">failed</span> <span class="n">to</span> <span class="n">convert</span> <span class="n">both</span> <span class="n">arguments</span> <span class="n">to</span> <span class="n">Unicode</span> <span class="o">-</span> <span class="n">interpreting</span> <span class="n">them</span> <span class="k">as</span> <span class="n">being</span> <span class="n">unequal</span>
+  <span class="k">print</span> <span class="s">&#39;3. cp1251 and unicode&#39;</span><span class="p">,</span> <span class="s">&#39;true&#39;</span> <span class="k">if</span> <span class="s">u&#39;Слово&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;cp1251&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s">u&#39;Слово&#39;</span> <span class="k">else</span> <span class="s">&#39;false&#39;</span>
+<span class="mf">3.</span> <span class="n">cp1251</span> <span class="ow">and</span> <span class="nb">unicode</span> <span class="n">false</span>
+</pre></div>
+</div>В сравнении 1, кодировка utf8 преобразовалась в unicode и сравнение произошло корректно.<br />
+В сравнении 2, сравниваются кодировки одного вида - обе внешние, т.к. кодированы они в разных кодировках условие выдало что они не равны.<br />
+В сравнении 3, выпало предупреждение из за того что выполняется сравнение кодировок разного вида - рабочая и внешняя, а авто-декодирование не произошло т.к. стандартная внешняя кодировка = utf8, и декодировать строку в кодировке cp1251 методом utf8 питон не смог.<br />
+<br />
+<br />
+<b>Вывод списков</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Тест&#39;</span><span class="p">,</span><span class="s">&#39;списка&#39;</span><span class="p">]</span>
+
+<span class="k">print</span> <span class="s">&#39;1&#39;</span><span class="p">,</span><span class="n">d</span>
+<span class="k">print</span> <span class="s">&#39;2&#39;</span><span class="p">,</span><span class="n">d</span><span class="o">.</span><span class="n">__repr__</span><span class="p">()</span>
+<span class="k">print</span> <span class="s">&#39;3&#39;</span><span class="p">,</span><span class="s">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</pre></div>
+</div>Результат:<div class="codebox"><div class="highlight"><pre><span class="mi">1</span> <span class="p">[</span><span class="s">&#39;</span><span class="se">\xd0\xa2\xd0\xb5\xd1\x81\xd1\x82</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\xd1\x81\xd0\xbf\xd0\xb8\xd1\x81\xd0\xba\xd0\xb0</span><span class="s">&#39;</span><span class="p">]</span>
+<span class="mi">2</span> <span class="p">[</span><span class="s">&#39;</span><span class="se">\xd0\xa2\xd0\xb5\xd1\x81\xd1\x82</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\xd1\x81\xd0\xbf\xd0\xb8\xd1\x81\xd0\xba\xd0\xb0</span><span class="s">&#39;</span><span class="p">]</span>
+<span class="mi">3</span> <span class="err">Тест</span><span class="p">,</span><span class="err">списка</span>
+</pre></div>
+</div>При выводе списка, происходит вызов [{<u>repr</u>}]() который возвращает внутреннее представление этого спиcка - print 1 и 2 являются аналогичными. Для корректного вывода списка, его нужно преобразовать в строку - print 3.<br />
+<br />
+<b>Установка внешней кодировки при запуске</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">PYTHONIOENCODING</span><span class="o">=</span><span class="n">utf8</span> <span class="n">python</span> <span class="mf">1.</span><span class="n">py</span>
+</pre></div>
+</div><br />
+<br />
+<br />
+<i>статья будет дополняться...</i><br />

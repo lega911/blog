@@ -1,0 +1,225 @@
+::id 4bfb3c691d41c846bc000085
+::date 2010-03-21
+::title Простая авторизация в web
+::tags python, bottle
+::body
+**Предыдущая статья:** [/page/30 Как быстро расшарить любую папку по http без установки тяжелого веб сервера]
+В данной статье показано как можно прикрутить авторизацию, пароли пользователей хранятся в файле //.access// в двойном md5, данные об авторизации хранятся в файле //.login//.
+
+!Добавленные ф-ии (основные):
+testLogin() - Проверка авторизации
+login() - Страница авторизации
+logout() - Отлогинивание
+loginpost() - Авторизация
+
+!Команды скрипта
+**script.py** adduser username - Добавить пользователя
+**script.py** start - Запустить сервер
+
+!Исходник
+[[# coding: utf-8
+
+from bottle import run, route, send_file, request, redirect, response
+import os
+import hashlib
+
+# Получить md5 хеш
+def getmd5(word,count=1):
+    for x in xrange(count):
+        a = hashlib.md5()
+        a.update(word)
+        word = a.hexdigest()
+    return word
+
+# Проверка доступа
+def testLogin():
+    if 'user' not in request.COOKIES: redirect('/login')
+    code = request.COOKIES['user']
+    for s in open('.login','r').readlines():
+        if code == s.rstrip(): return True
+    redirect('/login')
+
+# Страница логина
+@route('/login')
+def login():
+    return '<html><body> <form method=post >login:<input type=text name=user /><br/> password:<input type=password name=pasw /> <br /> <input type=submit /> </form> </body></html>'
+
+# Отлогинивание
+@route('/logout')
+def logout():
+    if 'user' not in request.COOKIES: redirect('/login')
+    code = request.COOKIES['user'] + '\n'
+    d = open('.login','r').readlines()
+    if code in d: d.remove(code)
+    open('.login','w').writelines(d)
+    response.set_cookie('user', '')
+    redirect('/login')
+
+# Залогинивание
+@route('/login', method='POST')
+def loginpost():
+    ok = False
+    try:
+        user = request.POST['user']
+        pasw = request.POST['pasw']
+        t = user + ':' + getmd5(pasw,2)
+        for s in open('.access','r').readlines():
+            if t == s.rstrip():
+                import random
+                code = user+':'+str(random.random())
+                open('.login','a').write(code+'\n')
+                response.set_cookie('user', code)
+                ok = True
+                break
+    except:
+        pass
+    if ok: redirect('/')
+    else: return 'Access denied<br/><a href="/">main</a>'
+
+# список текущих файлов
+@route('/')
+def mainpage():
+    testLogin()
+    msg = ''
+    for file in os.listdir('.'):
+        if os.path.isfile(file):
+            if file[0] == '.': continue
+            msg += '<a href="%s">%s</a><br/>\n' % (file,file)
+    return '<html><body><div align=right><a href="/logout">logout</a></div>%s</body></html>' % (msg,)
+
+# отправка файла
+@route('/:filename')
+def sendfile(filename):
+    testLogin()
+    send_file(filename, './')
+
+# Главная ф-ия
+def main():
+    import sys
+    if len(sys.argv) < 2:
+        print 'commands: start, adduser <username>'
+        return
+    # Добавить пользователя
+    if sys.argv[1] == 'adduser' and len(sys.argv) == 3:
+        user = sys.argv[2]
+        pasw = raw_input('enter password: ')
+        hash = getmd5(pasw,2)
+        open('.access','a').write(user+':'+hash+'\n')
+        return
+    # Запуск сервера
+    if sys.argv[1] == 'start': run(host='', port=8080, reloader=True)
+    print 'error command'
+
+main()]]
+
+
+[/page/74 HTTP Авторизация на bottle]
+::html
+<b>Предыдущая статья:</b> <a href="/page/30">Как быстро расшарить любую папку по http без установки тяжелого веб сервера</a><br />
+В данной статье показано как можно прикрутить авторизацию, пароли пользователей хранятся в файле <i>.access</i> в двойном md5, данные об авторизации хранятся в файле <i>.login</i>.<br />
+<h3>Добавленные ф-ии (основные):</h3><br />
+testLogin() - Проверка авторизации<br />
+login() - Страница авторизации<br />
+logout() - Отлогинивание<br />
+loginpost() - Авторизация<br />
+<h3>Команды скрипта</h3><br />
+<b>script.py</b> adduser username - Добавить пользователя<br />
+<b>script.py</b> start - Запустить сервер<br />
+<h3>Исходник</h3><br />
+<div class="codebox"><pre><code># coding: utf-8
+
+from bottle import run, route, send_file, request, redirect, response
+import os
+import hashlib
+
+# Получить md5 хеш
+def getmd5(word,count=1):
+    for x in xrange(count):
+        a = hashlib.md5()
+        a.update(word)
+        word = a.hexdigest()
+    return word
+
+# Проверка доступа
+def testLogin():
+    if 'user' not in request.COOKIES: redirect('/login')
+    code = request.COOKIES['user']
+    for s in open('.login','r').readlines():
+        if code == s.rstrip(): return True
+    redirect('/login')
+
+# Страница логина
+@route('/login')
+def login():
+    return '&lt;html&gt;&lt;body&gt; &lt;form method=post &gt;login:&lt;input type=text name=user /&gt;&lt;br/&gt; password:&lt;input type=password name=pasw /&gt; &lt;br /&gt; &lt;input type=submit /&gt; &lt;/form&gt; &lt;/body&gt;&lt;/html&gt;'
+
+# Отлогинивание
+@route('/logout')
+def logout():
+    if 'user' not in request.COOKIES: redirect('/login')
+    code = request.COOKIES['user'] + '\n'
+    d = open('.login','r').readlines()
+    if code in d: d.remove(code)
+    open('.login','w').writelines(d)
+    response.set_cookie('user', '')
+    redirect('/login')
+
+# Залогинивание
+@route('/login', method='POST')
+def loginpost():
+    ok = False
+    try:
+        user = request.POST['user']
+        pasw = request.POST['pasw']
+        t = user + ':' + getmd5(pasw,2)
+        for s in open('.access','r').readlines():
+            if t == s.rstrip():
+                import random
+                code = user+':'+str(random.random())
+                open('.login','a').write(code+'\n')
+                response.set_cookie('user', code)
+                ok = True
+                break
+    except:
+        pass
+    if ok: redirect('/')
+    else: return 'Access denied&lt;br/&gt;&lt;a href="/"&gt;main&lt;/a&gt;'
+
+# список текущих файлов
+@route('/')
+def mainpage():
+    testLogin()
+    msg = ''
+    for file in os.listdir('.'):
+        if os.path.isfile(file):
+            if file[0] == '.': continue
+            msg += '&lt;a href="%s"&gt;%s&lt;/a&gt;&lt;br/&gt;\n' % (file,file)
+    return '&lt;html&gt;&lt;body&gt;&lt;div align=right&gt;&lt;a href="/logout"&gt;logout&lt;/a&gt;&lt;/div&gt;%s&lt;/body&gt;&lt;/html&gt;' % (msg,)
+
+# отправка файла
+@route('/:filename')
+def sendfile(filename):
+    testLogin()
+    send_file(filename, './')
+
+# Главная ф-ия
+def main():
+    import sys
+    if len(sys.argv) &lt; 2:
+        print 'commands: start, adduser &lt;username&gt;'
+        return
+    # Добавить пользователя
+    if sys.argv[1] == 'adduser' and len(sys.argv) == 3:
+        user = sys.argv[2]
+        pasw = raw_input('enter password: ')
+        hash = getmd5(pasw,2)
+        open('.access','a').write(user+':'+hash+'\n')
+        return
+    # Запуск сервера
+    if sys.argv[1] == 'start': run(host='', port=8080, reloader=True)
+    print 'error command'
+
+main()</code></pre></div><br />
+<br />
+<br />
+<a href="/page/74">HTTP Авторизация на bottle</a>

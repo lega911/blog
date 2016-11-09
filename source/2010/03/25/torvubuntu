@@ -1,0 +1,36 @@
+::id 4bfb3c6a1d41c846bc000094
+::date 2010-03-25
+::title tor в ubuntu
+::tags tor, firefox
+::body
+[image:%id%/tor.png] **Tor** (The Onion Router) - это система, позволяющая устанавливать анонимное сетевое соединение, защищённое от прослушивания. Рассматривается как анонимная сеть, предоставляющая передачу данных в зашифрованном виде.
+
+!Настройка
+1. В firefox устанавливаем расширение **Tor Button**
+2. Добавляем tor в список deb-пакетов, добавьте строку //"deb http:/ /deb.torproject.org/torproject.org maverick main"// в файл **/etc/apt/sources.list**, и выполните[[gpg --keyserver keys.gnupg.net --recv 886DDD89
+gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | sudo apt-key add -
+sudo apt-get update]]
+3. Устанавливаем и настраиваем сам tor, выполнить от рута:
+[[# apt-get -f install tor privoxy
+# echo "forward-socks4a / 127.0.0.1:9050 ." >> /etc/privoxy/config
+# /etc/init.d/privoxy restart
+# /etc/init.d/tor restart]]
+
+Готово. Теперь в firefox должна появиться кнопка tor, обычно в правом нижнем углу.
+::html
+<a target="_blank" href="/uploads/4bfb3c6a1d41c846bc000094/tor.png"><img class="content" src="/uploads/4bfb3c6a1d41c846bc000094/tor.png" /></a> <b>Tor</b> (The Onion Router) - это система, позволяющая устанавливать анонимное сетевое соединение, защищённое от прослушивания. Рассматривается как анонимная сеть, предоставляющая передачу данных в зашифрованном виде.<br />
+<h3>Настройка</h3>1. В firefox устанавливаем расширение <b>Tor Button</b><br />
+2. Добавляем tor в список deb-пакетов, добавьте строку <i>"deb http:/ /deb.torproject.org/torproject.org maverick main"</i> в файл <b>/etc/apt/sources.list</b>, и выполните<div class="codebox"><div class="highlight"><pre><span class="n">gpg</span> <span class="o">--</span><span class="n">keyserver</span> <span class="n">keys</span><span class="o">.</span><span class="n">gnupg</span><span class="o">.</span><span class="n">net</span> <span class="o">--</span><span class="n">recv</span> <span class="mi">886</span><span class="n">DDD89</span>
+<span class="n">gpg</span> <span class="o">--</span><span class="n">export</span> <span class="n">A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89</span> <span class="o">|</span> <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">key</span> <span class="n">add</span> <span class="o">-</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+</pre></div>
+</div><br />
+3. Устанавливаем и настраиваем сам tor, выполнить от рута:<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># apt-get -f install tor privoxy</span>
+<span class="c"># echo &quot;forward-socks4a / 127.0.0.1:9050 .&quot; &gt;&gt; /etc/privoxy/config</span>
+<span class="c"># /etc/init.d/privoxy restart</span>
+<span class="c"># /etc/init.d/tor restart</span>
+</pre></div>
+</div><br />
+<br />
+Готово. Теперь в firefox должна появиться кнопка tor, обычно в правом нижнем углу.

@@ -1,0 +1,25 @@
+::id 4cd836ae1d41c84046000003
+::date 2010-11-08
+::title Как посмотреть подключенные модули apache
+::tags apache
+::body
+Для apache2,
+из консоли:
+[[apache2ctl -t -D DUMP_MODULES]]
+из PHP:
+[[<?php
+print_r(apache_get_modules());
+?>]]
+
+::html
+Для apache2,<br />
+из консоли:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">apache2ctl</span> <span class="o">-</span><span class="n">t</span> <span class="o">-</span><span class="n">D</span> <span class="n">DUMP_MODULES</span>
+</pre></div>
+</div><br />
+из PHP:<br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&lt;</span><span class="err">?</span><span class="n">php</span>
+<span class="n">print_r</span><span class="p">(</span><span class="n">apache_get_modules</span><span class="p">());</span>
+<span class="err">?</span><span class="o">&gt;</span>
+</pre></div>
+</div><br />

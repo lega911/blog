@@ -1,0 +1,68 @@
+::id 4bfb3c6a1d41c846bc0000cb
+::date 2010-04-29
+::title jquery подгрузка данных
+::tags jquery, ajax
+::body
+Пример подгрузки данных на jquery
+
+[[html#
+<html>
+<head>
+    <script type="text/javascript"
+        src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" language="javascript">
+      $(document).ready(function(){
+        $("#up1").bind("click", function(e){
+            $.get("./file.html", function(data) {
+                $("#msg").append( data );
+             });
+        });
+        $("#up1").bind("mouseenter mouseleave", function(e){
+            $(this).toggleClass("over");
+        });
+      });
+    </script>
+    <style>
+      #up1 { background:yellow; font-weight:bold;
+        cursor:pointer; padding:5px; }
+      #up1.over { background: #cfc; }
+    </style>
+</head>
+<body>
+  <span id=up1>Get data</span><br />
+  <span id=msg />
+</body>
+</html>]] и рядом нужно положить файл **file.html** с содержимым которое нужно отображать
+
+::html
+Пример подгрузки данных на jquery<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span>
+        <span class="na">src=</span><span class="s">&quot;http://code.jquery.com/jquery-1.4.2.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">language=</span><span class="s">&quot;javascript&quot;</span><span class="nt">&gt;</span>
+      <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+        <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#up1&quot;</span><span class="p">).</span><span class="nx">bind</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+            <span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;./file.html&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#msg&quot;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span> <span class="nx">data</span> <span class="p">);</span>
+             <span class="p">});</span>
+        <span class="p">});</span>
+        <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#up1&quot;</span><span class="p">).</span><span class="nx">bind</span><span class="p">(</span><span class="s2">&quot;mouseenter mouseleave&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+            <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">toggleClass</span><span class="p">(</span><span class="s2">&quot;over&quot;</span><span class="p">);</span>
+        <span class="p">});</span>
+      <span class="p">});</span>
+    <span class="nt">&lt;/script&gt;</span>
+    <span class="nt">&lt;style&gt;</span>
+      <span class="nf">#up1</span> <span class="p">{</span> <span class="k">background</span><span class="o">:</span><span class="nb">yellow</span><span class="p">;</span> <span class="k">font-weight</span><span class="o">:</span><span class="k">bold</span><span class="p">;</span>
+        <span class="k">cursor</span><span class="o">:</span><span class="k">pointer</span><span class="p">;</span> <span class="k">padding</span><span class="o">:</span><span class="m">5px</span><span class="p">;</span> <span class="p">}</span>
+      <span class="nf">#up1</span><span class="nc">.over</span> <span class="p">{</span> <span class="k">background</span><span class="o">:</span> <span class="m">#cfc</span><span class="p">;</span> <span class="p">}</span>
+    <span class="nt">&lt;/style&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;span</span> <span class="na">id=</span><span class="s">up1</span><span class="nt">&gt;</span>Get data<span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;span</span> <span class="na">id=</span><span class="s">msg</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+</div> и рядом нужно положить файл <b>file.html</b> с содержимым которое нужно отображать<br />

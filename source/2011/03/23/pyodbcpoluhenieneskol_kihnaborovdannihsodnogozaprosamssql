@@ -1,0 +1,84 @@
+::id 4d898acd1d41c85124000000
+::date 2011-03-23
+::title pyodbc, получение нескольких наборов данных с одного запроса MSSQL
+::tags python, pyodbc, sql, mssql, linux
+::body
+Пример под linux
+
+[[# coding: utf8
+
+import pyodbc 
+
+def sql_showtable(cur):
+    if cur.description is None: return
+    print cur.description
+    # cur.fetchall()
+    for line in cur:
+        for c in line:
+            if type(c) is str: c = c.decode('cp1251')
+            print c,
+        print
+
+def sql_query(sql):
+    conn = pyodbc.connect("DRIVER={FreeTDS};SERVER=127.0.0.1;"
+        "UID=user;PWD=pasw;DATABASE=demodb", autocommit=True)
+    cur = conn.cursor()
+    
+    cur.execute(sql)
+    
+    sql_showtable(cur)
+    while cur.nextset():
+        sql_showtable(cur)
+    
+    conn.close()
+
+sql_query("select 1+2 as number1,2+3 as number2,4+5 as number3;"
+          "select 'hello' as name ")
+]]
+**Результат**
+[[(('number1', <type 'int'>, None, 10, 10, 0, True), ('number2', <type 'int'>, None, 10, 10, 0, True), ('number3', <type 'int'>, None, 10, 10, 0, True))
+3 5 9
+(('name', <type 'str'>, None, 5, 5, 0, False),)
+hello
+]]
+::html
+Пример под linux<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">import</span> <span class="nn">pyodbc</span> 
+
+<span class="k">def</span> <span class="nf">sql_showtable</span><span class="p">(</span><span class="n">cur</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span> <span class="k">return</span>
+    <span class="k">print</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span>
+    <span class="c"># cur.fetchall()</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">cur</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span> <span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&#39;cp1251&#39;</span><span class="p">)</span>
+            <span class="k">print</span> <span class="n">c</span><span class="p">,</span>
+        <span class="k">print</span>
+
+<span class="k">def</span> <span class="nf">sql_query</span><span class="p">(</span><span class="n">sql</span><span class="p">):</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;DRIVER={FreeTDS};SERVER=127.0.0.1;&quot;</span>
+        <span class="s">&quot;UID=user;PWD=pasw;DATABASE=demodb&quot;</span><span class="p">,</span> <span class="n">autocommit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+    
+    <span class="n">sql_showtable</span><span class="p">(</span><span class="n">cur</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">cur</span><span class="o">.</span><span class="n">nextset</span><span class="p">():</span>
+        <span class="n">sql_showtable</span><span class="p">(</span><span class="n">cur</span><span class="p">)</span>
+    
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">sql_query</span><span class="p">(</span><span class="s">&quot;select 1+2 as number1,2+3 as number2,4+5 as number3;&quot;</span>
+          <span class="s">&quot;select &#39;hello&#39; as name &quot;</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<b>Результат</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="p">((</span><span class="s">&#39;number1&#39;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;int&#39;</span><span class="o">&gt;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">True</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;number2&#39;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;int&#39;</span><span class="o">&gt;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">True</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;number3&#39;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;int&#39;</span><span class="o">&gt;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">True</span><span class="p">))</span>
+<span class="mi">3</span> <span class="mi">5</span> <span class="mi">9</span>
+<span class="p">((</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;str&#39;</span><span class="o">&gt;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">False</span><span class="p">),)</span>
+<span class="n">hello</span>
+</pre></div>
+</div>

@@ -1,0 +1,55 @@
+::id 4cdd6c0e1d41c84046000004
+::date 2010-11-12
+::title smtp сервер на python, twisted
+::tags python, mail, smtp, twisted
+::body
+!Устанавливаем [http://twistedmatrix.com/ twisted]
+[[sudo aptitude install python-twisted
+]]
+!Качаем пример сервера
+[[wget http://twistedmatrix.com/documents/current/mail/examples/emailserver.tac]]
+меняем в этом примере порт на **25** //(в конце примера)//:
+[[...
+    a = service.Application("Console SMTP Server")
+    internet.TCPServer(25, ConsoleSMTPFactory()).setServiceParent(a)
+...]]
+!Запускаем
+[[sudo twistd -ny emailserver.tac
+]]
+Все! Можно на этот сервер отправлять почту.
+
+По умолчанию в этом примере один почтовый ящик console@//ваш_сервер//, но их можно добавить в ф-ии валидации
+[[...
+    def validateTo(self, user):
+        # Only messages directed to the "console" user are accepted.
+        if user.dest.local == "console":
+            return lambda: ConsoleMessage()
+        raise smtp.SMTPBadRcpt(user)
+...]]
+::html
+<h3>Устанавливаем <a target=_blank href="http://twistedmatrix.com/">twisted</a></h3><div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">aptitude</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">twisted</span>
+</pre></div>
+</div><h3>Качаем пример сервера</h3><div class="codebox"><div class="highlight"><pre><span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">twistedmatrix</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">documents</span><span class="o">/</span><span class="n">current</span><span class="o">/</span><span class="n">mail</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">emailserver</span><span class="o">.</span><span class="n">tac</span>
+</pre></div>
+</div><br />
+меняем в этом примере порт на <b>25</b> <i>(в конце примера)</i>:<br />
+<div class="codebox"><div class="highlight"><pre><span class="o">...</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">Application</span><span class="p">(</span><span class="s">&quot;Console SMTP Server&quot;</span><span class="p">)</span>
+    <span class="n">internet</span><span class="o">.</span><span class="n">TCPServer</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="n">ConsoleSMTPFactory</span><span class="p">())</span><span class="o">.</span><span class="n">setServiceParent</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="o">...</span>
+</pre></div>
+</div><h3>Запускаем</h3><div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">twistd</span> <span class="o">-</span><span class="n">ny</span> <span class="n">emailserver</span><span class="o">.</span><span class="n">tac</span>
+</pre></div>
+</div><br />
+Все! Можно на этот сервер отправлять почту.<br />
+<br />
+По умолчанию в этом примере один почтовый ящик console@<i>ваш_сервер</i>, но их можно добавить в ф-ии валидации<br />
+<div class="codebox"><div class="highlight"><pre><span class="o">...</span>
+    <span class="k">def</span> <span class="nf">validateTo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="c"># Only messages directed to the &quot;console&quot; user are accepted.</span>
+        <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">dest</span><span class="o">.</span><span class="n">local</span> <span class="o">==</span> <span class="s">&quot;console&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">ConsoleMessage</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="n">smtp</span><span class="o">.</span><span class="n">SMTPBadRcpt</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+<span class="o">...</span>
+</pre></div>
+</div>

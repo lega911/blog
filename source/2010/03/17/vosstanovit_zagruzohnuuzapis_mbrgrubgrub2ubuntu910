@@ -1,0 +1,67 @@
+::id 4bfb3c691d41c846bc00007f
+::date 2010-03-17
+::title Восстановить загрузочную запись (mbr) grub, grub2 (ubuntu 9.10)
+::tags grub, linux, dd
+::body
+Просмотреть все разделы можно командой:
+[[sudo fdisk -l]]
+
+!Настройка grub2 (ubuntu >=9.10)
+Загружаемся с liveCD, открываем консоль:
+[[sudo mount /dev/sdb1 /mnt]]**/dev/sdb1** - указываем где установлен сам grub (/boot/)
+
+[[sudo grub-install --root-directory=/mnt/ /dev/sda]]**/dev/sda** - устройство куда нужно записать mbr
+
+Если нужно обновить меню, то выполните
+[[sudo update-grub]]
+
+!Настройка grub (старая ubuntu)
+Загружаемся с liveCD, открываем консоль:
+[[sudo grub
+find /boot/grub/boot.img]]
+Команда выведет раздел где находится сам grub (например - (hd0,7) ), далее делаем этот раздел главным и настраиваем grub:
+[[root (hd0,7)
+setup (hd0)]]
+
+!доп. вариант: копирование сектора
+выполните:
+[[dd if=/dev/sda of=/home/user/boot.mbr bs=512 count=1]]
+эта команда скопирует сектор в файл, а когда нужно будет восстановить то:
+[[dd if=/home/user/boot.mbr of=/dev/sda bs=512 count=1]]
+
+::html
+Просмотреть все разделы можно командой:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">fdisk</span> <span class="o">-</span><span class="n">l</span>
+</pre></div>
+</div><br />
+<h3>Настройка grub2 (ubuntu &gt;=9.10)</h3>Загружаемся с liveCD, открываем консоль:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">mount</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sdb1</span> <span class="o">/</span><span class="n">mnt</span>
+</pre></div>
+</div><b>/dev/sdb1</b> - указываем где установлен сам grub (/boot/)<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">grub</span><span class="o">-</span><span class="n">install</span> <span class="o">--</span><span class="n">root</span><span class="o">-</span><span class="n">directory</span><span class="o">=/</span><span class="n">mnt</span><span class="o">/</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda</span>
+</pre></div>
+</div><b>/dev/sda</b> - устройство куда нужно записать mbr<br />
+<br />
+Если нужно обновить меню, то выполните<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">update</span><span class="o">-</span><span class="n">grub</span>
+</pre></div>
+</div><br />
+<h3>Настройка grub (старая ubuntu)</h3>Загружаемся с liveCD, открываем консоль:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">grub</span>
+<span class="n">find</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">grub</span><span class="o">/</span><span class="n">boot</span><span class="o">.</span><span class="n">img</span>
+</pre></div>
+</div><br />
+Команда выведет раздел где находится сам grub (например - (hd0,7) ), далее делаем этот раздел главным и настраиваем grub:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">root</span> <span class="p">(</span><span class="n">hd0</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">setup</span> <span class="p">(</span><span class="n">hd0</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<h3>доп. вариант: копирование сектора</h3>выполните:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">dd</span> <span class="k">if</span><span class="o">=/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda</span> <span class="n">of</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">boot</span><span class="o">.</span><span class="n">mbr</span> <span class="n">bs</span><span class="o">=</span><span class="mi">512</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span>
+</pre></div>
+</div><br />
+эта команда скопирует сектор в файл, а когда нужно будет восстановить то:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">dd</span> <span class="k">if</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">boot</span><span class="o">.</span><span class="n">mbr</span> <span class="n">of</span><span class="o">=/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda</span> <span class="n">bs</span><span class="o">=</span><span class="mi">512</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span>
+</pre></div>
+</div><br />

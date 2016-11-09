@@ -1,0 +1,28 @@
+::id 4bfb3c6a1d41c846bc00008d
+::date 2010-03-24
+::title ram disk in linux
+::tags ramdisk, linux
+::body
+В заметке показано как сделать рам диск в линуксе, реализовывал на ubuntu 9.10
+
+!1. Задаем размер рам диска в параметре при загрузке ядра
+дописываем в файл **/boot/grub/grub.cfg**, параметр **ramdisk_size=20000**, размер указываем в килобайтах, пример:
+[[linux   /boot/vmlinuz-2.6.31-20-generic-pae root=UUID=fe177150-9cd0-4d52-b0a5-435d044bbe33 ro   quiet splash ramdisk_size=20000]] далее перезагружаемся
+!2. Создаем диск и форматируем
+[[sudo mke2fs -m 0 /dev/ram0]]
+!3. Монтируем
+[[sudo mkdir /media/ram
+sudo mount /dev/ram0 /media/ram]]
+все! рам диск готов
+::html
+В заметке показано как сделать рам диск в линуксе, реализовывал на ubuntu 9.10<br />
+<br />
+<h3>1. Задаем размер рам диска в параметре при загрузке ядра</h3><br />
+дописываем в файл <b>/boot/grub/grub.cfg</b>, параметр <b>ramdisk_size=20000</b>, размер указываем в килобайтах, пример:<br />
+<div class="codebox"><pre><code>linux   /boot/vmlinuz-2.6.31-20-generic-pae root=UUID=fe177150-9cd0-4d52-b0a5-435d044bbe33 ro   quiet splash ramdisk_size=20000</code></pre></div> далее перезагружаемся<br />
+<h3>2. Создаем диск и форматируем</h3><br />
+<div class="codebox"><pre><code>sudo mke2fs -m 0 /dev/ram0</code></pre></div><br />
+<h3>3. Монтируем</h3><br />
+<div class="codebox"><pre><code>sudo mkdir /media/ram
+sudo mount /dev/ram0 /media/ram</code></pre></div><br />
+все! рам диск готов

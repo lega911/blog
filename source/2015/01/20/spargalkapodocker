@@ -1,0 +1,121 @@
+::id 54bece923ad2ff5abf082670
+::date 2015-01-20
+::title Шпаргалка по Docker
+::tags docker, virtual
+::body
+**Установка**
+[https://docs.docker.com/installation/ubuntulinux/#ubuntu-trusty-1404-lts-64-bit Документация], либо можно выполнить код:
+[[curl -sSL https://get.docker.com/ubuntu/ | sudo sh]]
+
+**Запуск docker от пользователя:**
+[[sudo groupadd docker
+sudo gpasswd -a ${USER} docker
+sudo service docker restart
+or
+sudo service docker.io restart
+newgrp docker]]
+**Собрать образ из текущей папки:**
+[[docker build -t Name .]]
+**Список образов:**
+[[docker images]]
+**Список контейнеров:**
+[[docker ps -a]]
+**Запуск команды в активном контейнере:**
+[[docker exec -d Name touch /tmp/new_file]]
+**Запуск bash в активном контейнере:**
+[[docker exec -it Name bash]]
+**Остановить контейнер:**
+[[docker stop Name]]
+**Удалить контейнер:**
+[[docker rm NameOrId]]
+**Удалить образ:**
+[[docker rmi NameOrId]]
+**Запустить контейнер:**
+[[docker run -v /hostDir:/contDir -i -t --rm -p 8080:8080 --name Name Image /bin/bash]]**-v /hostDir:/contDir** подключенине папки
+**-i -t** интерактивное управление
+**--rm** удалить контейнер после остановки
+**-p hostPort:containerPort** пробросить порт
+**--name Name** имя контейнера
+**Image** имя образа
+**/bin/bash** запускаемая команда при запуске контейнера
+**--link db:db** прилинковать имяконтейнера:внутренее имя
+
+**Изменить путь хранения образов, данных** в ubuntu, для этого нужно в файл **/etc/default/docker** добавить опцию:
+[[DOCKER_OPTS="--dns 8.8.8.8 --dns 8.8.4.4 -g /new/location"]]
+**Подключить папку к запущенному контейнеру**
+1) Перейти в папку-корень нужного контейнера
+[[cd /srv/docker/aufs/mnt/c0a9f1c2d/]]2) Создать папку и примонтировать
+[[mkdir /app; mount -o bind /host/path ./app]]3) Перезапустить контейнер
+
+::html
+<b>Установка</b><br />
+<a target=_blank href="https://docs.docker.com/installation/ubuntulinux/#ubuntu-trusty-1404-lts-64-bit">Документация</a>, либо можно выполнить код:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">curl</span> <span class="o">-</span><span class="n">sSL</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">get</span><span class="o">.</span><span class="n">docker</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">ubuntu</span><span class="o">/</span> <span class="o">|</span> <span class="n">sudo</span> <span class="n">sh</span>
+</pre></div>
+</div><br />
+<br />
+<b>Запуск docker от пользователя:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">groupadd</span> <span class="n">docker</span>
+<span class="n">sudo</span> <span class="n">gpasswd</span> <span class="o">-</span><span class="n">a</span> <span class="err">$</span><span class="p">{</span><span class="n">USER</span><span class="p">}</span> <span class="n">docker</span>
+<span class="n">sudo</span> <span class="n">service</span> <span class="n">docker</span> <span class="n">restart</span>
+<span class="ow">or</span>
+<span class="n">sudo</span> <span class="n">service</span> <span class="n">docker</span><span class="o">.</span><span class="n">io</span> <span class="n">restart</span>
+<span class="n">newgrp</span> <span class="n">docker</span>
+</pre></div>
+</div><br />
+<b>Собрать образ из текущей папки:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">t</span> <span class="n">Name</span> <span class="o">.</span>
+</pre></div>
+</div><br />
+<b>Список образов:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="n">images</span>
+</pre></div>
+</div><br />
+<b>Список контейнеров:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="n">ps</span> <span class="o">-</span><span class="n">a</span>
+</pre></div>
+</div><br />
+<b>Запуск команды в активном контейнере:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="k">exec</span> <span class="o">-</span><span class="n">d</span> <span class="n">Name</span> <span class="n">touch</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">new_file</span>
+</pre></div>
+</div><br />
+<b>Запуск bash в активном контейнере:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="k">exec</span> <span class="o">-</span><span class="n">it</span> <span class="n">Name</span> <span class="n">bash</span>
+</pre></div>
+</div><br />
+<b>Остановить контейнер:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="n">stop</span> <span class="n">Name</span>
+</pre></div>
+</div><br />
+<b>Удалить контейнер:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="n">rm</span> <span class="n">NameOrId</span>
+</pre></div>
+</div><br />
+<b>Удалить образ:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="n">rmi</span> <span class="n">NameOrId</span>
+</pre></div>
+</div><br />
+<b>Запустить контейнер:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">v</span> <span class="o">/</span><span class="n">hostDir</span><span class="p">:</span><span class="o">/</span><span class="n">contDir</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">t</span> <span class="o">--</span><span class="n">rm</span> <span class="o">-</span><span class="n">p</span> <span class="mi">8080</span><span class="p">:</span><span class="mi">8080</span> <span class="o">--</span><span class="n">name</span> <span class="n">Name</span> <span class="n">Image</span> <span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">bash</span>
+</pre></div>
+</div><b>-v /hostDir:/contDir</b> подключенине папки<br />
+<b>-i -t</b> интерактивное управление<br />
+<b>--rm</b> удалить контейнер после остановки<br />
+<b>-p hostPort:containerPort</b> пробросить порт<br />
+<b>--name Name</b> имя контейнера<br />
+<b>Image</b> имя образа<br />
+<b>/bin/bash</b> запускаемая команда при запуске контейнера<br />
+<b>--link db:db</b> прилинковать имяконтейнера:внутренее имя<br />
+<br />
+<b>Изменить путь хранения образов, данных</b> в ubuntu, для этого нужно в файл <b>/etc/default/docker</b> добавить опцию:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">DOCKER_OPTS</span><span class="o">=</span><span class="s">&quot;--dns 8.8.8.8 --dns 8.8.4.4 -g /new/location&quot;</span>
+</pre></div>
+</div><br />
+<b>Подключить папку к запущенному контейнеру</b><br />
+1) Перейти в папку-корень нужного контейнера<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">docker</span><span class="o">/</span><span class="n">aufs</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">c0a9f1c2d</span><span class="o">/</span>
+</pre></div>
+</div>2) Создать папку и примонтировать<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">mkdir</span> <span class="o">/</span><span class="n">app</span><span class="p">;</span> <span class="n">mount</span> <span class="o">-</span><span class="n">o</span> <span class="n">bind</span> <span class="o">/</span><span class="n">host</span><span class="o">/</span><span class="n">path</span> <span class="o">./</span><span class="n">app</span>
+</pre></div>
+</div>3) Перезапустить контейнер<br />

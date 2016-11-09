@@ -1,0 +1,107 @@
+::id 4ca446821d41c822e3000000
+::date 2010-09-30
+::title mencoder: кодирование видео, склейка видео
+::tags кодирование, видео, mencoder
+::body
+**mencoder** - свободный перекодировщик видео, поддерживает большинство известных кодеков, но основным является **avi**, с ним он наиболее оптимально работает.
+**Общий вид**[[mencoder input_file [options] -o output_file]]
+
+!Параметры
+#|
+||**-ovc** //codec//|Выбор **видео** кодека
+||**-vf scale=**//400:300//|Масштабирование //-vf scale=ширина:высота//
+||**-of** //format//|Формат файла
+||**-ofps** //15//|FPS
+||**-x264encopts**|Опции кодека x264
+**threads**=auto - Использовать все ядра процессора
+**keyint**=60 - Частота опорных кадров (GOP)
+||**-oac** //codec//|Выбор **аудио** кодека
+||**-srate** //44100//|Частота звука
+||**-channels** //2//|Кол-во каналов
+||**-lameopts**|Опции аудио кодека **mp3lame**
+**cbr:br=**//128// - Битрейт
+||**-o** //outpu_file//|Результирующий файл
+|#
+
+!Аудио кодеки
+см. **mencoder -oac help**
+#|
+||**mp3lame**|Кодируйте в VBR, ABR или CBR MP3 с LAME
+||**lavc**|Используйте один из кодеков библиотеки [http://www.mplayerhq.hu/DOCS/HTML/ru/menc-feat-enc-libavcodec.html#menc-feat-enc-libavcodec-audio-codecs libavcodec]
+||**faac**|FAAC AAC аудио кодер
+||**toolame**|MPEG Audio Layer 2 кодер
+||**twolame**|MPEG Audio Layer 2 кодер, основанный на tooLAME
+||**pcm**|Несжатый PCM звук
+||**copy**|Без перекодирования, копировать дорожку
+|#
+
+!Видео кодеки
+см. **mencoder -ovc help**
+#|
+||**lavc**|Используйте один из кодеков библиотеки [http://www.mplayerhq.hu/DOCS/HTML/ru/menc-feat-enc-libavcodec.html#menc-feat-enc-libavcodec-video-codecs libavcodec]
+||**xvid**|Xvid, MPEG-4 Advanced Simple Profile (ASP) кодек
+||**x264**|x264, MPEG-4 Advanced Video Coding (AVC), AKA[ он же] H.264 кодек
+||**nuv**|nuppel видео, используемое некоторыми приложениями реального времени
+||**raw**|Несжатые видео кадры
+||**copy**|Не перекодировать, просто скопировать сжатые кадры
+||**frameno**|Использовался для 3-х проходного кодирования (не рекомендуется)
+|#
+
+!Форматы файлов
+#|
+||**lavf**|Один из форматов, поддерживаемых библиотекой см. **mencoder -of help**
+||**avi**|'Слоеное' Аудио-Видео
+||**asf**|Advanced Streaming Format
+||**flv**|Macromedia Flash видео
+||**mpeg / mpg**|MPEG-1 и MPEG-2 PS
+||**mp4**|MPEG-4 формат
+||**mov**|QuickTime
+||**mkv**|Открытый аудио/видео контейнер Matroska
+||**rawvideo**|сырой видео поток (без мультиплексирования - только видео поток)
+||**rawaudio**|сырой аудио поток (без мультиплексирования - только аудио поток)
+|#
+
+!Примеры
+mkv в avi, звук в mp3, видео в h264[[mencoder input.mkv -oac mp3lame -ovc x264 -of lavf -o output.avi]]
+Преобразование битрейта звука и размеров видио[[mencoder input.mkv -oac mp3lame -srate 44100 -lameopts cbr:br=128 \
+    -ovc x264 -vf scale=640:344 -o output.mkv]]
+Извлечь звуковую дорожку в mp3[[mencoder 1.mpeg -oac mp3lame -ovc frameno -of rawaudio -o 1.mp3]]
+Сжатие в H264, 15fps и частотой опорных кадров=60, + использование всех ядер процессора[[mencoder input.avi -o output.mkv -oac copy -ovc x264 -x264encopts threads=auto:keyint=60 -ofps 15]]
+
+!Склейка видео
+Для склейки нужно что-б исходные файлы имели одинаковые параметры[[mencoder -oac copy -ovc copy file1.avi file2.avi -o out.avi]]
+
+[http://www.mplayerhq.hu/DOCS/HTML/ru/index.html Документация на русском] ([http://www.mplayerhq.hu/DOCS/HTML/ru/MPlayer.html одним файлом])
+
+::html
+<b>mencoder</b> - свободный перекодировщик видео, поддерживает большинство известных кодеков, но основным является <b>avi</b>, с ним он наиболее оптимально работает.<br />
+<b>Общий вид</b><div class="codebox"><div class="highlight"><pre><span class="n">mencoder</span> <span class="n">input_file</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span> <span class="o">-</span><span class="n">o</span> <span class="n">output_file</span>
+</pre></div>
+</div><br />
+<h3>Параметры</h3><table class="pymark_table"><tr><td></td></tr><tr><td><b>-ovc</b> <i>codec</i></td><td>Выбор <b>видео</b> кодека</td></tr><tr><td><b>-vf scale=</b><i>400:300</i></td><td>Масштабирование <i>-vf scale=ширина:высота</i></td></tr><tr><td><b>-of</b> <i>format</i></td><td>Формат файла</td></tr><tr><td><b>-ofps</b> <i>15</i></td><td>FPS</td></tr><tr><td><b>-x264encopts</b></td><td>Опции кодека x264<br />
+<b>threads</b>=auto - Использовать все ядра процессора<br />
+<b>keyint</b>=60 - Частота опорных кадров (GOP)</td></tr><tr><td><b>-oac</b> <i>codec</i></td><td>Выбор <b>аудио</b> кодека</td></tr><tr><td><b>-srate</b> <i>44100</i></td><td>Частота звука</td></tr><tr><td><b>-channels</b> <i>2</i></td><td>Кол-во каналов</td></tr><tr><td><b>-lameopts</b></td><td>Опции аудио кодека <b>mp3lame</b><br />
+<b>cbr:br=</b><i>128</i> - Битрейт</td></tr><tr><td><b>-o</b> <i>outpu_file</i></td><td>Результирующий файл</td></tr></table><br />
+<h3>Аудио кодеки</h3>см. <b>mencoder -oac help</b><br />
+<table class="pymark_table"><tr><td></td></tr><tr><td><b>mp3lame</b></td><td>Кодируйте в VBR, ABR или CBR MP3 с LAME</td></tr><tr><td><b>lavc</b></td><td>Используйте один из кодеков библиотеки <a target=_blank href="http://www.mplayerhq.hu/DOCS/HTML/ru/menc-feat-enc-libavcodec.html#menc-feat-enc-libavcodec-audio-codecs">libavcodec</a></td></tr><tr><td><b>faac</b></td><td>FAAC AAC аудио кодер</td></tr><tr><td><b>toolame</b></td><td>MPEG Audio Layer 2 кодер</td></tr><tr><td><b>twolame</b></td><td>MPEG Audio Layer 2 кодер, основанный на tooLAME</td></tr><tr><td><b>pcm</b></td><td>Несжатый PCM звук</td></tr><tr><td><b>copy</b></td><td>Без перекодирования, копировать дорожку</td></tr></table><br />
+<h3>Видео кодеки</h3>см. <b>mencoder -ovc help</b><br />
+<table class="pymark_table"><tr><td></td></tr><tr><td><b>lavc</b></td><td>Используйте один из кодеков библиотеки <a target=_blank href="http://www.mplayerhq.hu/DOCS/HTML/ru/menc-feat-enc-libavcodec.html#menc-feat-enc-libavcodec-video-codecs">libavcodec</a></td></tr><tr><td><b>xvid</b></td><td>Xvid, MPEG-4 Advanced Simple Profile (ASP) кодек</td></tr><tr><td><b>x264</b></td><td>x264, MPEG-4 Advanced Video Coding (AVC), AKA[ он же] H.264 кодек</td></tr><tr><td><b>nuv</b></td><td>nuppel видео, используемое некоторыми приложениями реального времени</td></tr><tr><td><b>raw</b></td><td>Несжатые видео кадры</td></tr><tr><td><b>copy</b></td><td>Не перекодировать, просто скопировать сжатые кадры</td></tr><tr><td><b>frameno</b></td><td>Использовался для 3-х проходного кодирования (не рекомендуется)</td></tr></table><br />
+<h3>Форматы файлов</h3><table class="pymark_table"><tr><td></td></tr><tr><td><b>lavf</b></td><td>Один из форматов, поддерживаемых библиотекой см. <b>mencoder -of help</b></td></tr><tr><td><b>avi</b></td><td>'Слоеное' Аудио-Видео</td></tr><tr><td><b>asf</b></td><td>Advanced Streaming Format</td></tr><tr><td><b>flv</b></td><td>Macromedia Flash видео</td></tr><tr><td><b>mpeg / mpg</b></td><td>MPEG-1 и MPEG-2 PS</td></tr><tr><td><b>mp4</b></td><td>MPEG-4 формат</td></tr><tr><td><b>mov</b></td><td>QuickTime</td></tr><tr><td><b>mkv</b></td><td>Открытый аудио/видео контейнер Matroska</td></tr><tr><td><b>rawvideo</b></td><td>сырой видео поток (без мультиплексирования - только видео поток)</td></tr><tr><td><b>rawaudio</b></td><td>сырой аудио поток (без мультиплексирования - только аудио поток)</td></tr></table><br />
+<h3>Примеры</h3>mkv в avi, звук в mp3, видео в h264<div class="codebox"><div class="highlight"><pre><span class="n">mencoder</span> <span class="nb">input</span><span class="o">.</span><span class="n">mkv</span> <span class="o">-</span><span class="n">oac</span> <span class="n">mp3lame</span> <span class="o">-</span><span class="n">ovc</span> <span class="n">x264</span> <span class="o">-</span><span class="n">of</span> <span class="n">lavf</span> <span class="o">-</span><span class="n">o</span> <span class="n">output</span><span class="o">.</span><span class="n">avi</span>
+</pre></div>
+</div><br />
+Преобразование битрейта звука и размеров видио<div class="codebox"><div class="highlight"><pre><span class="n">mencoder</span> <span class="nb">input</span><span class="o">.</span><span class="n">mkv</span> <span class="o">-</span><span class="n">oac</span> <span class="n">mp3lame</span> <span class="o">-</span><span class="n">srate</span> <span class="mi">44100</span> <span class="o">-</span><span class="n">lameopts</span> <span class="n">cbr</span><span class="p">:</span><span class="n">br</span><span class="o">=</span><span class="mi">128</span> \
+    <span class="o">-</span><span class="n">ovc</span> <span class="n">x264</span> <span class="o">-</span><span class="n">vf</span> <span class="n">scale</span><span class="o">=</span><span class="mi">640</span><span class="p">:</span><span class="mi">344</span> <span class="o">-</span><span class="n">o</span> <span class="n">output</span><span class="o">.</span><span class="n">mkv</span>
+</pre></div>
+</div><br />
+Извлечь звуковую дорожку в mp3<div class="codebox"><div class="highlight"><pre><span class="n">mencoder</span> <span class="mf">1.</span><span class="n">mpeg</span> <span class="o">-</span><span class="n">oac</span> <span class="n">mp3lame</span> <span class="o">-</span><span class="n">ovc</span> <span class="n">frameno</span> <span class="o">-</span><span class="n">of</span> <span class="n">rawaudio</span> <span class="o">-</span><span class="n">o</span> <span class="mf">1.</span><span class="n">mp3</span>
+</pre></div>
+</div><br />
+Сжатие в H264, 15fps и частотой опорных кадров=60, + использование всех ядер процессора<div class="codebox"><div class="highlight"><pre><span class="n">mencoder</span> <span class="nb">input</span><span class="o">.</span><span class="n">avi</span> <span class="o">-</span><span class="n">o</span> <span class="n">output</span><span class="o">.</span><span class="n">mkv</span> <span class="o">-</span><span class="n">oac</span> <span class="n">copy</span> <span class="o">-</span><span class="n">ovc</span> <span class="n">x264</span> <span class="o">-</span><span class="n">x264encopts</span> <span class="n">threads</span><span class="o">=</span><span class="n">auto</span><span class="p">:</span><span class="n">keyint</span><span class="o">=</span><span class="mi">60</span> <span class="o">-</span><span class="n">ofps</span> <span class="mi">15</span>
+</pre></div>
+</div><br />
+<h3>Склейка видео</h3>Для склейки нужно что-б исходные файлы имели одинаковые параметры<div class="codebox"><div class="highlight"><pre><span class="n">mencoder</span> <span class="o">-</span><span class="n">oac</span> <span class="n">copy</span> <span class="o">-</span><span class="n">ovc</span> <span class="n">copy</span> <span class="n">file1</span><span class="o">.</span><span class="n">avi</span> <span class="n">file2</span><span class="o">.</span><span class="n">avi</span> <span class="o">-</span><span class="n">o</span> <span class="n">out</span><span class="o">.</span><span class="n">avi</span>
+</pre></div>
+</div><br />
+<br />
+<a target=_blank href="http://www.mplayerhq.hu/DOCS/HTML/ru/index.html">Документация на русском</a> (<a target=_blank href="http://www.mplayerhq.hu/DOCS/HTML/ru/MPlayer.html">одним файлом</a>)<br />

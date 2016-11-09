@@ -1,0 +1,38 @@
+::id 4bfb3c691d41c846bc000000
+::date 2010-01-28
+::title Установка myBoard
+::tags установка, myboard
+::body
+Компоненты для **myBoard**
+ * jinja2
+ * pil
+ * bottle
+
+!Порядок установки и запуск
+[[sudo apt-get install python python-setuptools subversion
+sudo easy_install jinja2
+sudo aptitude install python-imaging
+svn co https://myboard.svn.sourceforge.net/svnroot/myboard myboard
+cd myboard
+python dbinit.py
+python index.py
+]]
+после этого myBoard должен быть доступен по ссылке [http://localhost:8080 http://localhost:8080]
+к Apache, nginx или к другим веб серерам можно подключить через wsgi, файл index.wsgi [7 инструкция]
+
+::html
+Компоненты для <b>myBoard</b>
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;jinja2
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;pil
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;bottle<br />
+<h3>Порядок установки и запуск</h3><div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python</span> <span class="n">python</span><span class="o">-</span><span class="n">setuptools</span> <span class="n">subversion</span>
+<span class="n">sudo</span> <span class="n">easy_install</span> <span class="n">jinja2</span>
+<span class="n">sudo</span> <span class="n">aptitude</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">imaging</span>
+<span class="n">svn</span> <span class="n">co</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">myboard</span><span class="o">.</span><span class="n">svn</span><span class="o">.</span><span class="n">sourceforge</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">svnroot</span><span class="o">/</span><span class="n">myboard</span> <span class="n">myboard</span>
+<span class="n">cd</span> <span class="n">myboard</span>
+<span class="n">python</span> <span class="n">dbinit</span><span class="o">.</span><span class="n">py</span>
+<span class="n">python</span> <span class="n">index</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div><br />
+после этого myBoard должен быть доступен по ссылке <a target=_blank href="http://localhost:8080">http://localhost:8080</a><br />
+к Apache, nginx или к другим веб серерам можно подключить через wsgi, файл index.wsgi <a href="7">инструкция</a><br />

@@ -1,0 +1,51 @@
+::id 510f5b277114480f2b000001
+::date 2013-02-04
+::title Запуск (графического) приложения от другого пользователя в linux
+::tags sudo, user, xserver, linux
+::body
+Запуск консольного приложения:
+[[sudo -u username touch /tmp/1]]
+
+Запуск shell другого пользователя:
+[[sudo su username]]
+
+Для запуска графического приложения нужно дать пользователю доступ к экрану (x-server):
+[[xhost +SI:localuser:username
+sudo -u test firefox
+xhost -SI:localuser:username]]
+
+Дать/забрать доступ к x-server с любого хоста и пользователя.
+[[xhost +
+xhost -]]
+
+Запуск из графической оболочки (отцепится от консоли)
+[[gksu -u username -l "firefox"]]
+
+::html
+Запуск консольного приложения:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="o">-</span><span class="n">u</span> <span class="n">username</span> <span class="n">touch</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="mi">1</span>
+</pre></div>
+</div><br />
+<br />
+Запуск shell другого пользователя:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">su</span> <span class="n">username</span>
+</pre></div>
+</div><br />
+<br />
+Для запуска графического приложения нужно дать пользователю доступ к экрану (x-server):<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">xhost</span> <span class="o">+</span><span class="n">SI</span><span class="p">:</span><span class="n">localuser</span><span class="p">:</span><span class="n">username</span>
+<span class="n">sudo</span> <span class="o">-</span><span class="n">u</span> <span class="n">test</span> <span class="n">firefox</span>
+<span class="n">xhost</span> <span class="o">-</span><span class="n">SI</span><span class="p">:</span><span class="n">localuser</span><span class="p">:</span><span class="n">username</span>
+</pre></div>
+</div><br />
+<br />
+Дать/забрать доступ к x-server с любого хоста и пользователя.<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">xhost</span> <span class="o">+</span>
+<span class="n">xhost</span> <span class="o">-</span>
+</pre></div>
+</div><br />
+<br />
+Запуск из графической оболочки (отцепится от консоли)<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">gksu</span> <span class="o">-</span><span class="n">u</span> <span class="n">username</span> <span class="o">-</span><span class="n">l</span> <span class="s">&quot;firefox&quot;</span>
+</pre></div>
+</div><br />

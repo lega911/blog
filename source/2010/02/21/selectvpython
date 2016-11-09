@@ -1,0 +1,60 @@
+::id 4bfb3c691d41c846bc00006a
+::date 2010-02-21
+::title select в python
+::tags python, select
+::body
+Метод **select** предназначен для опроса блокирующих потоковых классов: стандартный ввод (stdin), запуск приложения с ожидание результата (popen), получение данных с сокета (socket).
+
+**readst,writest,errorst = select(rlist, wlist, xlist[ , timeout])**
+Пример получения данных с клавиатуры и результата запущенного приложения
+[[import select
+import sys
+import os
+
+loop = True
+
+w, rr = os.popen4('ping google.com -c 5') # запускаем процесс
+# добавляем в список стандартный ввод
+# и поток с чтением результата запущенного процесса
+input = [ sys.stdin, rr]
+
+while loop:
+    r,w,e = select.select(input, [], []) # функция опроса устройств
+    for op in r:
+        if op == sys.stdin:
+            print ':',op.readline().rstrip()
+        else:
+            s = op.readline()
+            # получать больше нечего, удаляем из списка опрашиваемых
+            if not s: input.remove(op)
+            else:
+                print '>',s.rstrip()]]
+::html
+Метод <b>select</b> предназначен для опроса блокирующих потоковых классов: стандартный ввод (stdin), запуск приложения с ожидание результата (popen), получение данных с сокета (socket).<br />
+<br />
+<b>readst,writest,errorst = select(rlist, wlist, xlist[ , timeout])</b><br />
+Пример получения данных с клавиатуры и результата запущенного приложения<br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">select</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="bp">True</span>
+
+<span class="n">w</span><span class="p">,</span> <span class="n">rr</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">popen4</span><span class="p">(</span><span class="s">&#39;ping google.com -c 5&#39;</span><span class="p">)</span> <span class="c"># запускаем процесс</span>
+<span class="c"># добавляем в список стандартный ввод</span>
+<span class="c"># и поток с чтением результата запущенного процесса</span>
+<span class="nb">input</span> <span class="o">=</span> <span class="p">[</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">,</span> <span class="n">rr</span><span class="p">]</span>
+
+<span class="k">while</span> <span class="n">loop</span><span class="p">:</span>
+    <span class="n">r</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">e</span> <span class="o">=</span> <span class="n">select</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span> <span class="c"># функция опроса устройств</span>
+    <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&#39;:&#39;</span><span class="p">,</span><span class="n">op</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="c"># получать больше нечего, удаляем из списка опрашиваемых</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="p">:</span> <span class="nb">input</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&#39;&gt;&#39;</span><span class="p">,</span><span class="n">s</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+</pre></div>
+</div>

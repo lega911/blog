@@ -1,0 +1,52 @@
+::id 4c3725a81d41c87773000000
+::date 2010-07-09
+::title Получить traceback в python
+::tags python, exception, traceback
+::body
+Данный пример выводит на экран оформленный трейсбек, так же его можно записать в файл или передать по сети.
+
+[[# coding: utf8
+
+import sys,traceback
+
+def foo():
+    a = 5/0
+
+try:
+    foo()
+except Exception as e:
+    print traceback.format_exc(10)
+]]
+**Результат**
+[[Traceback (most recent call last):
+  File "/home/user/projects/test/src/test1.py", line 14, in <module>
+    foo()
+  File "/home/user/projects/test/src/test1.py", line 6, in foo
+    a = 5/0
+ZeroDivisionError: integer division or modulo by zero]]
+
+::html
+Данный пример выводит на экран оформленный трейсбек, так же его можно записать в файл или передать по сети.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span><span class="nn">traceback</span>
+
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">5</span><span class="o">/</span><span class="mi">0</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">foo</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<b>Результат</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s">&quot;/home/user/projects/test/src/test1.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">14</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+    <span class="n">foo</span><span class="p">()</span>
+  <span class="n">File</span> <span class="s">&quot;/home/user/projects/test/src/test1.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">6</span><span class="p">,</span> <span class="ow">in</span> <span class="n">foo</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">5</span><span class="o">/</span><span class="mi">0</span>
+<span class="ne">ZeroDivisionError</span><span class="p">:</span> <span class="n">integer</span> <span class="n">division</span> <span class="ow">or</span> <span class="n">modulo</span> <span class="n">by</span> <span class="n">zero</span>
+</pre></div>
+</div><br />

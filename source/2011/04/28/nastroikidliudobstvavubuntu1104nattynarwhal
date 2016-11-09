@@ -1,0 +1,31 @@
+::id 4db966c71d41c8214b000000
+::date 2011-04-28
+::title Настройки для удобства в Ubuntu 11.04 Natty Narwhal
+::tags ubuntu
+::body
+Основные пункты статьи [http://www.webupd8.org/2011/04/things-to-tweak-fix-after-installing.html Things To Tweak / Fix After Installing Ubuntu 11.04 Natty Narwhal]
+ * Установка CompizConfig Settings Manager
+ * Индикатор использования памяти и процессора
+ * Индикатор погоды
+ * Кнопка **menu like** для Firefox 4
+ * Отображение индикатора Dropbox
+ * Переключить LibreOffice на глобальное меню
+ * Изменить размер Dash панели
+ * Отключить глобальное меню
+ * Не отображать подключаемые устройства на панели Unity
+ * Старый режим полосы прокрутки
+ * Переключение на Unity 2D
+
+::html
+Основные пункты статьи <a target=_blank href="http://www.webupd8.org/2011/04/things-to-tweak-fix-after-installing.html">Things To Tweak / Fix After Installing Ubuntu 11.04 Natty Narwhal</a>
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;Установка CompizConfig Settings Manager
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;Индикатор использования памяти и процессора
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;Индикатор погоды
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;Кнопка <b>menu like</b> для Firefox 4
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;Отображение индикатора Dropbox
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;Переключить LibreOffice на глобальное меню
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;Изменить размер Dash панели
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;Отключить глобальное меню
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;Не отображать подключаемые устройства на панели Unity
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;Старый режим полосы прокрутки
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;Переключение на Unity 2D<br />

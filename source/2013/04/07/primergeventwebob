@@ -1,0 +1,51 @@
+::id 516190b77114480f2b00000c
+::date 2013-04-07
+::title Пример Gevent + WebOb
+::tags python, gevent, webob, async, coroutine
+::body
+Пример использования wsgi server от **gevent** и request/response от **webob**.
+
+[[from gevent.pywsgi import WSGIServer
+from webob import Request, Response
+
+from gevent import sleep
+
+def application(environ, start_response):
+    req = Request(environ)
+    res = Response()
+    res.content_type = 'text/plain'
+    sleep(1)
+    res.body = req.environ['PATH_INFO']
+    return res(environ, start_response)
+
+if __name__ == '__main__':
+    WSGIServer(('', 8080), application).serve_forever()]]
+
+Так же можно указать значение для //listen// - лимит одновременно принятых коннектов  параметром //backlog//:
+[[    WSGIServer(('', port), application, backlog=50).serve_forever()]]
+
+::html
+Пример использования wsgi server от <b>gevent</b> и request/response от <b>webob</b>.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">gevent.pywsgi</span> <span class="kn">import</span> <span class="n">WSGIServer</span>
+<span class="kn">from</span> <span class="nn">webob</span> <span class="kn">import</span> <span class="n">Request</span><span class="p">,</span> <span class="n">Response</span>
+
+<span class="kn">from</span> <span class="nn">gevent</span> <span class="kn">import</span> <span class="n">sleep</span>
+
+<span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">environ</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span>
+    <span class="n">req</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">environ</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">Response</span><span class="p">()</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">content_type</span> <span class="o">=</span> <span class="s">&#39;text/plain&#39;</span>
+    <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;PATH_INFO&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">res</span><span class="p">(</span><span class="n">environ</span><span class="p">,</span> <span class="n">start_response</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">WSGIServer</span><span class="p">((</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="mi">8080</span><span class="p">),</span> <span class="n">application</span><span class="p">)</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+</pre></div>
+</div><br />
+<br />
+Так же можно указать значение для <i>listen</i> - лимит одновременно принятых коннектов  параметром <i>backlog</i>:<br />
+<div class="codebox"><div class="highlight"><pre>    <span class="n">WSGIServer</span><span class="p">((</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">port</span><span class="p">),</span> <span class="n">application</span><span class="p">,</span> <span class="n">backlog</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+</pre></div>
+</div><br />

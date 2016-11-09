@@ -1,0 +1,110 @@
+::id 4ed5a7931d41c80309000000
+::date 2011-11-30
+::title Вывод кол-ва прошедшего времени от текущей даты на javascript
+::tags javascript
+::body
+Выводит кол-во прошедшего времени от текущей даты.
+
+[[function date_from_string(dt){
+	// 2011-11-30 15:40:50
+	var df = dt.split(' ');
+	var d = df[0].split('-');
+	var t = df[1].split(':');
+	return d1 = new Date(d[0],d[1]-1,d[2],t[0],t[1],t[2]);
+}
+
+function diff_date(d1){
+	var r = (new Date() - d1)/1000;
+	
+	var tt = {
+			sec: ['{} секунд','{} секунда','{} секунды'],
+			min: ['{} минут','{} минута','{} минуты'],
+			hour: ['{} часов','{} час','{} часа'],
+			day: ['{} дней','{} день','{} дня']
+	}
+	function sec(x,dtt){
+		var r;
+		x = x.toFixed(0);
+		if(x>=11 && x<=14) r = null
+		else {
+			var s = '' + x;
+			if(s.length>1) s = s.substring(1);
+			r = { '1':dtt[1], '2':dtt[2], '3':dtt[2], '4':dtt[2] }[s];
+		}
+		if(!r) r = dtt[0];
+		return r.replace('{}',x)
+	}
+	
+	if(r<60) return sec(r, tt.sec) + ' назад';
+	r = r / 60;
+	if(r<60) return sec(r, tt.min) + ' назад';
+	r = r / 60;
+	if(r<24) return sec(r, tt.hour) + ' назад';
+	r = r / 24;
+	if(r<1) return 'сегодня';
+	if(r<2) return 'вчера';
+	return sec(r, tt.day) + ' назад';
+}]]
+Пример
+[[diff_date( date_from_string('2011-11-20 15:10:05') )
+// Пример результатов:
+// 2 секунды назад
+// 5 минут назад
+// 1 час назад
+// 11 дней назад
+]]
+
+::html
+Выводит кол-во прошедшего времени от текущей даты.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">function</span> <span class="n">date_from_string</span><span class="p">(</span><span class="n">dt</span><span class="p">){</span>
+	<span class="o">//</span> <span class="mi">2011</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">30</span> <span class="mi">15</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">50</span>
+	<span class="n">var</span> <span class="n">df</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">);</span>
+	<span class="n">var</span> <span class="n">d</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;-&#39;</span><span class="p">);</span>
+	<span class="n">var</span> <span class="n">t</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;:&#39;</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">d1</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Date</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">d</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<span class="p">}</span>
+
+<span class="n">function</span> <span class="n">diff_date</span><span class="p">(</span><span class="n">d1</span><span class="p">){</span>
+	<span class="n">var</span> <span class="n">r</span> <span class="o">=</span> <span class="p">(</span><span class="n">new</span> <span class="n">Date</span><span class="p">()</span> <span class="o">-</span> <span class="n">d1</span><span class="p">)</span><span class="o">/</span><span class="mi">1000</span><span class="p">;</span>
+	
+	<span class="n">var</span> <span class="n">tt</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="n">sec</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;{} секунд&#39;</span><span class="p">,</span><span class="s">&#39;{} секунда&#39;</span><span class="p">,</span><span class="s">&#39;{} секунды&#39;</span><span class="p">],</span>
+			<span class="nb">min</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;{} минут&#39;</span><span class="p">,</span><span class="s">&#39;{} минута&#39;</span><span class="p">,</span><span class="s">&#39;{} минуты&#39;</span><span class="p">],</span>
+			<span class="n">hour</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;{} часов&#39;</span><span class="p">,</span><span class="s">&#39;{} час&#39;</span><span class="p">,</span><span class="s">&#39;{} часа&#39;</span><span class="p">],</span>
+			<span class="n">day</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;{} дней&#39;</span><span class="p">,</span><span class="s">&#39;{} день&#39;</span><span class="p">,</span><span class="s">&#39;{} дня&#39;</span><span class="p">]</span>
+	<span class="p">}</span>
+	<span class="n">function</span> <span class="n">sec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">dtt</span><span class="p">){</span>
+		<span class="n">var</span> <span class="n">r</span><span class="p">;</span>
+		<span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">toFixed</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">&gt;=</span><span class="mi">11</span> <span class="o">&amp;&amp;</span> <span class="n">x</span><span class="o">&lt;=</span><span class="mi">14</span><span class="p">)</span> <span class="n">r</span> <span class="o">=</span> <span class="n">null</span>
+		<span class="k">else</span> <span class="p">{</span>
+			<span class="n">var</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&#39;&#39;</span> <span class="o">+</span> <span class="n">x</span><span class="p">;</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">length</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span> <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+			<span class="n">r</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#39;1&#39;</span><span class="p">:</span><span class="n">dtt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s">&#39;2&#39;</span><span class="p">:</span><span class="n">dtt</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s">&#39;3&#39;</span><span class="p">:</span><span class="n">dtt</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s">&#39;4&#39;</span><span class="p">:</span><span class="n">dtt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">}[</span><span class="n">s</span><span class="p">];</span>
+		<span class="p">}</span>
+		<span class="k">if</span><span class="p">(</span><span class="err">!</span><span class="n">r</span><span class="p">)</span> <span class="n">r</span> <span class="o">=</span> <span class="n">dtt</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+		<span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;{}&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+	<span class="p">}</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="n">r</span><span class="o">&lt;</span><span class="mi">60</span><span class="p">)</span> <span class="k">return</span> <span class="n">sec</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">sec</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39; назад&#39;</span><span class="p">;</span>
+	<span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">/</span> <span class="mi">60</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">r</span><span class="o">&lt;</span><span class="mi">60</span><span class="p">)</span> <span class="k">return</span> <span class="n">sec</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">min</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39; назад&#39;</span><span class="p">;</span>
+	<span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">/</span> <span class="mi">60</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">r</span><span class="o">&lt;</span><span class="mi">24</span><span class="p">)</span> <span class="k">return</span> <span class="n">sec</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">hour</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39; назад&#39;</span><span class="p">;</span>
+	<span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">/</span> <span class="mi">24</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">r</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="s">&#39;сегодня&#39;</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">r</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">)</span> <span class="k">return</span> <span class="s">&#39;вчера&#39;</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">sec</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">day</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39; назад&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div><br />
+Пример<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">diff_date</span><span class="p">(</span> <span class="n">date_from_string</span><span class="p">(</span><span class="s">&#39;2011-11-20 15:10:05&#39;</span><span class="p">)</span> <span class="p">)</span>
+<span class="o">//</span> <span class="err">Пример</span> <span class="err">результатов</span><span class="p">:</span>
+<span class="o">//</span> <span class="mi">2</span> <span class="err">секунды</span> <span class="err">назад</span>
+<span class="o">//</span> <span class="mi">5</span> <span class="err">минут</span> <span class="err">назад</span>
+<span class="o">//</span> <span class="mi">1</span> <span class="err">час</span> <span class="err">назад</span>
+<span class="o">//</span> <span class="mi">11</span> <span class="err">дней</span> <span class="err">назад</span>
+</pre></div>
+</div><br />

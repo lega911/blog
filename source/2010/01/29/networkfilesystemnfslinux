@@ -1,0 +1,43 @@
+::id 4bfb3c691d41c846bc000023
+::date 2010-01-29
+::title Network File System (nfs), linux
+::tags nfs, linux
+::body
+проверено на ос: ubuntu 9.10, 10.4
+!Установка
+[[sudo aptitude install nfs-client nfs-common nfs-kernel-server nfs-server]]
+
+!Настройка сервера
+павим файл /etc/exports
+[[/home/user 192.168.0.5(rw,no_root_squash,async)
+/home/user *(rw,root_squash,sync)]]
+рестарт nfs сервера:
+[[/etc/init.d/nfs-kernel-server restart]]
+
+!Настройка клиента
+создаем папку для подключения:
+[[sudo mkdir /media/user]]
+правим файл **/etc/fstub**, что-б автоматический подключалось при загрузке ос
+[[адрес_сервера:/home/user /media/folder nfs rw,hard,intr 0 0]]
+подключаем ресурс
+[[sudo mount -a]]
+
+::html
+проверено на ос: ubuntu 9.10, 10.4<br />
+<h3>Установка</h3><br />
+<div class="codebox"><pre><code>sudo aptitude install nfs-client nfs-common nfs-kernel-server nfs-server</code></pre></div><br />
+<br />
+<h3>Настройка сервера</h3><br />
+павим файл /etc/exports<br />
+<div class="codebox"><pre><code>/home/user 192.168.0.5(rw,no_root_squash,async)
+/home/user *(rw,root_squash,sync)</code></pre></div><br />
+рестарт nfs сервера:<br />
+<div class="codebox"><pre><code>/etc/init.d/nfs-kernel-server restart</code></pre></div><br />
+<br />
+<h3>Настройка клиента</h3><br />
+создаем папку для подключения:<br />
+<div class="codebox"><pre><code>sudo mkdir /media/user</code></pre></div><br />
+правим файл <b>/etc/fstub</b>, что-б автоматический подключалось при загрузке ос<br />
+<div class="codebox"><pre><code>адрес_сервера:/home/user /media/folder nfs rw,hard,intr 0 0</code></pre></div><br />
+подключаем ресурс<br />
+<div class="codebox"><pre><code>sudo mount -a</code></pre></div><br />

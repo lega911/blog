@@ -1,0 +1,61 @@
+::id 4cf138b41d41c82851000000
+::date 2010-11-27
+::title FieldStorage получить имя временного файла
+::tags python, web, fieldstorage, bottle
+::body
+Для этого можно наследовать FieldStorage, и использовать нашу версию класса:[[import cgi
+class MyFieldStorage(cgi.FieldStorage):
+    def make_file(self, binary=None):
+        from os import tmpnam
+        self.tmp_name = tmpnam()
+        return open(self.tmp_name,'w+b')
+]]имя файла будет в **field.tmp_name**, где field - это экземпляр класса FieldStorage
+
+!Если веб фреймворк не позволяет подменить FieldStorage
+Тогда подменяем в классе "файла" функцию создания файла //(пример использования для фреймворка **bottle**)//:[[# подменяем make_file
+def make_file(self, binary=None):
+    from os import tmpnam
+    self.tmp_name = tmpnam()
+    return open(self.tmp_name,'w+b')
+import cgi
+cgi.FieldStorage.make_file = make_file
+
+# пример загрузки файла
+def query_post_upload():
+    fdata = request.POST['file']
+    fdata.file.close()
+    full_fname = './uploads/' + fdata.filename
+    tmp_name = fdata.tmp_name
+    os.rename(tmp_name, full_fname)
+]]
+
+Таким образом мы избегаем лишнего копирования загружаемого файла, переместив его.
+
+::html
+Для этого можно наследовать FieldStorage, и использовать нашу версию класса:<div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">cgi</span>
+<span class="k">class</span> <span class="nc">MyFieldStorage</span><span class="p">(</span><span class="n">cgi</span><span class="o">.</span><span class="n">FieldStorage</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">make_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">tmpnam</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_name</span> <span class="o">=</span> <span class="n">tmpnam</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_name</span><span class="p">,</span><span class="s">&#39;w+b&#39;</span><span class="p">)</span>
+</pre></div>
+</div>имя файла будет в <b>field.tmp_name</b>, где field - это экземпляр класса FieldStorage<br />
+<h3>Если веб фреймворк не позволяет подменить FieldStorage</h3>Тогда подменяем в классе "файла" функцию создания файла <i>(пример использования для фреймворка <b>bottle</b>)</i>:<div class="codebox"><div class="highlight"><pre><span class="c"># подменяем make_file</span>
+<span class="k">def</span> <span class="nf">make_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">tmpnam</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tmp_name</span> <span class="o">=</span> <span class="n">tmpnam</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_name</span><span class="p">,</span><span class="s">&#39;w+b&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">cgi</span>
+<span class="n">cgi</span><span class="o">.</span><span class="n">FieldStorage</span><span class="o">.</span><span class="n">make_file</span> <span class="o">=</span> <span class="n">make_file</span>
+
+<span class="c"># пример загрузки файла</span>
+<span class="k">def</span> <span class="nf">query_post_upload</span><span class="p">():</span>
+    <span class="n">fdata</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;file&#39;</span><span class="p">]</span>
+    <span class="n">fdata</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">full_fname</span> <span class="o">=</span> <span class="s">&#39;./uploads/&#39;</span> <span class="o">+</span> <span class="n">fdata</span><span class="o">.</span><span class="n">filename</span>
+    <span class="n">tmp_name</span> <span class="o">=</span> <span class="n">fdata</span><span class="o">.</span><span class="n">tmp_name</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">tmp_name</span><span class="p">,</span> <span class="n">full_fname</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<br />
+Таким образом мы избегаем лишнего копирования загружаемого файла, переместив его.<br />

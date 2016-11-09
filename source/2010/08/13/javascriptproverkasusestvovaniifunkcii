@@ -1,0 +1,18 @@
+::id 4c6525951d41c85ded000000
+::date 2010-08-13
+::title Javascript, проверка существования функции
+::tags javascript
+::body
+[[
+if(typeof foo == 'function') {
+   // функция существует, ее можно вызывать
+   foo();
+}
+]]
+::html
+<div class="codebox"><div class="highlight"><pre><span class="k">if</span><span class="p">(</span><span class="n">typeof</span> <span class="n">foo</span> <span class="o">==</span> <span class="s">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
+   <span class="o">//</span> <span class="err">функция</span> <span class="err">существует</span><span class="p">,</span> <span class="err">ее</span> <span class="err">можно</span> <span class="err">вызывать</span>
+   <span class="n">foo</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>

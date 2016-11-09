@@ -1,0 +1,89 @@
+::id 4c11335e1d41c80f34000005
+::date 2010-06-11
+::title Защищаем SSH при помощи технологии Port Knocking
+::tags защита, ssh
+::body
+Реализация идеи динамического открытия доступа к 22 порту, при предварительном
+обращении telnet-ом на определенный сетевой порт (в примере 333 - открыть
+доступ и 334 - закрыть). Идея реализована средствами iptables, без привлечения
+дополнительных утилит и анализаторов логов.
+
+[[bash#
+# Создаю цепочку с именем SSH
+iptables -N SSH
+# Правило по умолчанию в INPUT - DROP
+iptables -P INPUT DROP 
+# Всё что пришло на 22 порт - в цепочку SSH
+iptables -A INPUT -p tcp --dport 22 -j SSH 
+# Всё что пришло на 333 порт - в цепочку SSH
+iptables -A INPUT -p tcp --dport 333 -j SSH 
+# Всё что пришло на 334 порт - в цепочку SSH
+iptables -A INPUT -p tcp --dport 334 -j SSH ]]Разделения на цепочки сделано для своего удобства, от этого можно и отказаться.
+
+**Теперь заполняем цепочку SSH.**
+[[bash#
+# Проверяем на наличие имени "SSH" у IP адреса устанавливающего соединение на 22 порт. 
+# И если оно присутствует - то ACCEPT
+iptables -A SSH -p tcp -m state --state NEW -m tcp --dport 22 -m recent --rcheck --name SSH --rsource -j ACCEPT
+
+# Устанавливает имя SSH любому IP адресу с которого пришло новое TCP соединение на указанный порт. (порт 333)
+iptables -A SSH -p tcp -m state --state NEW -m tcp --dport 333 -m recent --set --name SSH --rsource -j DROP
+
+# Удаляет имя "SSH" с IP адреса установившего соединение на этот порт. (порт 334)
+iptables -A SSH -p tcp -m state --state NEW -m tcp --dport 334 -m recent --remove --name SSH --rsource -j DROP ]]
+
+**Насладимся итоговым результатом**
+
+Делаем:
+[[telnet ip_address_or_domain_name 333 ]]После чего спокойно подключаемся по SSH.
+
+Когда прекращаем работу закрываем за собой 22 порт:
+[[telnet ip_address_or_domain_name 334]]
+
+[http://www.opennet.ru/tips/info/2265.shtml источник]
+
+::html
+Реализация идеи динамического открытия доступа к 22 порту, при предварительном<br />
+обращении telnet-ом на определенный сетевой порт (в примере 333 - открыть<br />
+доступ и 334 - закрыть). Идея реализована средствами iptables, без привлечения<br />
+дополнительных утилит и анализаторов логов.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># Создаю цепочку с именем SSH</span>
+iptables -N SSH
+<span class="c"># Правило по умолчанию в INPUT - DROP</span>
+iptables -P INPUT DROP 
+<span class="c"># Всё что пришло на 22 порт - в цепочку SSH</span>
+iptables -A INPUT -p tcp --dport 22 -j SSH 
+<span class="c"># Всё что пришло на 333 порт - в цепочку SSH</span>
+iptables -A INPUT -p tcp --dport 333 -j SSH 
+<span class="c"># Всё что пришло на 334 порт - в цепочку SSH</span>
+iptables -A INPUT -p tcp --dport 334 -j SSH 
+</pre></div>
+</div>Разделения на цепочки сделано для своего удобства, от этого можно и отказаться.<br />
+<br />
+<b>Теперь заполняем цепочку SSH.</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># Проверяем на наличие имени &quot;SSH&quot; у IP адреса устанавливающего соединение на 22 порт. </span>
+<span class="c"># И если оно присутствует - то ACCEPT</span>
+iptables -A SSH -p tcp -m state --state NEW -m tcp --dport 22 -m recent --rcheck --name SSH --rsource -j ACCEPT
+
+<span class="c"># Устанавливает имя SSH любому IP адресу с которого пришло новое TCP соединение на указанный порт. (порт 333)</span>
+iptables -A SSH -p tcp -m state --state NEW -m tcp --dport 333 -m recent --set --name SSH --rsource -j DROP
+
+<span class="c"># Удаляет имя &quot;SSH&quot; с IP адреса установившего соединение на этот порт. (порт 334)</span>
+iptables -A SSH -p tcp -m state --state NEW -m tcp --dport 334 -m recent --remove --name SSH --rsource -j DROP 
+</pre></div>
+</div><br />
+<br />
+<b>Насладимся итоговым результатом</b><br />
+<br />
+Делаем:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">telnet</span> <span class="n">ip_address_or_domain_name</span> <span class="mi">333</span> 
+</pre></div>
+</div>После чего спокойно подключаемся по SSH.<br />
+<br />
+Когда прекращаем работу закрываем за собой 22 порт:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">telnet</span> <span class="n">ip_address_or_domain_name</span> <span class="mi">334</span>
+</pre></div>
+</div><br />
+<br />
+<a target=_blank href="http://www.opennet.ru/tips/info/2265.shtml">источник</a><br />

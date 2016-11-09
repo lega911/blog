@@ -1,0 +1,29 @@
+::id 4bfb3c691d41c846bc000047
+::date 2010-02-05
+::title Управление консолью, ввод пароля из python
+::tags python, pexpect
+::body
+Пример ввода пароля при копирования файла через scp
+
+[[cmd = "scp lega@trac.tonics.ru:/var/file.txt file.txt"
+mypass = 'mypass'
+
+from pexpect import *
+child = spawn(cmd)
+child.expect('password:')
+child.sendline(mypass)
+child.interact()]]
+
+::html
+Пример ввода пароля при копирования файла через scp<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">cmd</span> <span class="o">=</span> <span class="s">&quot;scp lega@trac.tonics.ru:/var/file.txt file.txt&quot;</span>
+<span class="n">mypass</span> <span class="o">=</span> <span class="s">&#39;mypass&#39;</span>
+
+<span class="kn">from</span> <span class="nn">pexpect</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">child</span> <span class="o">=</span> <span class="n">spawn</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+<span class="n">child</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="s">&#39;password:&#39;</span><span class="p">)</span>
+<span class="n">child</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">mypass</span><span class="p">)</span>
+<span class="n">child</span><span class="o">.</span><span class="n">interact</span><span class="p">()</span>
+</pre></div>
+</div><br />

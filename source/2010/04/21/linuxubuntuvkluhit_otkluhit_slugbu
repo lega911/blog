@@ -1,0 +1,37 @@
+::id 4bfb3c6a1d41c846bc0000c3
+::date 2010-04-21
+::title linux ubuntu, включить/отключить службу
+::tags службы, linux, update-rcd, sysv-rc-conf, upstart
+::body
+**Ubuntu 14.04 / upstart**
+Пример отключения nginx
+[[echo "manual" > /etc/init/nginx.override]]
+
+**Ubuntu 12.04 - 13.10**
+Пример для apache
+[[update-rc.d apache2 enable
+update-rc.d apache2 disable]]
+ 
+Вывести список служб и статусы[[sudo sysv-rc-conf --list]]
+Статусы по одной службе[[sudo sysv-rc-conf --list apache2]]
+
+::html
+<b>Ubuntu 14.04 / upstart</b><br />
+Пример отключения nginx<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">echo</span> <span class="s">&quot;manual&quot;</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">/</span><span class="n">nginx</span><span class="o">.</span><span class="n">override</span>
+</pre></div>
+</div><br />
+<br />
+<b>Ubuntu 12.04 - 13.10</b><br />
+Пример для apache<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">update</span><span class="o">-</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span> <span class="n">apache2</span> <span class="n">enable</span>
+<span class="n">update</span><span class="o">-</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span> <span class="n">apache2</span> <span class="n">disable</span>
+</pre></div>
+</div><br />
+ <br />
+Вывести список служб и статусы<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">sysv</span><span class="o">-</span><span class="n">rc</span><span class="o">-</span><span class="n">conf</span> <span class="o">--</span><span class="nb">list</span>
+</pre></div>
+</div><br />
+Статусы по одной службе<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">sysv</span><span class="o">-</span><span class="n">rc</span><span class="o">-</span><span class="n">conf</span> <span class="o">--</span><span class="nb">list</span> <span class="n">apache2</span>
+</pre></div>
+</div><br />

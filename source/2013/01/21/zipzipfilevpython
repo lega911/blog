@@ -1,0 +1,127 @@
+::id 50fce46271144856d0000001
+::date 2013-01-21
+::title zip (zipfile) в python
+::tags python, zip, zipfile
+::body
+Примеры работы с zip архивами из Python.
+//Примеры проверялись на python 2.7 ubuntu//
+
+!Создание и чтение архива
+[[# coding: utf8
+
+from zipfile import ZipFile
+
+filename = __file__
+
+# Создание архива
+z = ZipFile('archive.zip', 'w')
+# Добавление файла в архив
+z.write(filename, 'new_name.py')
+# Добавление буфера/строки в архив как файл
+z.writestr('dir/data.txt', 'buffer with data')
+z.close()
+
+# Открываем архив на чтение
+z = ZipFile('archive.zip', 'r')
+# Тестирование архива, пробная распаковка
+z.testzip()
+# Список файлов
+print z.namelist()
+# Читаем файл
+print z.read('dir/data.txt')
+z.close()]]
+
+!Открытие архива из буфера, сохранение в буфер (строку)
+[[# coding: utf8
+
+from zipfile import ZipFile
+from StringIO import StringIO
+
+# Считываем в строку (буфер)
+buf = open('archive.zip', 'r').read()
+
+# Открываем file-like объект  с данными
+sio = StringIO(buf)
+z = ZipFile(sio, 'a')
+z.writestr('test', 'test')
+z.close()
+
+# Сохраняем в строку (буфер)
+buf = sio.getvalue()
+print 'Size', len(buf)]]
+
+!Удаление файла из zip архива
+[[# coding: utf8
+
+from zipfile import ZipFile
+
+
+zin = ZipFile('archive.zip', 'r')
+zout = ZipFile('archive2.zip', 'w')
+for item in zin.infolist():
+    buf = zin.read(item.filename)
+    if item.filename != 'test':
+        zout.writestr(item, buf)
+zout.close()]]
+
+::html
+Примеры работы с zip архивами из Python.<br />
+<i>Примеры проверялись на python 2.7 ubuntu</i><br />
+<h3>Создание и чтение архива</h3><div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="n">__file__</span>
+
+<span class="c"># Создание архива</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">ZipFile</span><span class="p">(</span><span class="s">&#39;archive.zip&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+<span class="c"># Добавление файла в архив</span>
+<span class="n">z</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#39;new_name.py&#39;</span><span class="p">)</span>
+<span class="c"># Добавление буфера/строки в архив как файл</span>
+<span class="n">z</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s">&#39;dir/data.txt&#39;</span><span class="p">,</span> <span class="s">&#39;buffer with data&#39;</span><span class="p">)</span>
+<span class="n">z</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c"># Открываем архив на чтение</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">ZipFile</span><span class="p">(</span><span class="s">&#39;archive.zip&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
+<span class="c"># Тестирование архива, пробная распаковка</span>
+<span class="n">z</span><span class="o">.</span><span class="n">testzip</span><span class="p">()</span>
+<span class="c"># Список файлов</span>
+<span class="k">print</span> <span class="n">z</span><span class="o">.</span><span class="n">namelist</span><span class="p">()</span>
+<span class="c"># Читаем файл</span>
+<span class="k">print</span> <span class="n">z</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&#39;dir/data.txt&#39;</span><span class="p">)</span>
+<span class="n">z</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div><br />
+<h3>Открытие архива из буфера, сохранение в буфер (строку)</h3><div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span>
+<span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
+
+<span class="c"># Считываем в строку (буфер)</span>
+<span class="n">buf</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;archive.zip&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="c"># Открываем file-like объект  с данными</span>
+<span class="n">sio</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">sio</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="n">z</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s">&#39;test&#39;</span><span class="p">,</span> <span class="s">&#39;test&#39;</span><span class="p">)</span>
+<span class="n">z</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c"># Сохраняем в строку (буфер)</span>
+<span class="n">buf</span> <span class="o">=</span> <span class="n">sio</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+<span class="k">print</span> <span class="s">&#39;Size&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<h3>Удаление файла из zip архива</h3><div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span>
+
+
+<span class="n">zin</span> <span class="o">=</span> <span class="n">ZipFile</span><span class="p">(</span><span class="s">&#39;archive.zip&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">zout</span> <span class="o">=</span> <span class="n">ZipFile</span><span class="p">(</span><span class="s">&#39;archive2.zip&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">zin</span><span class="o">.</span><span class="n">infolist</span><span class="p">():</span>
+    <span class="n">buf</span> <span class="o">=</span> <span class="n">zin</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">filename</span> <span class="o">!=</span> <span class="s">&#39;test&#39;</span><span class="p">:</span>
+        <span class="n">zout</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span>
+<span class="n">zout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div><br />

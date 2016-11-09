@@ -1,0 +1,89 @@
+::id 4bfde6861d41c86651000001
+::date 2010-05-27
+::title MongoDB map_reduce, подсчет тегов
+::tags mongodb, map_reduce
+::body
+Пример для подсчета тегов
+
+[[# coding: utf8
+
+from pymongo import Connection
+from pymongo.code import Code
+
+con = Connection()
+con.drop_database('test')
+db = con.test
+
+db.posts.insert({ 'tags':['linux','prog'] })
+db.posts.insert({ 'tags':['prog','mac'] })
+db.posts.insert({ 'tags':['linux'] })
+db.posts.insert({ 'tags':['linux'] })
+
+map = Code(""" function()  {  
+        this.tags.forEach(  
+            function(x) {  
+                emit(x, 1);  
+            }  
+        );  
+    }""")
+
+reduce = Code("""function (key, values) {
+      var total = 0;
+      for(var i in values) total += values[i];
+      return total;
+    }""")
+
+for x in db.posts.inline_map_reduce(map, reduce):
+    print x]]**Результат**[[ {u'_id': u'linux', u'value': 3.0}
+{u'_id': u'mac', u'value': 1.0}
+{u'_id': u'prog', u'value': 2.0} ]]
+
+
+**Примечание**
+В старой версии pymongo (<1.10), метода **inline_map_reduce** нет, вместо его нужно использовать map_reduce:[[db.posts.map_reduce(map, reduce).find()]]
+
+::html
+Пример для подсчета тегов<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">Connection</span>
+<span class="kn">from</span> <span class="nn">pymongo.code</span> <span class="kn">import</span> <span class="n">Code</span>
+
+<span class="n">con</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">()</span>
+<span class="n">con</span><span class="o">.</span><span class="n">drop_database</span><span class="p">(</span><span class="s">&#39;test&#39;</span><span class="p">)</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">test</span>
+
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;tags&#39;</span><span class="p">:[</span><span class="s">&#39;linux&#39;</span><span class="p">,</span><span class="s">&#39;prog&#39;</span><span class="p">]</span> <span class="p">})</span>
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;tags&#39;</span><span class="p">:[</span><span class="s">&#39;prog&#39;</span><span class="p">,</span><span class="s">&#39;mac&#39;</span><span class="p">]</span> <span class="p">})</span>
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;tags&#39;</span><span class="p">:[</span><span class="s">&#39;linux&#39;</span><span class="p">]</span> <span class="p">})</span>
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;tags&#39;</span><span class="p">:[</span><span class="s">&#39;linux&#39;</span><span class="p">]</span> <span class="p">})</span>
+
+<span class="nb">map</span> <span class="o">=</span> <span class="n">Code</span><span class="p">(</span><span class="s">&quot;&quot;&quot; function()  {  </span>
+<span class="s">        this.tags.forEach(  </span>
+<span class="s">            function(x) {  </span>
+<span class="s">                emit(x, 1);  </span>
+<span class="s">            }  </span>
+<span class="s">        );  </span>
+<span class="s">    }&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="nb">reduce</span> <span class="o">=</span> <span class="n">Code</span><span class="p">(</span><span class="s">&quot;&quot;&quot;function (key, values) {</span>
+<span class="s">      var total = 0;</span>
+<span class="s">      for(var i in values) total += values[i];</span>
+<span class="s">      return total;</span>
+<span class="s">    }&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">inline_map_reduce</span><span class="p">(</span><span class="nb">map</span><span class="p">,</span> <span class="nb">reduce</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">x</span>
+</pre></div>
+</div><b>Результат</b><div class="codebox"><div class="highlight"><pre> <span class="p">{</span><span class="s">u&#39;_id&#39;</span><span class="p">:</span> <span class="s">u&#39;linux&#39;</span><span class="p">,</span> <span class="s">u&#39;value&#39;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">}</span>
+<span class="p">{</span><span class="s">u&#39;_id&#39;</span><span class="p">:</span> <span class="s">u&#39;mac&#39;</span><span class="p">,</span> <span class="s">u&#39;value&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
+<span class="p">{</span><span class="s">u&#39;_id&#39;</span><span class="p">:</span> <span class="s">u&#39;prog&#39;</span><span class="p">,</span> <span class="s">u&#39;value&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">}</span> 
+</pre></div>
+</div><br />
+<br />
+<br />
+<b>Примечание</b><br />
+В старой версии pymongo (&lt;1.10), метода <b>inline_map_reduce</b> нет, вместо его нужно использовать map_reduce:<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">map_reduce</span><span class="p">(</span><span class="nb">map</span><span class="p">,</span> <span class="nb">reduce</span><span class="p">)</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+</pre></div>
+</div><br />

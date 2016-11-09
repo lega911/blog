@@ -1,0 +1,92 @@
+::id 4d696e541d41c81a5b000001
+::date 2011-02-27
+::title Динамическое добавление/удаление роутов в Bottle
+::tags python, bottle, route
+::body
+Добавление роута **/path** с привязкой к методу **method**:
+[[app.routes.add('path', {'GET': method})]]
+Удаление роута:
+[[app.routes.routes = filter(lambda x:x.route != 'path', app.routes.routes)]]
+После изменения списка роутов нужно запустить компиляцию:
+[[app.routes.compile()]]
+где, //app = bottle.default_app[-1]//
+
+**Пример**
+[[# coding: utf-8
+
+from bottle import get, default_app, run
+
+app = default_app[-1]
+
+#@get(':class_name/:command')
+def somecommand(class_name,command):
+    return 'test route ok: %s %s'% (class_name,command)
+
+@get('/')
+def main():
+    return '''<a href="/add">add route</a><br/>
+    <a href="/del">del route</a><br/>
+    <a href="/test/route">test route</a><br/>'''
+
+@get('/add')
+def add_r():
+    app.routes.add(':class_name/:command', {'GET': somecommand})
+    app.routes.compile()
+    return 'add ok'
+
+@get('/del')
+def del_r():
+    app.routes.routes = filter(lambda x:x.route != ':class_name/:command',
+            app.routes.routes)
+    app.routes.compile()
+    return 'del ok'
+
+run(host='',port=8080,reloader=True)]]
+::html
+Добавление роута <b>/path</b> с привязкой к методу <b>method</b>:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">app</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&#39;path&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;GET&#39;</span><span class="p">:</span> <span class="n">method</span><span class="p">})</span>
+</pre></div>
+</div><br />
+Удаление роута:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">app</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">routes</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">.</span><span class="n">route</span> <span class="o">!=</span> <span class="s">&#39;path&#39;</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">routes</span><span class="p">)</span>
+</pre></div>
+</div><br />
+После изменения списка роутов нужно запустить компиляцию:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">app</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+</pre></div>
+</div><br />
+где, <i>app = bottle.default_app[-1]</i><br />
+<br />
+<b>Пример</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf-8</span>
+
+<span class="kn">from</span> <span class="nn">bottle</span> <span class="kn">import</span> <span class="n">get</span><span class="p">,</span> <span class="n">default_app</span><span class="p">,</span> <span class="n">run</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">default_app</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c">#@get(&#39;:class_name/:command&#39;)</span>
+<span class="k">def</span> <span class="nf">somecommand</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span><span class="n">command</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">&#39;test route ok: </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span><span class="o">%</span> <span class="p">(</span><span class="n">class_name</span><span class="p">,</span><span class="n">command</span><span class="p">)</span>
+
+<span class="nd">@get</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">&#39;&#39;&#39;&lt;a href=&quot;/add&quot;&gt;add route&lt;/a&gt;&lt;br/&gt;</span>
+<span class="s">    &lt;a href=&quot;/del&quot;&gt;del route&lt;/a&gt;&lt;br/&gt;</span>
+<span class="s">    &lt;a href=&quot;/test/route&quot;&gt;test route&lt;/a&gt;&lt;br/&gt;&#39;&#39;&#39;</span>
+
+<span class="nd">@get</span><span class="p">(</span><span class="s">&#39;/add&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">add_r</span><span class="p">():</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&#39;:class_name/:command&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;GET&#39;</span><span class="p">:</span> <span class="n">somecommand</span><span class="p">})</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+    <span class="k">return</span> <span class="s">&#39;add ok&#39;</span>
+
+<span class="nd">@get</span><span class="p">(</span><span class="s">&#39;/del&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">del_r</span><span class="p">():</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">routes</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">.</span><span class="n">route</span> <span class="o">!=</span> <span class="s">&#39;:class_name/:command&#39;</span><span class="p">,</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">routes</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+    <span class="k">return</span> <span class="s">&#39;del ok&#39;</span>
+
+<span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span><span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span><span class="n">reloader</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>

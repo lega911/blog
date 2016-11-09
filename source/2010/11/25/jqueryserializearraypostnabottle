@@ -1,0 +1,107 @@
+::id 4ced6ac11d41c87a97000006
+::date 2010-11-25
+::title jquery serializeArray + post на bottle
+::tags jquery, web, form, python, serializearray, bottle
+::body
+Пример использования jquery serializeArray на bottle. В примере берутся все элементы формы и отправляются post запросом на сервер. 
+
+[[# coding: utf8
+
+from bottle import run, debug, get, post, view, request
+
+page = """<html><head>
+    <script src="http://code.jquery.com/jquery-1.4.4.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.number').keyup(function(event) {
+                res = { 'prefix': 'prx: ' };
+                
+                $.each( $("form").serializeArray() , function(i, field){
+                    res[field.name] = field.value;
+                });    
+                
+                $.post('/sum', res, function(data) {  
+                    $('#c').val(data);  
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <form>
+        <input class="number" name="a" type="text" /> +
+        <input class="number" name="b" type="text" /> =
+        <input id="c" type="text" />
+    </form>
+</body>
+</html>"""
+
+@get('/')
+def main():
+    return page
+
+@post('/sum')
+def main_post():
+    try:
+        return request.POST['prefix'] + \
+                str( int(request.POST['a']) + int(request.POST['b']) )
+    except:
+        return 'error'
+
+debug(True)
+run(reloader=True, port=8081)]]
+
+см [4ce6bfe81d41c862f0000002 jquery serialize + python bottle]
+
+::html
+Пример использования jquery serializeArray на bottle. В примере берутся все элементы формы и отправляются post запросом на сервер. <br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">from</span> <span class="nn">bottle</span> <span class="kn">import</span> <span class="n">run</span><span class="p">,</span> <span class="n">debug</span><span class="p">,</span> <span class="n">get</span><span class="p">,</span> <span class="n">post</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">request</span>
+
+<span class="n">page</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;&lt;html&gt;&lt;head&gt;</span>
+<span class="s">    &lt;script src=&quot;http://code.jquery.com/jquery-1.4.4.js&quot;&gt;&lt;/script&gt;</span>
+<span class="s">    &lt;script type=&quot;text/javascript&quot;&gt;</span>
+<span class="s">        $(document).ready(function() {</span>
+<span class="s">            $(&#39;.number&#39;).keyup(function(event) {</span>
+<span class="s">                res = { &#39;prefix&#39;: &#39;prx: &#39; };</span>
+<span class="s">                </span>
+<span class="s">                $.each( $(&quot;form&quot;).serializeArray() , function(i, field){</span>
+<span class="s">                    res[field.name] = field.value;</span>
+<span class="s">                });    </span>
+<span class="s">                </span>
+<span class="s">                $.post(&#39;/sum&#39;, res, function(data) {  </span>
+<span class="s">                    $(&#39;#c&#39;).val(data);  </span>
+<span class="s">                });</span>
+<span class="s">            });</span>
+<span class="s">        });</span>
+<span class="s">    &lt;/script&gt;</span>
+<span class="s">&lt;/head&gt;</span>
+<span class="s">&lt;body&gt;</span>
+<span class="s">    &lt;form&gt;</span>
+<span class="s">        &lt;input class=&quot;number&quot; name=&quot;a&quot; type=&quot;text&quot; /&gt; +</span>
+<span class="s">        &lt;input class=&quot;number&quot; name=&quot;b&quot; type=&quot;text&quot; /&gt; =</span>
+<span class="s">        &lt;input id=&quot;c&quot; type=&quot;text&quot; /&gt;</span>
+<span class="s">    &lt;/form&gt;</span>
+<span class="s">&lt;/body&gt;</span>
+<span class="s">&lt;/html&gt;&quot;&quot;&quot;</span>
+
+<span class="nd">@get</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">page</span>
+
+<span class="nd">@post</span><span class="p">(</span><span class="s">&#39;/sum&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main_post</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;prefix&#39;</span><span class="p">]</span> <span class="o">+</span> \
+                <span class="nb">str</span><span class="p">(</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;b&#39;</span><span class="p">])</span> <span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">&#39;error&#39;</span>
+
+<span class="n">debug</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">run</span><span class="p">(</span><span class="n">reloader</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8081</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<br />
+см <a href="4ce6bfe81d41c862f0000002">jquery serialize + python bottle</a><br />

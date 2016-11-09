@@ -1,0 +1,99 @@
+::id 4d994d4e1d41c87536000000
+::date 2011-04-04
+::title Архивирование в linux
+::tags linux, tar, gzip, bzip2
+::body
+**tar**
+Создать архив без сжатия (собрать файлы в один файл)
+[[tar -cf :arh-file: :file1: :file2:]]
+Распаковать tar архив
+[[tar -xf :arh-file:]]
+
+**gzip**
+Сжать файл через gzip
+[[gzip :file:]]
+Распаковать gzip файл
+[[gzip -d :arh-file:
+или
+gunzip :arh-file:]]
+Запаковать/распаковать в gzip через tar
+[[tar -czf :arh-file: :file1: :file2:
+tar -xzf :arh-file:]]
+**bzip2**
+Сжать
+[[bzip2 :file:]]
+Распаковать
+[[bzip2 -d :file:]]
+Запаковать/распаковать в gzip через tar
+[[tar -cjf :arh-file: :file1: :file2:
+tar -xjf :arh-file:]]
+
+bzip2 и gzip сжимают по одному файлу, поэтому для сжатия нескольких файлов их нужно использовать через tar.
+В общем случае bzip2 эффективнее чем gzip, как по скорости, так и по степени сжатия.
+
+**Сохранение прав**
+Запаковка
+[[tar -cvpzf file.tar.gz --one-file-system input_file
+tar -cvpjf file.tar.bz2 --one-file-system input_file]]
+Распаковка
+[[sudo tar -xvpzf file.tar.gz -C /media/path --numeric-owner]]
+--numeric-owner - сохранять права как числа (без привязывания к именам)
+-C - сменить папку распаковки
+
+::html
+<b>tar</b><br />
+Создать архив без сжатия (собрать файлы в один файл)<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">tar</span> <span class="o">-</span><span class="n">cf</span> <span class="p">:</span><span class="n">arh</span><span class="o">-</span><span class="nb">file</span><span class="p">:</span> <span class="p">:</span><span class="n">file1</span><span class="p">:</span> <span class="p">:</span><span class="n">file2</span><span class="p">:</span>
+</pre></div>
+</div><br />
+Распаковать tar архив<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">tar</span> <span class="o">-</span><span class="n">xf</span> <span class="p">:</span><span class="n">arh</span><span class="o">-</span><span class="nb">file</span><span class="p">:</span>
+</pre></div>
+</div><br />
+<br />
+<b>gzip</b><br />
+Сжать файл через gzip<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">gzip</span> <span class="p">:</span><span class="nb">file</span><span class="p">:</span>
+</pre></div>
+</div><br />
+Распаковать gzip файл<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">gzip</span> <span class="o">-</span><span class="n">d</span> <span class="p">:</span><span class="n">arh</span><span class="o">-</span><span class="nb">file</span><span class="p">:</span>
+<span class="err">или</span>
+<span class="n">gunzip</span> <span class="p">:</span><span class="n">arh</span><span class="o">-</span><span class="nb">file</span><span class="p">:</span>
+</pre></div>
+</div><br />
+Запаковать/распаковать в gzip через tar<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">tar</span> <span class="o">-</span><span class="n">czf</span> <span class="p">:</span><span class="n">arh</span><span class="o">-</span><span class="nb">file</span><span class="p">:</span> <span class="p">:</span><span class="n">file1</span><span class="p">:</span> <span class="p">:</span><span class="n">file2</span><span class="p">:</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">xzf</span> <span class="p">:</span><span class="n">arh</span><span class="o">-</span><span class="nb">file</span><span class="p">:</span>
+</pre></div>
+</div><br />
+<b>bzip2</b><br />
+Сжать<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">bzip2</span> <span class="p">:</span><span class="nb">file</span><span class="p">:</span>
+</pre></div>
+</div><br />
+Распаковать<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">bzip2</span> <span class="o">-</span><span class="n">d</span> <span class="p">:</span><span class="nb">file</span><span class="p">:</span>
+</pre></div>
+</div><br />
+Запаковать/распаковать в gzip через tar<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">tar</span> <span class="o">-</span><span class="n">cjf</span> <span class="p">:</span><span class="n">arh</span><span class="o">-</span><span class="nb">file</span><span class="p">:</span> <span class="p">:</span><span class="n">file1</span><span class="p">:</span> <span class="p">:</span><span class="n">file2</span><span class="p">:</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">xjf</span> <span class="p">:</span><span class="n">arh</span><span class="o">-</span><span class="nb">file</span><span class="p">:</span>
+</pre></div>
+</div><br />
+<br />
+bzip2 и gzip сжимают по одному файлу, поэтому для сжатия нескольких файлов их нужно использовать через tar.<br />
+В общем случае bzip2 эффективнее чем gzip, как по скорости, так и по степени сжатия.<br />
+<br />
+<b>Сохранение прав</b><br />
+Запаковка<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">tar</span> <span class="o">-</span><span class="n">cvpzf</span> <span class="nb">file</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">--</span><span class="n">one</span><span class="o">-</span><span class="nb">file</span><span class="o">-</span><span class="n">system</span> <span class="n">input_file</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">cvpjf</span> <span class="nb">file</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">bz2</span> <span class="o">--</span><span class="n">one</span><span class="o">-</span><span class="nb">file</span><span class="o">-</span><span class="n">system</span> <span class="n">input_file</span>
+</pre></div>
+</div><br />
+Распаковка<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">tar</span> <span class="o">-</span><span class="n">xvpzf</span> <span class="nb">file</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">-</span><span class="n">C</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">path</span> <span class="o">--</span><span class="n">numeric</span><span class="o">-</span><span class="n">owner</span>
+</pre></div>
+</div><br />
+--numeric-owner - сохранять права как числа (без привязывания к именам)<br />
+-C - сменить папку распаковки<br />

@@ -1,0 +1,71 @@
+::id 4dcb728c1d41c86edc000000
+::date 2011-05-12
+::title Скрипт переподключения соединения network manager
+::tags linux, python, network manager, internet
+::body
+Скрипт каждые 30 сек. проверяет наличие интернета, если пинг отсутствует, то вызывает команду включения/переподключения соединения из network manager.
+ 
+Посмотреть **uuid** нужного соединения можно командой:
+[[nmcli con list]]
+
+Сам скрипт:[[#!/usr/bin/python
+# coding: utf8
+
+# list connections: nmcli con list
+
+import os
+import subprocess
+import time
+
+host = 'ya.ru'
+uuid = '27534a5a-bbc3-4a35-8d73-f6a254b76051'
+
+while True:
+    try:
+        print 'ping'
+        PIPE = subprocess.PIPE
+        p = subprocess.Popen(['ping',host,'-c','3'], stdout=PIPE)
+        s = p.stdout.read()
+        print s
+        if not 'time=' in s: os.system('nmcli con up uuid "%s"' % uuid)
+    except Exception as e:
+        print e
+    time.sleep(30)]]
+Подставляем свой **uuid** и можно использовать.
+Для того что-б скрипт стартовал при запуске, его можно добавить в [4bfb3c691d41c846bc000040 крон]
+
+::html
+Скрипт каждые 30 сек. проверяет наличие интернета, если пинг отсутствует, то вызывает команду включения/переподключения соединения из network manager.<br />
+ <br />
+Посмотреть <b>uuid</b> нужного соединения можно командой:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">nmcli</span> <span class="n">con</span> <span class="nb">list</span>
+</pre></div>
+</div><br />
+<br />
+Сам скрипт:<div class="codebox"><div class="highlight"><pre><span class="c">#!/usr/bin/python</span>
+<span class="c"># coding: utf8</span>
+
+<span class="c"># list connections: nmcli con list</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">host</span> <span class="o">=</span> <span class="s">&#39;ya.ru&#39;</span>
+<span class="n">uuid</span> <span class="o">=</span> <span class="s">&#39;27534a5a-bbc3-4a35-8d73-f6a254b76051&#39;</span>
+
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&#39;ping&#39;</span>
+        <span class="n">PIPE</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s">&#39;ping&#39;</span><span class="p">,</span><span class="n">host</span><span class="p">,</span><span class="s">&#39;-c&#39;</span><span class="p">,</span><span class="s">&#39;3&#39;</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">print</span> <span class="n">s</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="s">&#39;time=&#39;</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&#39;nmcli con up uuid &quot;</span><span class="si">%s</span><span class="s">&quot;&#39;</span> <span class="o">%</span> <span class="n">uuid</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span> <span class="n">e</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+</pre></div>
+</div><br />
+Подставляем свой <b>uuid</b> и можно использовать.<br />
+Для того что-б скрипт стартовал при запуске, его можно добавить в <a href="4bfb3c691d41c846bc000040">крон</a><br />

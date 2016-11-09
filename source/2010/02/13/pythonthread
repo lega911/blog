@@ -1,0 +1,107 @@
+::id 4bfb3c691d41c846bc000059
+::date 2010-02-13
+::title python thread
+::tags python, threading, потоки, thread
+::body
+Потоки (threads) Python, используются для параллельного выполнения блокирующих операций, вызов "внешних" функций, чаще всего используется для распараллеливания работы с сетью (работа с http/web, подключение к БД и т.п.) т.к. это может на длительное время заблокировать поток. Сам питоновский код (вызов функций, математические операции и т.п.) не работает параллельно (см. GIL), поэтому нет смысла пихать в разные потоки тяжелые математические вычисления, для этого можно использовать multiprocessing, либо специальные математические библиотеки например NumPy, SciPy.
+
+!Пример обычного использования потоков
+//Проверено в python 2.7 и 3.2 (linux)//
+
+[[import threading
+
+class TestThread(threading.Thread):
+    def run(self):
+        print('my name',self.getName()) # получить имя потока
+
+test = TestThread()
+test.setName('my proc') # задать имя потока (необязательно)
+test.setDaemon(True) # сделать поток демоном
+test.start()]]**setName** - задает имя потоку
+**setDaemon(True)** - делает поток демоном, после чего главный поток программы не ждет завершения дочернего и выходит.
+**isAlive()** - определяет живой ли поток
+
+!Пример запуска процедуры в отдельный поток
+[[try:
+    import thread
+except ImportError:
+    import _thread as thread
+import time
+
+def myThread(param):
+    print(param)
+
+thread.start_new_thread(myThread, ('this param',))
+time.sleep(0.2)]]
+
+Ещё вариант:
+[[import threading
+
+def foo(a, b):
+    pass
+
+threading.Thread(target=foo, args=("some", "args")).start()]]
+
+!Получить класс текущего потока
+В нем можно хранить общие переменные в пределах текущего потока
+[[from threading import currentThread
+th = currentThread()
+th.tag = 'this tag']]
+
+примечание: потоки в питоне (python thread) не дают увеличения производительности, для использования полной мощи процессора можно использовать [/post/4bfb3c691d41c846bc000064 multiprocessing]
+Дополнительно смотрите [/post/4cae490f1d41c81169000004 Как использовать локальную память потока]
+
+Так же для "параллельного" выполнения кода можно использовать асинхронные фреймворки, в них весь основной код выполняется в одном потоке, а "блокирующие" методы используются в неблокирующем режиме. Часто, приложения использующие такие фреймворки, более эффективны, но они сложнее в разработке. Для примера можете посмотреть [/post/4f278211bbddbd0322000000 асинхронную (однопоточную) загрузку сайтов на tornado].
+
+::html
+Потоки (threads) Python, используются для параллельного выполнения блокирующих операций, вызов "внешних" функций, чаще всего используется для распараллеливания работы с сетью (работа с http/web, подключение к БД и т.п.) т.к. это может на длительное время заблокировать поток. Сам питоновский код (вызов функций, математические операции и т.п.) не работает параллельно (см. GIL), поэтому нет смысла пихать в разные потоки тяжелые математические вычисления, для этого можно использовать multiprocessing, либо специальные математические библиотеки например NumPy, SciPy.<br />
+<h3>Пример обычного использования потоков</h3><i>Проверено в python 2.7 и 3.2 (linux)</i><br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">threading</span>
+
+<span class="k">class</span> <span class="nc">TestThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;my name&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">getName</span><span class="p">())</span> <span class="c"># получить имя потока</span>
+
+<span class="n">test</span> <span class="o">=</span> <span class="n">TestThread</span><span class="p">()</span>
+<span class="n">test</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s">&#39;my proc&#39;</span><span class="p">)</span> <span class="c"># задать имя потока (необязательно)</span>
+<span class="n">test</span><span class="o">.</span><span class="n">setDaemon</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span> <span class="c"># сделать поток демоном</span>
+<span class="n">test</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div><b>setName</b> - задает имя потоку<br />
+<b>setDaemon(True)</b> - делает поток демоном, после чего главный поток программы не ждет завершения дочернего и выходит.<br />
+<b>isAlive()</b> - определяет живой ли поток<br />
+<h3>Пример запуска процедуры в отдельный поток</h3><div class="codebox"><div class="highlight"><pre><span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">thread</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">_thread</span> <span class="kn">as</span> <span class="nn">thread</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="k">def</span> <span class="nf">myThread</span><span class="p">(</span><span class="n">param</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+
+<span class="n">thread</span><span class="o">.</span><span class="n">start_new_thread</span><span class="p">(</span><span class="n">myThread</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;this param&#39;</span><span class="p">,))</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<br />
+Ещё вариант:<br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">threading</span>
+
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">foo</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s">&quot;some&quot;</span><span class="p">,</span> <span class="s">&quot;args&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div><br />
+<h3>Получить класс текущего потока</h3>В нем можно хранить общие переменные в пределах текущего потока<br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">currentThread</span>
+<span class="n">th</span> <span class="o">=</span> <span class="n">currentThread</span><span class="p">()</span>
+<span class="n">th</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="s">&#39;this tag&#39;</span>
+</pre></div>
+</div><br />
+<br />
+примечание: потоки в питоне (python thread) не дают увеличения производительности, для использования полной мощи процессора можно использовать <a href="/post/4bfb3c691d41c846bc000064">multiprocessing</a><br />
+Дополнительно смотрите <a href="/post/4cae490f1d41c81169000004">Как использовать локальную память потока</a><br />
+<br />
+Так же для "параллельного" выполнения кода можно использовать асинхронные фреймворки, в них весь основной код выполняется в одном потоке, а "блокирующие" методы используются в неблокирующем режиме. Часто, приложения использующие такие фреймворки, более эффективны, но они сложнее в разработке. Для примера можете посмотреть <a href="/post/4f278211bbddbd0322000000">асинхронную (однопоточную) загрузку сайтов на tornado</a>.<br />

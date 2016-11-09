@@ -1,0 +1,56 @@
+::id 4cad91bb1d41c81169000000
+::date 2010-10-07
+::title mongodb: реализация autoincrement
+::tags python, mongodb, findandmodify, autoincrement
+::body
+Пример получения уникального инкрементируемого числа
+
+[[# coding:utf8
+
+from pymongo.connection import Connection
+
+db = Connection('localhost')['test']
+
+def get_autoincrement():
+    result = db.command('findandmodify', 'test',
+            query={ 'name': 'id' }, update={ '$inc': { 'val':1 } } )
+    if not int(result['ok']): return None
+    return result['value']['val']
+
+db.test.update({ 'name':'id' },{ 'name':'id', 'val':1 }, True)
+
+print 'before',db.test.find_one()['val']
+print 'capture id = ',get_autoincrement()
+print 'after',db.test.find_one()['val'] ]]
+**Результат**
+[[before 1
+capture id =  1
+after 2]]
+::html
+Пример получения уникального инкрементируемого числа<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding:utf8</span>
+
+<span class="kn">from</span> <span class="nn">pymongo.connection</span> <span class="kn">import</span> <span class="n">Connection</span>
+
+<span class="n">db</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">(</span><span class="s">&#39;localhost&#39;</span><span class="p">)[</span><span class="s">&#39;test&#39;</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">get_autoincrement</span><span class="p">():</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">&#39;findandmodify&#39;</span><span class="p">,</span> <span class="s">&#39;test&#39;</span><span class="p">,</span>
+            <span class="n">query</span><span class="o">=</span><span class="p">{</span> <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;id&#39;</span> <span class="p">},</span> <span class="n">update</span><span class="o">=</span><span class="p">{</span> <span class="s">&#39;$inc&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s">&#39;val&#39;</span><span class="p">:</span><span class="mi">1</span> <span class="p">}</span> <span class="p">}</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s">&#39;ok&#39;</span><span class="p">]):</span> <span class="k">return</span> <span class="bp">None</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s">&#39;value&#39;</span><span class="p">][</span><span class="s">&#39;val&#39;</span><span class="p">]</span>
+
+<span class="n">db</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">update</span><span class="p">({</span> <span class="s">&#39;name&#39;</span><span class="p">:</span><span class="s">&#39;id&#39;</span> <span class="p">},{</span> <span class="s">&#39;name&#39;</span><span class="p">:</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="s">&#39;val&#39;</span><span class="p">:</span><span class="mi">1</span> <span class="p">},</span> <span class="bp">True</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s">&#39;before&#39;</span><span class="p">,</span><span class="n">db</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">find_one</span><span class="p">()[</span><span class="s">&#39;val&#39;</span><span class="p">]</span>
+<span class="k">print</span> <span class="s">&#39;capture id = &#39;</span><span class="p">,</span><span class="n">get_autoincrement</span><span class="p">()</span>
+<span class="k">print</span> <span class="s">&#39;after&#39;</span><span class="p">,</span><span class="n">db</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">find_one</span><span class="p">()[</span><span class="s">&#39;val&#39;</span><span class="p">]</span> 
+</pre></div>
+</div><br />
+<b>Результат</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">before</span> <span class="mi">1</span>
+<span class="n">capture</span> <span class="nb">id</span> <span class="o">=</span>  <span class="mi">1</span>
+<span class="n">after</span> <span class="mi">2</span>
+</pre></div>
+</div>

@@ -1,0 +1,14 @@
+::id 4c072a791d41c867ae000002
+::date 2010-06-03
+::title Mercurial: Not trusting file .hg/hgrc from untrusted user group
+::tags mercurial
+::body
+Mercurial говорит что текущий репозиторий принадлежит другому пользователю, для того что-б можно было работать с текущим репозиторием нужно в файл **~/.hgrc** (в папке пользователя) прописать:[[!^[trusted]
+users = *
+groups = *
+]]
+::html
+Mercurial говорит что текущий репозиторий принадлежит другому пользователю, для того что-б можно было работать с текущим репозиторием нужно в файл <b>~/.hgrc</b> (в папке пользователя) прописать:<div class="codebox"><pre><code>[trusted]
+users = *
+groups = *
+</code></pre></div>

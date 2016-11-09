@@ -1,0 +1,41 @@
+::id 5098d8e3bbddbd2f44000000
+::date 2012-11-06
+::title python telnet, пример определения разрыва соединения
+::tags telnet, python
+::body
+При использовании telnet в Python, при разрыве связи или закрытии сокета на удаленной стороне, telnet может не выдать ошибку закрытия соединения. Отловить разрыв соединения можно отправив NOP команду, ниже пример как можно определить разрыв соединения:
+
+[[import telnetlib
+import socket
+
+try:
+    tn = telnetlib.Telnet('google.com', 80)
+    tn.write('GET / HTTP/1.0\n\n')
+    while True:
+        buf = tn.read_some()
+        if buf:
+            print buf
+        else:
+            tn.sock.sendall(telnetlib.IAC + telnetlib.NOP)
+except socket.error:
+    print 'connection was closed']]
+
+::html
+При использовании telnet в Python, при разрыве связи или закрытии сокета на удаленной стороне, telnet может не выдать ошибку закрытия соединения. Отловить разрыв соединения можно отправив NOP команду, ниже пример как можно определить разрыв соединения:<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">telnetlib</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">tn</span> <span class="o">=</span> <span class="n">telnetlib</span><span class="o">.</span><span class="n">Telnet</span><span class="p">(</span><span class="s">&#39;google.com&#39;</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;GET / HTTP/1.0</span><span class="se">\n\n</span><span class="s">&#39;</span><span class="p">)</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="n">tn</span><span class="o">.</span><span class="n">read_some</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">buf</span><span class="p">:</span>
+            <span class="k">print</span> <span class="n">buf</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tn</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">telnetlib</span><span class="o">.</span><span class="n">IAC</span> <span class="o">+</span> <span class="n">telnetlib</span><span class="o">.</span><span class="n">NOP</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&#39;connection was closed&#39;</span>
+</pre></div>
+</div><br />

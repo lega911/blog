@@ -1,0 +1,73 @@
+::id 4c6946ce1d41c81b86000000
+::date 2010-08-16
+::title MongoDB: фильтры запросов
+::tags mongodb
+::body
+Часто используемые фильтры
+ 
+[[db.things.find({ "x" : value } );   // x = value
+db.things.find({ "x" : { "$gt": value } } ); // x > value
+db.things.find({ "x" : { "$lt": value } } ); // x < value
+db.things.find({ "x" : { "$gte": value } } ); // x >= value
+db.things.find({ "x" : { "$lte": value } } ); // x <= value
+db.things.find({ "x" : { "$gt": value1, "$lt": value2 } } ); // value1 < x < value2
+db.things.find( { "x" : { "$ne" : value } } ); // x != value]]
+
+Вхождение в список **$in** (Любой из подставленных значений должен присутствовать в массиве **j**)
+[[db.things.find({"j":{"$in": [2,4,6]}});]]
+Не входит в список **$nin**
+[[db.things.find({"j":{"$nin": [2,4,6]}});]]
+Проверка вхождения всех элементов списка **$all** (Все подставленные значения должны присутствовать в массиве **j**)
+[[db.things.find({ "j": { "$all": [ 1,2,3 ] } });]]
+Проверка размера списка **$size**
+[[db.things.find({ "j" : { "$size": 3 } });]]
+Проверка существования атрибута **$exists**
+[[db.things.find({ "j" : { "$exists" : true } });
+db.things.find({ "j" : { "$exists" : false } });]]
+Логическое сложение **$or**
+[[db.things.find({ "$or" : [ { "j" : 1 } , { "j" : 2 } ] });]]
+Отрицание **$not**
+[[db.things.find({ "j" : { "$not" : { "$mod" : [ 10 , 1 ] } } });]]
+
+::html
+Часто используемые фильтры<br />
+ <br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;x&quot;</span> <span class="p">:</span> <span class="n">value</span> <span class="p">}</span> <span class="p">);</span>   <span class="o">//</span> <span class="n">x</span> <span class="o">=</span> <span class="n">value</span>
+<span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;x&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$gt&quot;</span><span class="p">:</span> <span class="n">value</span> <span class="p">}</span> <span class="p">}</span> <span class="p">);</span> <span class="o">//</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">value</span>
+<span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;x&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$lt&quot;</span><span class="p">:</span> <span class="n">value</span> <span class="p">}</span> <span class="p">}</span> <span class="p">);</span> <span class="o">//</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">value</span>
+<span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;x&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$gte&quot;</span><span class="p">:</span> <span class="n">value</span> <span class="p">}</span> <span class="p">}</span> <span class="p">);</span> <span class="o">//</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">value</span>
+<span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;x&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$lte&quot;</span><span class="p">:</span> <span class="n">value</span> <span class="p">}</span> <span class="p">}</span> <span class="p">);</span> <span class="o">//</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">value</span>
+<span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;x&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$gt&quot;</span><span class="p">:</span> <span class="n">value1</span><span class="p">,</span> <span class="s">&quot;$lt&quot;</span><span class="p">:</span> <span class="n">value2</span> <span class="p">}</span> <span class="p">}</span> <span class="p">);</span> <span class="o">//</span> <span class="n">value1</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">value2</span>
+<span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">(</span> <span class="p">{</span> <span class="s">&quot;x&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$ne&quot;</span> <span class="p">:</span> <span class="n">value</span> <span class="p">}</span> <span class="p">}</span> <span class="p">);</span> <span class="o">//</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">value</span>
+</pre></div>
+</div><br />
+<br />
+Вхождение в список <b>$in</b> (Любой из подставленных значений должен присутствовать в массиве <b>j</b>)<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s">&quot;j&quot;</span><span class="p">:{</span><span class="s">&quot;$in&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">]}});</span>
+</pre></div>
+</div><br />
+Не входит в список <b>$nin</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s">&quot;j&quot;</span><span class="p">:{</span><span class="s">&quot;$nin&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">]}});</span>
+</pre></div>
+</div><br />
+Проверка вхождения всех элементов списка <b>$all</b> (Все подставленные значения должны присутствовать в массиве <b>j</b>)<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;j&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$all&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span> <span class="p">]</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div><br />
+Проверка размера списка <b>$size</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;j&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$size&quot;</span><span class="p">:</span> <span class="mi">3</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div><br />
+Проверка существования атрибута <b>$exists</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;j&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$exists&quot;</span> <span class="p">:</span> <span class="n">true</span> <span class="p">}</span> <span class="p">});</span>
+<span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;j&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$exists&quot;</span> <span class="p">:</span> <span class="n">false</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div><br />
+Логическое сложение <b>$or</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;$or&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s">&quot;j&quot;</span> <span class="p">:</span> <span class="mi">1</span> <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="s">&quot;j&quot;</span> <span class="p">:</span> <span class="mi">2</span> <span class="p">}</span> <span class="p">]</span> <span class="p">});</span>
+</pre></div>
+</div><br />
+Отрицание <b>$not</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;j&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$not&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$mod&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="mi">10</span> <span class="p">,</span> <span class="mi">1</span> <span class="p">]</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div><br />

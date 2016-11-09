@@ -1,0 +1,27 @@
+::id 4e5366911d41c84a4f000002
+::date 2011-08-23
+::title Перехват сетевого трафика из консоли, ngrep.
+::tags linux, ngrep
+::body
+//Заметка не завершена//
+
+!Примеры
+
+**Фильтр по тексту**
+[[ngrep -q -W byline "^(GET|POST) .*"]]
+
+**Фильтр по параметрам (host, port)**
+[[ngrep -q -W byline "text" host exaple.com and port 80]]
+
+::html
+<i>Заметка не завершена</i><br />
+<h3>Примеры</h3><br />
+<b>Фильтр по тексту</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">ngrep</span> <span class="o">-</span><span class="n">q</span> <span class="o">-</span><span class="n">W</span> <span class="n">byline</span> <span class="s">&quot;^(GET|POST) .*&quot;</span>
+</pre></div>
+</div><br />
+<br />
+<b>Фильтр по параметрам (host, port)</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">ngrep</span> <span class="o">-</span><span class="n">q</span> <span class="o">-</span><span class="n">W</span> <span class="n">byline</span> <span class="s">&quot;text&quot;</span> <span class="n">host</span> <span class="n">exaple</span><span class="o">.</span><span class="n">com</span> <span class="ow">and</span> <span class="n">port</span> <span class="mi">80</span>
+</pre></div>
+</div><br />

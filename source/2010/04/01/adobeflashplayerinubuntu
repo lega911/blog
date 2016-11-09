@@ -1,0 +1,19 @@
+::id 4bfb3c6a1d41c846bc0000a9
+::date 2010-04-01
+::title adobe flash player in ubuntu
+::tags chrome, flash, firefox, linux
+::body
+Установка[[sudo aptitude install flashplugin-installer]]
+после этого нужно перезагрузить браузер или саму ос.
+
+
+//Проверено на ubuntu 9.10 32bit, firefox 3.58 и google chrome 5//
+
+
+::html
+Установка<div class="codebox"><pre><code>sudo aptitude install flashplugin-installer</code></pre></div><br />
+после этого нужно перезагрузить браузер или саму ос.<br />
+<br />
+<br />
+<i>Проверено на ubuntu 9.10 32bit, firefox 3.58 и google chrome 5</i><br />
+<br />

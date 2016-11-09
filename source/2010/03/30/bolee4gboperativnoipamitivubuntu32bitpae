@@ -1,0 +1,43 @@
+::id 4bfb3c6a1d41c846bc00009e
+::date 2010-03-30
+::title Более 4Гб оперативной памяти в ubuntu 32bit, pae
+::tags ram, pae, linux
+::body
+Для того что-б linux 32bit видел память свыше 4Гб нужно включить режим PAE, для этого можно пересобрать ядро с флагм pae, а можно просто его установить,
+выведем доступные ядра с флагом pae
+[[apt-cache search linux-image | grep pae]]у меня выдало[[linux-image-2.6.31-14-generic-pae - Linux kernel image for version 2.6.31 on x86
+linux-image-2.6.31-15-generic-pae - Linux kernel image for version 2.6.31 on x86
+linux-image-2.6.31-16-generic-pae - Linux kernel image for version 2.6.31 on x86
+linux-image-2.6.31-17-generic-pae - Linux kernel image for version 2.6.31 on x86
+linux-image-2.6.31-19-generic-pae - Linux kernel image for version 2.6.31 on x86
+linux-image-2.6.31-20-generic-pae - Linux kernel image for version 2.6.31 on x86
+linux-image-generic-pae - Generic Linux kernel image]]
+Выбираем ядро и ставим, я выбрал что посвежее[[sudo apt-get linux-image-2.6.31-20-generic-pae]]Перезагружаемся - все, память должна быть доступна.
+
+
+Если после перезагрузки возникли проблемы с видеокартой, то нужно загрузиться в графическом режиме низкого качества и переустановить драйвер видеокарты.
+
+//примечание: проверено на ubuntu 9.10 32bit//
+
+::html
+Для того что-б linux 32bit видел память свыше 4Гб нужно включить режим PAE, для этого можно пересобрать ядро с флагм pae, а можно просто его установить,<br />
+выведем доступные ядра с флагом pae<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">apt</span><span class="o">-</span><span class="n">cache</span> <span class="n">search</span> <span class="n">linux</span><span class="o">-</span><span class="n">image</span> <span class="o">|</span> <span class="n">grep</span> <span class="n">pae</span>
+</pre></div>
+</div>у меня выдало<div class="codebox"><div class="highlight"><pre><span class="n">linux</span><span class="o">-</span><span class="n">image</span><span class="o">-</span><span class="mf">2.6</span><span class="o">.</span><span class="mi">31</span><span class="o">-</span><span class="mi">14</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">pae</span> <span class="o">-</span> <span class="n">Linux</span> <span class="n">kernel</span> <span class="n">image</span> <span class="k">for</span> <span class="n">version</span> <span class="mf">2.6</span><span class="o">.</span><span class="mi">31</span> <span class="n">on</span> <span class="n">x86</span>
+<span class="n">linux</span><span class="o">-</span><span class="n">image</span><span class="o">-</span><span class="mf">2.6</span><span class="o">.</span><span class="mi">31</span><span class="o">-</span><span class="mi">15</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">pae</span> <span class="o">-</span> <span class="n">Linux</span> <span class="n">kernel</span> <span class="n">image</span> <span class="k">for</span> <span class="n">version</span> <span class="mf">2.6</span><span class="o">.</span><span class="mi">31</span> <span class="n">on</span> <span class="n">x86</span>
+<span class="n">linux</span><span class="o">-</span><span class="n">image</span><span class="o">-</span><span class="mf">2.6</span><span class="o">.</span><span class="mi">31</span><span class="o">-</span><span class="mi">16</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">pae</span> <span class="o">-</span> <span class="n">Linux</span> <span class="n">kernel</span> <span class="n">image</span> <span class="k">for</span> <span class="n">version</span> <span class="mf">2.6</span><span class="o">.</span><span class="mi">31</span> <span class="n">on</span> <span class="n">x86</span>
+<span class="n">linux</span><span class="o">-</span><span class="n">image</span><span class="o">-</span><span class="mf">2.6</span><span class="o">.</span><span class="mi">31</span><span class="o">-</span><span class="mi">17</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">pae</span> <span class="o">-</span> <span class="n">Linux</span> <span class="n">kernel</span> <span class="n">image</span> <span class="k">for</span> <span class="n">version</span> <span class="mf">2.6</span><span class="o">.</span><span class="mi">31</span> <span class="n">on</span> <span class="n">x86</span>
+<span class="n">linux</span><span class="o">-</span><span class="n">image</span><span class="o">-</span><span class="mf">2.6</span><span class="o">.</span><span class="mi">31</span><span class="o">-</span><span class="mi">19</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">pae</span> <span class="o">-</span> <span class="n">Linux</span> <span class="n">kernel</span> <span class="n">image</span> <span class="k">for</span> <span class="n">version</span> <span class="mf">2.6</span><span class="o">.</span><span class="mi">31</span> <span class="n">on</span> <span class="n">x86</span>
+<span class="n">linux</span><span class="o">-</span><span class="n">image</span><span class="o">-</span><span class="mf">2.6</span><span class="o">.</span><span class="mi">31</span><span class="o">-</span><span class="mi">20</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">pae</span> <span class="o">-</span> <span class="n">Linux</span> <span class="n">kernel</span> <span class="n">image</span> <span class="k">for</span> <span class="n">version</span> <span class="mf">2.6</span><span class="o">.</span><span class="mi">31</span> <span class="n">on</span> <span class="n">x86</span>
+<span class="n">linux</span><span class="o">-</span><span class="n">image</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">pae</span> <span class="o">-</span> <span class="n">Generic</span> <span class="n">Linux</span> <span class="n">kernel</span> <span class="n">image</span>
+</pre></div>
+</div><br />
+Выбираем ядро и ставим, я выбрал что посвежее<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">linux</span><span class="o">-</span><span class="n">image</span><span class="o">-</span><span class="mf">2.6</span><span class="o">.</span><span class="mi">31</span><span class="o">-</span><span class="mi">20</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">pae</span>
+</pre></div>
+</div>Перезагружаемся - все, память должна быть доступна.<br />
+<br />
+<br />
+Если после перезагрузки возникли проблемы с видеокартой, то нужно загрузиться в графическом режиме низкого качества и переустановить драйвер видеокарты.<br />
+<br />
+<i>примечание: проверено на ubuntu 9.10 32bit</i><br />

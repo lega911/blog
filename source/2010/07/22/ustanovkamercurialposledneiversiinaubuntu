@@ -1,0 +1,19 @@
+::id 4c47d0fe1d41c86b60000000
+::date 2010-07-22
+::title Установка mercurial последней версии на ubuntu
+::tags mercurial, linux
+::body
+Установка mercurial с оф. сайта
+[[
+sudo add-apt-repository ppa:mercurial-ppa/releases
+sudo aptitude update
+sudo aptitude install mercurial
+]]
+
+::html
+Установка mercurial с оф. сайта<br />
+<div class="codebox"><pre><code>
+sudo add-apt-repository ppa:mercurial-ppa/releases
+sudo aptitude update
+sudo aptitude install mercurial
+</code></pre></div><br />

@@ -1,0 +1,77 @@
+::id 4bfd80a91d41c86651000000
+::date 2010-05-27
+::title MongoDB map_reduce, подсчет количества
+::tags mongodb, map_reduce
+::body
+В данном примере вычислим сумму значений атрибута **col**
+
+[[# coding: utf8
+
+from pymongo import Connection
+from pymongo.code import Code
+
+con = Connection()
+con.drop_database('test')
+db = con.test
+
+db.posts.insert({ 'col':2 })
+db.posts.insert({ 'col':3 })
+db.posts.insert({ 'col':5 })
+
+map = Code("emit('count', this.col);")
+
+reduce = Code("function (key, vals) { "
+    "var sum=0;"
+    "for(var i in vals) sum += vals[i];"
+    "return sum;"
+    " }")
+
+for x in db.posts.inline_map_reduce(map, reduce):
+    print x]]**Результат**[[ {u'_id': u'count', u'value': 10.0} ]]
+!Принцип действия
+Создаем метод **map**, в котором вызываем **emit(key,value)** (ф-ия подстановки элементов)
+ * **key**='count' - это значит что результат вызова **reduce** должен будет поместиться в документ с идентификатором='count', 
+ * **value** - указываем значение которое будет передаваться в **reduce**
+Далее создаем метод **reduce** в котором будет производиться обработка данных и возврат результата
+
+**Примечание**
+В старой версии pymongo (<1.10), метода **inline_map_reduce** нет, вместо его нужно использовать map_reduce:[[db.posts.map_reduce(map, reduce).find()]]
+
+::html
+В данном примере вычислим сумму значений атрибута <b>col</b><br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">Connection</span>
+<span class="kn">from</span> <span class="nn">pymongo.code</span> <span class="kn">import</span> <span class="n">Code</span>
+
+<span class="n">con</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">()</span>
+<span class="n">con</span><span class="o">.</span><span class="n">drop_database</span><span class="p">(</span><span class="s">&#39;test&#39;</span><span class="p">)</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">test</span>
+
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;col&#39;</span><span class="p">:</span><span class="mi">2</span> <span class="p">})</span>
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;col&#39;</span><span class="p">:</span><span class="mi">3</span> <span class="p">})</span>
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;col&#39;</span><span class="p">:</span><span class="mi">5</span> <span class="p">})</span>
+
+<span class="nb">map</span> <span class="o">=</span> <span class="n">Code</span><span class="p">(</span><span class="s">&quot;emit(&#39;count&#39;, this.col);&quot;</span><span class="p">)</span>
+
+<span class="nb">reduce</span> <span class="o">=</span> <span class="n">Code</span><span class="p">(</span><span class="s">&quot;function (key, vals) { &quot;</span>
+    <span class="s">&quot;var sum=0;&quot;</span>
+    <span class="s">&quot;for(var i in vals) sum += vals[i];&quot;</span>
+    <span class="s">&quot;return sum;&quot;</span>
+    <span class="s">&quot; }&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">inline_map_reduce</span><span class="p">(</span><span class="nb">map</span><span class="p">,</span> <span class="nb">reduce</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">x</span>
+</pre></div>
+</div><b>Результат</b><div class="codebox"><div class="highlight"><pre> <span class="p">{</span><span class="s">u&#39;_id&#39;</span><span class="p">:</span> <span class="s">u&#39;count&#39;</span><span class="p">,</span> <span class="s">u&#39;value&#39;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">}</span> 
+</pre></div>
+</div><h3>Принцип действия</h3>Создаем метод <b>map</b>, в котором вызываем <b>emit(key,value)</b> (ф-ия подстановки элементов)
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;<b>key</b>='count' - это значит что результат вызова <b>reduce</b> должен будет поместиться в документ с идентификатором='count', 
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;<b>value</b> - указываем значение которое будет передаваться в <b>reduce</b><br />
+Далее создаем метод <b>reduce</b> в котором будет производиться обработка данных и возврат результата<br />
+<br />
+<b>Примечание</b><br />
+В старой версии pymongo (&lt;1.10), метода <b>inline_map_reduce</b> нет, вместо его нужно использовать map_reduce:<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">map_reduce</span><span class="p">(</span><span class="nb">map</span><span class="p">,</span> <span class="nb">reduce</span><span class="p">)</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+</pre></div>
+</div><br />

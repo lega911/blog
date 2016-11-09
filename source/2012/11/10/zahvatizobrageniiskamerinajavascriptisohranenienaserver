@@ -1,0 +1,153 @@
+::id 509e3150bbddbd2f44000006
+::date 2012-11-10
+::title Захват изображения с камеры на javascript и сохранение на сервер
+::tags python, javascript, image, capture, camera
+::body
+Пример получения изображения с веб камеры через браузер (javascript), и передачи его на сервер.
+
+**static/index.html**
+[[<!doctype html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	var canvas = $("#canvas")[0],
+	context = canvas.getContext("2d"),
+	video = $("#video")[0],
+	videoObj = { "video": true },
+	errBack = function(error) {
+		console.log("Ошибка видео захвата: ", error.code); 
+	};
+	
+	// Подключение потока
+	if(navigator.getUserMedia) {
+		navigator.getUserMedia(videoObj, function(stream) {
+			video.src = stream;
+			video.play();
+		}, errBack);
+	} else if(navigator.webkitGetUserMedia) { // WebKit-prefixed
+		navigator.webkitGetUserMedia(videoObj, function(stream){
+			video.src = window.webkitURL.createObjectURL(stream);
+			video.play();
+		}, errBack);
+	}
+	
+	// Получение и отправка изображения
+	$('#snap').click(function() {
+		  context.drawImage(video, 0, 0, 320, 240);
+		  $.post('/', { img : canvas.toDataURL('image/jpeg') });
+	})
+})
+</script>
+</head>
+<body>
+	<video id="video" width="320" height="240" autoplay></video>
+	<canvas id="canvas" width="320" height="240"></canvas>
+	<br/> <button id="snap">Сфоткаться</button>
+</body>
+</html>]]
+
+Код веб сервера на фреймворке web-tornado, отдача главной страницы, прием фотографии и сохраниение в папку uploads.
+[[from tornado import web, ioloop
+
+import re 
+import base64
+data_fetch = re.compile('data:image/(png|jpeg);base64,(.*)$')
+
+class MainHandler(web.RequestHandler):
+    def get(self):
+        self.finish(open('static/index.html', 'rb').read())
+    def post(self):
+        img = self.request.arguments.get('img')[0]
+        d = data_fetch.match(img)
+        itype = d.group(1)
+        data64 = d.group(2)
+        if data64 is not None and len(data64) > 0:
+            buf = base64.b64decode(data64)
+            open('uploads/image.'+itype, 'wb').write(buf)
+
+application = web.Application([
+    (r"/", MainHandler),
+])
+
+if __name__ == "__main__":
+    application.listen(8888)
+    ioloop.IOLoop.instance().start()]]
+
+::html
+Пример получения изображения с веб камеры через браузер (javascript), и передачи его на сервер.<br />
+<br />
+<b>static/index.html</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&lt;</span><span class="err">!</span><span class="n">doctype</span> <span class="n">html</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">head</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">script</span> <span class="n">src</span><span class="o">=</span><span class="s">&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js&quot;</span><span class="o">&gt;&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">script</span> <span class="nb">type</span><span class="o">=</span><span class="s">&quot;text/javascript&quot;</span><span class="o">&gt;</span>
+<span class="err">$</span><span class="p">(</span><span class="n">function</span><span class="p">(){</span>
+	<span class="n">var</span> <span class="n">canvas</span> <span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="s">&quot;#canvas&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+	<span class="n">context</span> <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">getContext</span><span class="p">(</span><span class="s">&quot;2d&quot;</span><span class="p">),</span>
+	<span class="n">video</span> <span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="s">&quot;#video&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+	<span class="n">videoObj</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&quot;video&quot;</span><span class="p">:</span> <span class="n">true</span> <span class="p">},</span>
+	<span class="n">errBack</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&quot;Ошибка видео захвата: &quot;</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">code</span><span class="p">);</span> 
+	<span class="p">};</span>
+	
+	<span class="o">//</span> <span class="err">Подключение</span> <span class="err">потока</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">navigator</span><span class="o">.</span><span class="n">getUserMedia</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">navigator</span><span class="o">.</span><span class="n">getUserMedia</span><span class="p">(</span><span class="n">videoObj</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">video</span><span class="o">.</span><span class="n">src</span> <span class="o">=</span> <span class="n">stream</span><span class="p">;</span>
+			<span class="n">video</span><span class="o">.</span><span class="n">play</span><span class="p">();</span>
+		<span class="p">},</span> <span class="n">errBack</span><span class="p">);</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">navigator</span><span class="o">.</span><span class="n">webkitGetUserMedia</span><span class="p">)</span> <span class="p">{</span> <span class="o">//</span> <span class="n">WebKit</span><span class="o">-</span><span class="n">prefixed</span>
+		<span class="n">navigator</span><span class="o">.</span><span class="n">webkitGetUserMedia</span><span class="p">(</span><span class="n">videoObj</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">stream</span><span class="p">){</span>
+			<span class="n">video</span><span class="o">.</span><span class="n">src</span> <span class="o">=</span> <span class="n">window</span><span class="o">.</span><span class="n">webkitURL</span><span class="o">.</span><span class="n">createObjectURL</span><span class="p">(</span><span class="n">stream</span><span class="p">);</span>
+			<span class="n">video</span><span class="o">.</span><span class="n">play</span><span class="p">();</span>
+		<span class="p">},</span> <span class="n">errBack</span><span class="p">);</span>
+	<span class="p">}</span>
+	
+	<span class="o">//</span> <span class="err">Получение</span> <span class="err">и</span> <span class="err">отправка</span> <span class="err">изображения</span>
+	<span class="err">$</span><span class="p">(</span><span class="s">&#39;#snap&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="n">function</span><span class="p">()</span> <span class="p">{</span>
+		  <span class="n">context</span><span class="o">.</span><span class="n">drawImage</span><span class="p">(</span><span class="n">video</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">240</span><span class="p">);</span>
+		  <span class="err">$</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="n">img</span> <span class="p">:</span> <span class="n">canvas</span><span class="o">.</span><span class="n">toDataURL</span><span class="p">(</span><span class="s">&#39;image/jpeg&#39;</span><span class="p">)</span> <span class="p">});</span>
+	<span class="p">})</span>
+<span class="p">})</span>
+<span class="o">&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">head</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">body</span><span class="o">&gt;</span>
+	<span class="o">&lt;</span><span class="n">video</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;video&quot;</span> <span class="n">width</span><span class="o">=</span><span class="s">&quot;320&quot;</span> <span class="n">height</span><span class="o">=</span><span class="s">&quot;240&quot;</span> <span class="n">autoplay</span><span class="o">&gt;&lt;/</span><span class="n">video</span><span class="o">&gt;</span>
+	<span class="o">&lt;</span><span class="n">canvas</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;canvas&quot;</span> <span class="n">width</span><span class="o">=</span><span class="s">&quot;320&quot;</span> <span class="n">height</span><span class="o">=</span><span class="s">&quot;240&quot;</span><span class="o">&gt;&lt;/</span><span class="n">canvas</span><span class="o">&gt;</span>
+	<span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span> <span class="o">&lt;</span><span class="n">button</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;snap&quot;</span><span class="o">&gt;</span><span class="err">Сфоткаться</span><span class="o">&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">body</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
+</pre></div>
+</div><br />
+<br />
+Код веб сервера на фреймворке web-tornado, отдача главной страницы, прием фотографии и сохраниение в папку uploads.<br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">tornado</span> <span class="kn">import</span> <span class="n">web</span><span class="p">,</span> <span class="n">ioloop</span>
+
+<span class="kn">import</span> <span class="nn">re</span> 
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="n">data_fetch</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&#39;data:image/(png|jpeg);base64,(.*)$&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MainHandler</span><span class="p">(</span><span class="n">web</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;static/index.html&#39;</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;img&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">data_fetch</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+        <span class="n">itype</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">data64</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data64</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">data64</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">buf</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">data64</span><span class="p">)</span>
+            <span class="nb">open</span><span class="p">(</span><span class="s">&#39;uploads/image.&#39;</span><span class="o">+</span><span class="n">itype</span><span class="p">,</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+
+<span class="n">application</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">Application</span><span class="p">([</span>
+    <span class="p">(</span><span class="s">r&quot;/&quot;</span><span class="p">,</span> <span class="n">MainHandler</span><span class="p">),</span>
+<span class="p">])</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">application</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">8888</span><span class="p">)</span>
+    <span class="n">ioloop</span><span class="o">.</span><span class="n">IOLoop</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div><br />

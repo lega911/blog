@@ -1,0 +1,115 @@
+::id 4bfb3c691d41c846bc00000f
+::date 2010-01-28
+::title 'hello world' на wsgi Apache
+::tags apache, wsgi
+::body
+В этом скрипте кроме "Helo world" добавлено несколько строчек для возможности подключения близ лежащих модулей:
+
+[[# coding: utf-8
+
+import sys
+import os
+
+path = os.path.dirname(__file__)
+sys.path.append(path)
+os.chdir(path)
+
+def application(environ, start_response):
+    status = '200 OK' 
+    output = 'Hello world!!!'
+
+    response_headers = [('Content-type', 'text/html; charset=utf-8'),
+                        ('Content-Length', str(len(output)))]
+    start_response(status, response_headers)
+
+    return [output] ]]
+ложим его в файл **/var/www/main/main.wsgi**
+
+в конфиге апача создаем виртуальный хост (**/etc/apache2/sites-available/default** для ubuntu 9.10):
+[[<VirtualHost *:80>
+    ServerName myhost.com
+
+    WSGIDaemonProcess main user=www-data group=www-data processes=1 threads=5
+    WSGIScriptAlias / /var/www/main/main.wsgi
+
+    <Directory /var/www/main>
+        WSGIProcessGroup main
+        WSGIApplicationGroup %{GLOBAL}
+        Order deny,allow
+        Allow from all
+    </Directory>
+
+    # Для статики
+    Alias "/static/" "/var/www/main/static/"
+    <Directory "/var/www/main/static">
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    ErrorLog /var/log/apache2/main_error_log
+    CustomLog /var/log/apache2/main_log common
+</VirtualHost>]]
+
+рестарт апача, и все должно работать: **sudo /etc/init.d/apache2 restart**
+
+
+**Примечание** При изменении wsgi приложения не обязательно перезагружать apache, достаточно выполнить[[touch main.wsgi]]
+
+::html
+В этом скрипте кроме "Helo world" добавлено несколько строчек для возможности подключения близ лежащих модулей:<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf-8</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">environ</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="s">&#39;200 OK&#39;</span> 
+    <span class="n">output</span> <span class="o">=</span> <span class="s">&#39;Hello world!!!&#39;</span>
+
+    <span class="n">response_headers</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;Content-type&#39;</span><span class="p">,</span> <span class="s">&#39;text/html; charset=utf-8&#39;</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s">&#39;Content-Length&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">)))]</span>
+    <span class="n">start_response</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">response_headers</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">output</span><span class="p">]</span> 
+</pre></div>
+</div><br />
+ложим его в файл <b>/var/www/main/main.wsgi</b><br />
+<br />
+в конфиге апача создаем виртуальный хост (<b>/etc/apache2/sites-available/default</b> для ubuntu 9.10):<br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&lt;</span><span class="n">VirtualHost</span> <span class="o">*</span><span class="p">:</span><span class="mi">80</span><span class="o">&gt;</span>
+    <span class="n">ServerName</span> <span class="n">myhost</span><span class="o">.</span><span class="n">com</span>
+
+    <span class="n">WSGIDaemonProcess</span> <span class="n">main</span> <span class="n">user</span><span class="o">=</span><span class="n">www</span><span class="o">-</span><span class="n">data</span> <span class="n">group</span><span class="o">=</span><span class="n">www</span><span class="o">-</span><span class="n">data</span> <span class="n">processes</span><span class="o">=</span><span class="mi">1</span> <span class="n">threads</span><span class="o">=</span><span class="mi">5</span>
+    <span class="n">WSGIScriptAlias</span> <span class="o">/</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">main</span><span class="o">.</span><span class="n">wsgi</span>
+
+    <span class="o">&lt;</span><span class="n">Directory</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">main</span><span class="o">&gt;</span>
+        <span class="n">WSGIProcessGroup</span> <span class="n">main</span>
+        <span class="n">WSGIApplicationGroup</span> <span class="o">%</span><span class="p">{</span><span class="n">GLOBAL</span><span class="p">}</span>
+        <span class="n">Order</span> <span class="n">deny</span><span class="p">,</span><span class="n">allow</span>
+        <span class="n">Allow</span> <span class="kn">from</span> <span class="nn">all</span>
+    <span class="o">&lt;/</span><span class="n">Directory</span><span class="o">&gt;</span>
+
+    <span class="c"># Для статики</span>
+    <span class="n">Alias</span> <span class="s">&quot;/static/&quot;</span> <span class="s">&quot;/var/www/main/static/&quot;</span>
+    <span class="o">&lt;</span><span class="n">Directory</span> <span class="s">&quot;/var/www/main/static&quot;</span><span class="o">&gt;</span>
+        <span class="n">Order</span> <span class="n">allow</span><span class="p">,</span><span class="n">deny</span>
+        <span class="n">Allow</span> <span class="kn">from</span> <span class="nn">all</span>
+    <span class="o">&lt;/</span><span class="n">Directory</span><span class="o">&gt;</span>
+
+    <span class="n">ErrorLog</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">apache2</span><span class="o">/</span><span class="n">main_error_log</span>
+    <span class="n">CustomLog</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">apache2</span><span class="o">/</span><span class="n">main_log</span> <span class="n">common</span>
+<span class="o">&lt;/</span><span class="n">VirtualHost</span><span class="o">&gt;</span>
+</pre></div>
+</div><br />
+<br />
+рестарт апача, и все должно работать: <b>sudo /etc/init.d/apache2 restart</b><br />
+<br />
+<br />
+<b>Примечание</b> При изменении wsgi приложения не обязательно перезагружать apache, достаточно выполнить<div class="codebox"><div class="highlight"><pre><span class="n">touch</span> <span class="n">main</span><span class="o">.</span><span class="n">wsgi</span>
+</pre></div>
+</div><br />

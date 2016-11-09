@@ -1,0 +1,105 @@
+::id 4bfb3c6a1d41c846bc0000b2
+::date 2010-04-05
+::title Скрипт авто подключения к инету при его исчезновении
+::tags python, pexpect, internet
+::body
+Скрипт проверяет наличие интернета путем пинга на yandex.ru, в случае отсутствия выполняет команду отключения, а затем подключения интернета с правами root.
+
+[[#!/usr/bin/python
+# coding: utf8
+
+# Проверка наличия инета
+def check():
+    cmd = 'ping yandex.ru -c 5'
+    import subprocess
+    PIPE = subprocess.PIPE
+    p = subprocess.Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE,
+            stderr=subprocess.STDOUT, close_fds=True)
+    buf = p.stdout.read()
+    return 'time=' in buf
+
+# Выполнить команду от рута
+def execcommand(cmd):
+    mypass = 'mypass\n'
+    
+    try:
+        from pexpect import spawn, EOF
+        child = spawn(cmd)
+        res = child.expect([r'.+?password.+?:\s?', EOF], timeout=120)
+        print 'res = ',res
+        child.sendline(mypass)
+    except Exception as e:
+        print 'except:',str(e)
+
+import time
+col = 0
+while 1:
+    try:
+        time.sleep(30)
+        print 'check',
+        if check(): col = 0
+        else: col +=1
+        print col
+        if col > 1: # Если разрыв более 1 мин, делаем переподключение
+            print 'poff'
+            execcommand("sudo poff dsl-provider") # Разрыв
+            time.sleep(5)
+            print 'pon'
+            execcommand("sudo pon dsl-provider") # Соединение
+    except Exception as e:
+        print 'except:',str(e)]]
+
+
+примечание: вместо программного ввода пароля для sudo разумней сделать возможность запуска этих команд без ввода пароля sudo, см [/page/98 sudo без ввода пароля]
+
+::html
+Скрипт проверяет наличие интернета путем пинга на yandex.ru, в случае отсутствия выполняет команду отключения, а затем подключения интернета с правами root.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c">#!/usr/bin/python</span>
+<span class="c"># coding: utf8</span>
+
+<span class="c"># Проверка наличия инета</span>
+<span class="k">def</span> <span class="nf">check</span><span class="p">():</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s">&#39;ping yandex.ru -c 5&#39;</span>
+    <span class="kn">import</span> <span class="nn">subprocess</span>
+    <span class="n">PIPE</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">close_fds</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">buf</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">return</span> <span class="s">&#39;time=&#39;</span> <span class="ow">in</span> <span class="n">buf</span>
+
+<span class="c"># Выполнить команду от рута</span>
+<span class="k">def</span> <span class="nf">execcommand</span><span class="p">(</span><span class="n">cmd</span><span class="p">):</span>
+    <span class="n">mypass</span> <span class="o">=</span> <span class="s">&#39;mypass</span><span class="se">\n</span><span class="s">&#39;</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">pexpect</span> <span class="kn">import</span> <span class="n">spawn</span><span class="p">,</span> <span class="n">EOF</span>
+        <span class="n">child</span> <span class="o">=</span> <span class="n">spawn</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">expect</span><span class="p">([</span><span class="s">r&#39;.+?password.+?:\s?&#39;</span><span class="p">,</span> <span class="n">EOF</span><span class="p">],</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s">&#39;res = &#39;</span><span class="p">,</span><span class="n">res</span>
+        <span class="n">child</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">mypass</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&#39;except:&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="n">col</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s">&#39;check&#39;</span><span class="p">,</span>
+        <span class="k">if</span> <span class="n">check</span><span class="p">():</span> <span class="n">col</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span> <span class="n">col</span> <span class="o">+=</span><span class="mi">1</span>
+        <span class="k">print</span> <span class="n">col</span>
+        <span class="k">if</span> <span class="n">col</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="c"># Если разрыв более 1 мин, делаем переподключение</span>
+            <span class="k">print</span> <span class="s">&#39;poff&#39;</span>
+            <span class="n">execcommand</span><span class="p">(</span><span class="s">&quot;sudo poff dsl-provider&quot;</span><span class="p">)</span> <span class="c"># Разрыв</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+            <span class="k">print</span> <span class="s">&#39;pon&#39;</span>
+            <span class="n">execcommand</span><span class="p">(</span><span class="s">&quot;sudo pon dsl-provider&quot;</span><span class="p">)</span> <span class="c"># Соединение</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&#39;except:&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<br />
+<br />
+примечание: вместо программного ввода пароля для sudo разумней сделать возможность запуска этих команд без ввода пароля sudo, см <a href="/page/98">sudo без ввода пароля</a><br />

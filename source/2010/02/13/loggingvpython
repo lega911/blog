@@ -1,0 +1,43 @@
+::id 4bfb3c691d41c846bc000055
+::date 2010-02-13
+::title logging в python
+::tags python, logging
+::body
+Краткий пример для использования logging.
+
+!Инициализация
+[[import logging
+logging.basicConfig(filename='file.log',format='%(asctime)s %(levelname)s %(message)s',level=logging.DEBUG)]]
+
+!Добавление сообщений в логи
+[[logging.debug('This is a debug message')
+logging.info('This is an info message')
+logging.warning('This is a warning message')
+logging.error('This is an error message')
+logging.critical('This is a critical error message')]]
+
+!Подробный вывод exception'а в логи
+[[try:
+    ...
+except Exception as e:
+    logging.exception(e)]]
+
+::html
+Краткий пример для использования logging.<br />
+<h3>Инициализация</h3><div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s">&#39;file.log&#39;</span><span class="p">,</span><span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%(asctime)s</span><span class="s"> </span><span class="si">%(levelname)s</span><span class="s"> </span><span class="si">%(message)s</span><span class="s">&#39;</span><span class="p">,</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<h3>Добавление сообщений в логи</h3><div class="codebox"><div class="highlight"><pre><span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;This is a debug message&#39;</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;This is an info message&#39;</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&#39;This is a warning message&#39;</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&#39;This is an error message&#39;</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s">&#39;This is a critical error message&#39;</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<h3>Подробный вывод exception'а в логи</h3><div class="codebox"><div class="highlight"><pre><span class="k">try</span><span class="p">:</span>
+    <span class="o">...</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div><br />

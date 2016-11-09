@@ -1,0 +1,68 @@
+::id 4bfb3c691d41c846bc000087
+::date 2010-03-22
+::title telnet на python
+::tags python, telnet
+::body
+Пример для windows, но на linux тоже должен работать
+
+[[# coding: utf-8
+
+import telnetlib
+import time
+
+def main():
+	HOST = "host"
+	user = "user"
+	password = "pasw"
+
+	tn = telnetlib.Telnet(HOST)
+
+	# Логинимся
+	print 'login',
+	tn.read_until("login: ")
+	tn.write(user + "\r")
+	print 'ok\npass',
+	tn.read_until("password: ")
+	tn.write(password + "\r")
+	print 'ok'
+
+	# Читаем результат, посылаем команду
+	time.sleep(3)
+	print tn.read_some()
+	tn.write("dir" + "\r")
+	tn.write("exit\r")
+	print tn.read_all()
+main()]]
+::html
+Пример для windows, но на linux тоже должен работать<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf-8</span>
+
+<span class="kn">import</span> <span class="nn">telnetlib</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+	<span class="n">HOST</span> <span class="o">=</span> <span class="s">&quot;host&quot;</span>
+	<span class="n">user</span> <span class="o">=</span> <span class="s">&quot;user&quot;</span>
+	<span class="n">password</span> <span class="o">=</span> <span class="s">&quot;pasw&quot;</span>
+
+	<span class="n">tn</span> <span class="o">=</span> <span class="n">telnetlib</span><span class="o">.</span><span class="n">Telnet</span><span class="p">(</span><span class="n">HOST</span><span class="p">)</span>
+
+	<span class="c"># Логинимся</span>
+	<span class="k">print</span> <span class="s">&#39;login&#39;</span><span class="p">,</span>
+	<span class="n">tn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="s">&quot;login: &quot;</span><span class="p">)</span>
+	<span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">user</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\r</span><span class="s">&quot;</span><span class="p">)</span>
+	<span class="k">print</span> <span class="s">&#39;ok</span><span class="se">\n</span><span class="s">pass&#39;</span><span class="p">,</span>
+	<span class="n">tn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="s">&quot;password: &quot;</span><span class="p">)</span>
+	<span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">password</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\r</span><span class="s">&quot;</span><span class="p">)</span>
+	<span class="k">print</span> <span class="s">&#39;ok&#39;</span>
+
+	<span class="c"># Читаем результат, посылаем команду</span>
+	<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+	<span class="k">print</span> <span class="n">tn</span><span class="o">.</span><span class="n">read_some</span><span class="p">()</span>
+	<span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;dir&quot;</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\r</span><span class="s">&quot;</span><span class="p">)</span>
+	<span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;exit</span><span class="se">\r</span><span class="s">&quot;</span><span class="p">)</span>
+	<span class="k">print</span> <span class="n">tn</span><span class="o">.</span><span class="n">read_all</span><span class="p">()</span>
+<span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>

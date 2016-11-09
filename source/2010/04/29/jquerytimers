@@ -1,0 +1,54 @@
+::id 4bfb3c6a1d41c846bc0000ce
+::date 2010-04-29
+::title jquery timers
+::tags jquery, ajax, timers
+::body
+Данный код подгружает данные каждую секунду, можно использовать для мониторинга, чата и т.п.
+
+[[html#
+<html>
+<head>
+    <script type="text/javascript" 
+        src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="jquery.timers.js"></script>
+    <script type="text/javascript" language="javascript">
+        $(document).ready(function(){
+            $(document).everyTime(1000, function(i) {
+                $.get("gettime", function(data) {
+                    $("#msg").html( data );
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+  <span id=msg />
+</body>
+</html>]]
+Плагин [http://plugins.jquery.com/project/timers jquery.timers]
+
+::html
+Данный код подгружает данные каждую секунду, можно использовать для мониторинга, чата и т.п.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> 
+        <span class="na">src=</span><span class="s">&quot;http://code.jquery.com/jquery-1.4.2.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;jquery.timers.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">language=</span><span class="s">&quot;javascript&quot;</span><span class="nt">&gt;</span>
+        <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+            <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">everyTime</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;gettime&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#msg&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span> <span class="nx">data</span> <span class="p">);</span>
+                <span class="p">});</span>
+            <span class="p">});</span>
+        <span class="p">});</span>
+    <span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;span</span> <span class="na">id=</span><span class="s">msg</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+</div><br />
+Плагин <a target=_blank href="http://plugins.jquery.com/project/timers">jquery.timers</a><br />

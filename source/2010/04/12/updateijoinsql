@@ -1,0 +1,22 @@
+::id 4bfb3c6a1d41c846bc0000bc
+::date 2010-04-12
+::title UPDATE и JOIN (SQL)
+::tags mssql, sql
+::body
+//mssql//
+[[UPDATE Table1 Set Field1 = Value
+
+FROM Table1 as t1
+
+INNER JOIN Table2 as t2 on t1.Field2 = t2.Field2
+
+WHERE Field3 = Value]]
+::html
+<i>mssql</i><br />
+<div class="codebox"><pre><code>UPDATE Table1 Set Field1 = Value
+
+FROM Table1 as t1
+
+INNER JOIN Table2 as t2 on t1.Field2 = t2.Field2
+
+WHERE Field3 = Value</code></pre></div>

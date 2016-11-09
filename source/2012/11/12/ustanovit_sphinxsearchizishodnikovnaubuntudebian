@@ -1,0 +1,95 @@
+::id 50a0be47bbddbd103f000005
+::date 2012-11-12
+::title Установить sphinx search из исходников на ubuntu/debian
+::tags linux, sphinx, install
+::body
+Инструкция для установки sphinx из исходников с созданием deb пакета, с возможностью в дальнейшем удалить пакет из системы. Можно применять когда нужна самая свежая/dev версия sphinx либо когда нужно иметь несколько разных версий параллельно.
+ 
+Установка необходимых компонентов:
+[[sudo apt-get install gcc g++ make checkinstall]]
+
+!1.a) Берем исходники из svn (самый свежак):
+[[svn checkout http://sphinxsearch.googlecode.com/svn/trunk/ sphinxsearch-read-only]]
+!1.b) Либо можно скачать какой-нибудь из релизов:
+[[wget http://sphinxsearch.com/files/sphinx-2.0.6-release.tar.gz
+wget http://sphinxsearch.com/files/sphinx-2.0.5-release.tar.gz
+wget http://sphinxsearch.com/files/sphinx-2.0.4-release.tar.gz
+tar -xzf sphinx-2.0.X-release.tar.gz]]
+
+!2) Далее переходим в получившуюся папку, выбираем путь установки, дополнительные модули:
+[[./configure --prefix=/usr/local/sphinx --without-mysql]]
+В папку /usr/local/sphinx без модуля mysql
+[[./configure --prefix=/usr/local/sphinx-2.0.5 --with-mysql]]
+В папку /usr/local/sphinx-2.0.5, с модулем mysql
+[[./configure --prefix=/usr/local/sphinx --without-mysql --with-pgsql]]
+С модулем для PostgreSQL
+
+//При указании разных папок установки, можно параллельно установить несколько версий sphinx'a//
+
+!3) Компилируем и устанавливаем
+[[make
+sudo checkinstall -D
+]]
+При создании пакета, будет предложено изменить параметры пакета, в пункте 3 нужно будет задать версию sphinx.
+[[3 -  Version: [ release ] ]]Нужно указать версию, например 2.0.5
+
+Если все хорошо прошло, то sphinx будет установлен и в текущей папке должен будет появиться deb пакет.
+
+!Просмотр установленных sphinx'ов:
+[[$ dpkg -l | grep sphinx
+ii  sphinx-2.0.4                     2.0.4-1                    sphinxsearch
+ii  sphinx-2.0.5                     2.0.5-1                    sphinx-2.0.5
+ii  sphinx-2.0.6                     2.0.6-1                    sphinx-2.0.6
+ii  sphinxsearch                     2.0.7b-1                   sphinxsearch
+]]
+!Удаление sphinx:
+[[sudo dpkg -r sphinx-2.0.5]]
+
+::html
+Инструкция для установки sphinx из исходников с созданием deb пакета, с возможностью в дальнейшем удалить пакет из системы. Можно применять когда нужна самая свежая/dev версия sphinx либо когда нужно иметь несколько разных версий параллельно.<br />
+ <br />
+Установка необходимых компонентов:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">gcc</span> <span class="n">g</span><span class="o">++</span> <span class="n">make</span> <span class="n">checkinstall</span>
+</pre></div>
+</div><br />
+<h3>1.a) Берем исходники из svn (самый свежак):</h3><div class="codebox"><div class="highlight"><pre><span class="n">svn</span> <span class="n">checkout</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">sphinxsearch</span><span class="o">.</span><span class="n">googlecode</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">svn</span><span class="o">/</span><span class="n">trunk</span><span class="o">/</span> <span class="n">sphinxsearch</span><span class="o">-</span><span class="n">read</span><span class="o">-</span><span class="n">only</span>
+</pre></div>
+</div><h3>1.b) Либо можно скачать какой-нибудь из релизов:</h3><div class="codebox"><div class="highlight"><pre><span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">sphinxsearch</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">sphinx</span><span class="o">-</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">6</span><span class="o">-</span><span class="n">release</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">sphinxsearch</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">sphinx</span><span class="o">-</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">5</span><span class="o">-</span><span class="n">release</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">sphinxsearch</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">sphinx</span><span class="o">-</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">4</span><span class="o">-</span><span class="n">release</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">xzf</span> <span class="n">sphinx</span><span class="o">-</span><span class="mf">2.0</span><span class="o">.</span><span class="n">X</span><span class="o">-</span><span class="n">release</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+</pre></div>
+</div><br />
+<h3>2) Далее переходим в получившуюся папку, выбираем путь установки, дополнительные модули:</h3><div class="codebox"><div class="highlight"><pre><span class="o">./</span><span class="n">configure</span> <span class="o">--</span><span class="n">prefix</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">sphinx</span> <span class="o">--</span><span class="n">without</span><span class="o">-</span><span class="n">mysql</span>
+</pre></div>
+</div><br />
+В папку /usr/local/sphinx без модуля mysql<br />
+<div class="codebox"><div class="highlight"><pre><span class="o">./</span><span class="n">configure</span> <span class="o">--</span><span class="n">prefix</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">sphinx</span><span class="o">-</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">5</span> <span class="o">--</span><span class="k">with</span><span class="o">-</span><span class="n">mysql</span>
+</pre></div>
+</div><br />
+В папку /usr/local/sphinx-2.0.5, с модулем mysql<br />
+<div class="codebox"><div class="highlight"><pre><span class="o">./</span><span class="n">configure</span> <span class="o">--</span><span class="n">prefix</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">sphinx</span> <span class="o">--</span><span class="n">without</span><span class="o">-</span><span class="n">mysql</span> <span class="o">--</span><span class="k">with</span><span class="o">-</span><span class="n">pgsql</span>
+</pre></div>
+</div><br />
+С модулем для PostgreSQL<br />
+<br />
+<i>При указании разных папок установки, можно параллельно установить несколько версий sphinx'a</i><br />
+<h3>3) Компилируем и устанавливаем</h3><div class="codebox"><div class="highlight"><pre><span class="n">make</span>
+<span class="n">sudo</span> <span class="n">checkinstall</span> <span class="o">-</span><span class="n">D</span>
+</pre></div>
+</div><br />
+При создании пакета, будет предложено изменить параметры пакета, в пункте 3 нужно будет задать версию sphinx.<br />
+<div class="codebox"><div class="highlight"><pre><span class="mi">3</span> <span class="o">-</span>  <span class="n">Version</span><span class="p">:</span> <span class="p">[</span> <span class="n">release</span> <span class="p">]</span> 
+</pre></div>
+</div>Нужно указать версию, например 2.0.5<br />
+<br />
+Если все хорошо прошло, то sphinx будет установлен и в текущей папке должен будет появиться deb пакет.<br />
+<h3>Просмотр установленных sphinx'ов:</h3><div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">dpkg</span> <span class="o">-</span><span class="n">l</span> <span class="o">|</span> <span class="n">grep</span> <span class="n">sphinx</span>
+<span class="n">ii</span>  <span class="n">sphinx</span><span class="o">-</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">4</span>                     <span class="mf">2.0</span><span class="o">.</span><span class="mi">4</span><span class="o">-</span><span class="mi">1</span>                    <span class="n">sphinxsearch</span>
+<span class="n">ii</span>  <span class="n">sphinx</span><span class="o">-</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">5</span>                     <span class="mf">2.0</span><span class="o">.</span><span class="mi">5</span><span class="o">-</span><span class="mi">1</span>                    <span class="n">sphinx</span><span class="o">-</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">5</span>
+<span class="n">ii</span>  <span class="n">sphinx</span><span class="o">-</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">6</span>                     <span class="mf">2.0</span><span class="o">.</span><span class="mi">6</span><span class="o">-</span><span class="mi">1</span>                    <span class="n">sphinx</span><span class="o">-</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">6</span>
+<span class="n">ii</span>  <span class="n">sphinxsearch</span>                     <span class="mf">2.0</span><span class="o">.</span><span class="mi">7</span><span class="n">b</span><span class="o">-</span><span class="mi">1</span>                   <span class="n">sphinxsearch</span>
+</pre></div>
+</div><h3>Удаление sphinx:</h3><div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">dpkg</span> <span class="o">-</span><span class="n">r</span> <span class="n">sphinx</span><span class="o">-</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">5</span>
+</pre></div>
+</div><br />

@@ -1,0 +1,64 @@
+::id 50da943fbbddbd3f33000000
+::date 2012-12-26
+::title Условия в CSS
+::tags css, media, if
+::body
+Условия в CSS они же медиа запросы (CSS media queries), используются для переключения/подключения CSS в зависимости от некоторых условий (свойств аппаратуры), часто применяются в css фреймворках.
+ 
+Пример использования:
+[[@media screen and (min-width: 1024px) {
+  #sidebar { width: 220px; }
+}
+@media screen and (max-width: 1023px) {
+  #sidebar { width: 110px; }
+}
+]]В данном примере условия работают для экранов мониторов (screen), и если ширина окна будет 1024px и более то будет активный 1-ый блок (=220px), если ширина окна будет 1023px и менее то будет активный 2-й блок (=110px).
+ 
+Пример использования условий при подключении css файла:
+[[<link rel="stylesheet" media="all and (min-device-width: 600)" href="/style.css" />]]
+
+!Некоторые из параметров:
+#|min-width, max-width|Минимальная/максимальная ширина окна
+||min-height, max-height|Минимальная/максимальная высота окна
+||min-device-width, max-device-width|Минимальная/максимальная ширина экрана
+||min-device-height, max-device-height|Минимальная/максимальная высота экрана
+|#
+
+!Условия по девайсам:
+#|all|Любые устройства
+||screen|Экраны мониторов
+||print|Принтеры
+||handheld|Смарфоны и аналоги
+||tv|Телевизоры
+||projection|Проекторы
+|#
+
+!Совместимость
+Эта возможность появилась в CSS3, работает в:
+Chrome, Firefox 3.6+, Safari 4+, Opera 10, IE 9+, Android 2+, iOS 2+
+
+О других свойствах можно прочитать тут [https://developer.mozilla.org/en-US/docs/CSS/Media_queries developer.mozilla.org]
+
+::html
+Условия в CSS они же медиа запросы (CSS media queries), используются для переключения/подключения CSS в зависимости от некоторых условий (свойств аппаратуры), часто применяются в css фреймворках.<br />
+ <br />
+Пример использования:<br />
+<div class="codebox"><div class="highlight"><pre><span class="nd">@media</span> <span class="n">screen</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">min</span><span class="o">-</span><span class="n">width</span><span class="p">:</span> <span class="mi">1024</span><span class="n">px</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c">#sidebar { width: 220px; }</span>
+<span class="p">}</span>
+<span class="nd">@media</span> <span class="n">screen</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">max</span><span class="o">-</span><span class="n">width</span><span class="p">:</span> <span class="mi">1023</span><span class="n">px</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c">#sidebar { width: 110px; }</span>
+<span class="p">}</span>
+</pre></div>
+</div>В данном примере условия работают для экранов мониторов (screen), и если ширина окна будет 1024px и более то будет активный 1-ый блок (=220px), если ширина окна будет 1023px и менее то будет активный 2-й блок (=110px).<br />
+ <br />
+Пример использования условий при подключении css файла:<br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&lt;</span><span class="n">link</span> <span class="n">rel</span><span class="o">=</span><span class="s">&quot;stylesheet&quot;</span> <span class="n">media</span><span class="o">=</span><span class="s">&quot;all and (min-device-width: 600)&quot;</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;/style.css&quot;</span> <span class="o">/&gt;</span>
+</pre></div>
+</div><br />
+<h3>Некоторые из параметров:</h3><table class="pymark_table"><tr><td>min-width, max-width</td><td>Минимальная/максимальная ширина окна</td></tr><tr><td>min-height, max-height</td><td>Минимальная/максимальная высота окна</td></tr><tr><td>min-device-width, max-device-width</td><td>Минимальная/максимальная ширина экрана</td></tr><tr><td>min-device-height, max-device-height</td><td>Минимальная/максимальная высота экрана</td></tr></table><br />
+<h3>Условия по девайсам:</h3><table class="pymark_table"><tr><td>all</td><td>Любые устройства</td></tr><tr><td>screen</td><td>Экраны мониторов</td></tr><tr><td>print</td><td>Принтеры</td></tr><tr><td>handheld</td><td>Смарфоны и аналоги</td></tr><tr><td>tv</td><td>Телевизоры</td></tr><tr><td>projection</td><td>Проекторы</td></tr></table><br />
+<h3>Совместимость</h3>Эта возможность появилась в CSS3, работает в:<br />
+Chrome, Firefox 3.6+, Safari 4+, Opera 10, IE 9+, Android 2+, iOS 2+<br />
+<br />
+О других свойствах можно прочитать тут <a target=_blank href="https://developer.mozilla.org/en-US/docs/CSS/Media_queries">developer.mozilla.org</a><br />

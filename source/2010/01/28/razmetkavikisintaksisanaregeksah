@@ -1,0 +1,205 @@
+::id 4bfb3c691d41c846bc000018
+::date 2010-01-28
+::title Разметка вики синтаксиса на регексах
+::tags wiki, regexp, python
+::body
+Начальная версия [http://bitbucket.org/lega911/pymark pymark]:
+
+[[# coding: utf-8
+
+import re
+
+r_codebox = '<div class="codebox"><pre><code>%s</code></pre></div>'
+r_header = '<h3>%s</h3>'
+r_url = '<a href="%s">%s</a>'
+r_urle = '<a target=_blank href="%s">%s</a>'
+r_file = '<a href="/uploads/%s">%s</a>'
+r_image = '<img src="/uploads/%s" />'
+
+def mark1(nText):
+    ret = nText
+    
+    # safe
+    ret = ret.replace('~~','~~0~~')
+
+    # blocks
+    blocks = ['~~','&amp;','&lt;','&gt;','\n<br />&nbsp;&#8226;&nbsp;','\n<br />&nbsp;&nbsp;&#9643;&nbsp;','<br />\n']
+    def toBlocks(s):
+        blocks.append(s)
+        return len(blocks)-1
+    
+    # html blocks [{ }]
+    def rid(m,reptext='%s',protect=0):
+        if len(m.groups(0)) > 1:
+            text = reptext % m.groups(0)
+            id = toBlocks(text)
+        else:
+            text = m.groups(0)[0]
+            if protect:
+                text = m.groups(0)[0]
+                text = text.replace('&','&amp;')
+                text = text.replace('<','&lt;')
+                text = text.replace('>','&gt;')
+                if protect>1: text = text.replace('\n','<br />\n')
+            id = toBlocks(reptext % text)
+        return '~~%d~~' % id
+    ret = re.compile(r'\[\{(.+?)\}\]', re.DOTALL).sub(rid, ret)
+
+    # code block [ [ ] ]
+    ret = re.compile(r'\[\[(.+?)\]\]', re.DOTALL).sub(lambda x:rid(x,r_codebox,1), ret)
+
+    # attachments
+    ret = re.compile(r'\[file:(\d+)\s(.+?)\]', re.DOTALL).sub(lambda x:rid(x,r_file), ret)
+    ret = re.compile(r'\[image:(\d+)\]', re.DOTALL).sub(lambda x:rid(x,r_image), ret)
+
+    # url
+    ret = re.compile(r'\[(https?://[\w\d/:\.\-]+?)\s(.+?)\]', re.DOTALL).sub(lambda x:rid(x,r_urle), ret)
+    ret = re.compile(r'\[([\w\d/:\.\-]+?)\s(.+?)\]', re.DOTALL).sub(lambda x:rid(x,r_url), ret)
+
+    # !header
+    ret = re.compile(r'^!(.+?)$', re.DOTALL | re.MULTILINE).sub(lambda x:rid(x,r_header,2), ret)
+    
+    # **bold**
+    ret = re.compile(r'\*\*(.+?)\*\*', re.DOTALL).sub(lambda x:rid(x,'<b>%s</b>',2), ret)
+    
+    # **italic**
+    ret = re.compile(r'//(.+?)//', re.DOTALL).sub(lambda x:rid(x,'<i>%s</i>',2), ret)
+
+    # --strike--
+    ret = re.compile(r'--(.+?)--', re.DOTALL).sub(lambda x:rid(x,'<s>%s</s>',2), ret)
+    
+    # __underline__
+    ret = re.compile(r'__(.+?)__', re.DOTALL).sub(lambda x:rid(x,'<u>%s</u>',2), ret)
+    
+    # ##monoshir##
+    ret = re.compile(r'##(.+?)##', re.DOTALL).sub(lambda x:rid(x,'<tt>%s</tt>',2), ret)
+    
+    # ++small++
+    ret = re.compile(r'\+\+(.+?)\+\+', re.DOTALL).sub(lambda x:rid(x,'<small>%s</small>',2), ret)
+    
+    # safe < > &
+    ret = ret.replace('&','~~1~~')
+    ret = ret.replace('<','~~2~~')
+    ret = ret.replace('>','~~3~~')
+
+    # *
+    ret = ret.replace('\n * ','~~4~~')
+    ret = ret.replace('\n  * ','~~5~~')
+
+    ret = ret.replace('\n','~~6~~')
+
+    # insert blocks
+    def rid2(m):
+        id = int(m.groups(0)[0])
+        return blocks[id]
+    ret = re.sub(r'~~(\d+)~~', rid2, ret)
+    
+    #print blocks
+    return ret]]
+
+исходник: [http://bitbucket.org/lega911/pymark http://bitbucket.org/lega911/pymark]
+[/page/91 пример использования]
+
+
+см. [/page/63 regexp методы в python]
+
+::html
+Начальная версия <a target=_blank href="http://bitbucket.org/lega911/pymark">pymark</a>:<br />
+<br />
+<div class="codebox"><pre><code># coding: utf-8
+
+import re
+
+r_codebox = '&lt;div class="codebox"&gt;&lt;pre&gt;&lt;code&gt;%s&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;'
+r_header = '&lt;h3&gt;%s&lt;/h3&gt;'
+r_url = '&lt;a href="%s"&gt;%s&lt;/a&gt;'
+r_urle = '&lt;a target=_blank href="%s"&gt;%s&lt;/a&gt;'
+r_file = '&lt;a href="/uploads/%s"&gt;%s&lt;/a&gt;'
+r_image = '&lt;img src="/uploads/%s" /&gt;'
+
+def mark1(nText):
+    ret = nText
+    
+    # safe
+    ret = ret.replace('~~0~~','~~0~~0~~0~~')
+
+    # blocks
+    blocks = ['~~0~~','&amp;amp;','&amp;lt;','&amp;gt;','\n&lt;br /&gt;&amp;nbsp;&amp;#8226;&amp;nbsp;','\n&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;#9643;&amp;nbsp;','&lt;br /&gt;\n']
+    def toBlocks(s):
+        blocks.append(s)
+        return len(blocks)-1
+    
+    # html blocks ~~7~~
+    def rid(m,reptext='%s',protect=0):
+        if len(m.groups(0)) &gt; 1:
+            text = reptext % m.groups(0)
+            id = toBlocks(text)
+        else:
+            text = m.groups(0)[0]
+            if protect:
+                text = m.groups(0)[0]
+                text = text.replace('&amp;','&amp;amp;')
+                text = text.replace('&lt;','&amp;lt;')
+                text = text.replace('&gt;','&amp;gt;')
+                if protect&gt;1: text = text.replace('\n','&lt;br /&gt;\n')
+            id = toBlocks(reptext % text)
+        return '~~0~~%d~~0~~' % id
+    ret = re.compile(r'\[\{(.+?)\}\]', re.DOTALL).sub(rid, ret)
+
+    # code block [ [ ] ]
+    ret = re.compile(r'\[\[(.+?)\]\]', re.DOTALL).sub(lambda x:rid(x,r_codebox,1), ret)
+
+    # attachments
+    ret = re.compile(r'\[file:(\d+)\s(.+?)\]', re.DOTALL).sub(lambda x:rid(x,r_file), ret)
+    ret = re.compile(r'\[image:(\d+)\]', re.DOTALL).sub(lambda x:rid(x,r_image), ret)
+
+    # url
+    ret = re.compile(r'\[(https?://[\w\d/:\.\-]+?)\s(.+?)\]', re.DOTALL).sub(lambda x:rid(x,r_urle), ret)
+    ret = re.compile(r'\[([\w\d/:\.\-]+?)\s(.+?)\]', re.DOTALL).sub(lambda x:rid(x,r_url), ret)
+
+    # !header
+    ret = re.compile(r'^!(.+?)$', re.DOTALL | re.MULTILINE).sub(lambda x:rid(x,r_header,2), ret)
+    
+    # **bold**
+    ret = re.compile(r'\*\*(.+?)\*\*', re.DOTALL).sub(lambda x:rid(x,'&lt;b&gt;%s&lt;/b&gt;',2), ret)
+    
+    # **italic**
+    ret = re.compile(r'//(.+?)//', re.DOTALL).sub(lambda x:rid(x,'&lt;i&gt;%s&lt;/i&gt;',2), ret)
+
+    # --strike--
+    ret = re.compile(r'--(.+?)--', re.DOTALL).sub(lambda x:rid(x,'&lt;s&gt;%s&lt;/s&gt;',2), ret)
+    
+    # __underline__
+    ret = re.compile(r'__(.+?)__', re.DOTALL).sub(lambda x:rid(x,'&lt;u&gt;%s&lt;/u&gt;',2), ret)
+    
+    # ##monoshir##
+    ret = re.compile(r'##(.+?)##', re.DOTALL).sub(lambda x:rid(x,'&lt;tt&gt;%s&lt;/tt&gt;',2), ret)
+    
+    # ++small++
+    ret = re.compile(r'\+\+(.+?)\+\+', re.DOTALL).sub(lambda x:rid(x,'&lt;small&gt;%s&lt;/small&gt;',2), ret)
+    
+    # safe &lt; &gt; &amp;
+    ret = ret.replace('&amp;','~~0~~1~~0~~')
+    ret = ret.replace('&lt;','~~0~~2~~0~~')
+    ret = ret.replace('&gt;','~~0~~3~~0~~')
+
+    # *
+    ret = ret.replace('\n * ','~~0~~4~~0~~')
+    ret = ret.replace('\n  * ','~~0~~5~~0~~')
+
+    ret = ret.replace('\n','~~0~~6~~0~~')
+
+    # insert blocks
+    def rid2(m):
+        id = int(m.groups(0)[0])
+        return blocks[id]
+    ret = re.sub(r'~~0~~(\d+)~~0~~', rid2, ret)
+    
+    #print blocks
+    return ret</code></pre></div><br />
+<br />
+исходник: <a target=_blank href="http://bitbucket.org/lega911/pymark">http://bitbucket.org/lega911/pymark</a><br />
+<a href="/page/91">пример использования</a><br />
+<br />
+<br />
+см. <a href="/page/63">regexp методы в python</a><br />

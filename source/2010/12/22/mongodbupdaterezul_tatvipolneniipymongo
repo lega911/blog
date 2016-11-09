@@ -1,0 +1,33 @@
+::id 4d12448c1d41c81a2d000000
+::date 2010-12-22
+::title mongodb update результат выполнения (pymongo)
+::tags python, mongodb, update
+::body
+Результат выполнения **update** обновления, можно получить методом **last_status()**
+**Пример**
+[[>>> from pymongo import Connection
+>>> db = Connection('localhost')['test']
+>>> db.test.save({ 'name':'lega', 'level':5 })
+ObjectId('4d1242929f1fdf144b000000')
+>>> db.test.update({ 'name':'lega' },{ '$inc':{ 'level':1 } })
+>>> db.last_status()
+{u'updatedExisting': True, u'ok': 1.0, u'err': None, u'n': 1}
+>>> res = db.test.update({ 'name':'lega2' },{ '$inc':{ 'level':1 } })
+>>> db.last_status()
+{u'updatedExisting': False, u'ok': 1.0, u'err': None, u'n': 0}
+]]
+::html
+Результат выполнения <b>update</b> обновления, можно получить методом <b>last_status()</b><br />
+<b>Пример</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">Connection</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">(</span><span class="s">&#39;localhost&#39;</span><span class="p">)[</span><span class="s">&#39;test&#39;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">save</span><span class="p">({</span> <span class="s">&#39;name&#39;</span><span class="p">:</span><span class="s">&#39;lega&#39;</span><span class="p">,</span> <span class="s">&#39;level&#39;</span><span class="p">:</span><span class="mi">5</span> <span class="p">})</span>
+<span class="n">ObjectId</span><span class="p">(</span><span class="s">&#39;4d1242929f1fdf144b000000&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">update</span><span class="p">({</span> <span class="s">&#39;name&#39;</span><span class="p">:</span><span class="s">&#39;lega&#39;</span> <span class="p">},{</span> <span class="s">&#39;$inc&#39;</span><span class="p">:{</span> <span class="s">&#39;level&#39;</span><span class="p">:</span><span class="mi">1</span> <span class="p">}</span> <span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">last_status</span><span class="p">()</span>
+<span class="p">{</span><span class="s">u&#39;updatedExisting&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="s">u&#39;ok&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s">u&#39;err&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span> <span class="s">u&#39;n&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">res</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">update</span><span class="p">({</span> <span class="s">&#39;name&#39;</span><span class="p">:</span><span class="s">&#39;lega2&#39;</span> <span class="p">},{</span> <span class="s">&#39;$inc&#39;</span><span class="p">:{</span> <span class="s">&#39;level&#39;</span><span class="p">:</span><span class="mi">1</span> <span class="p">}</span> <span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">last_status</span><span class="p">()</span>
+<span class="p">{</span><span class="s">u&#39;updatedExisting&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s">u&#39;ok&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s">u&#39;err&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span> <span class="s">u&#39;n&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>

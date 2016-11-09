@@ -1,0 +1,23 @@
+::id 4c53bff61d41c840ec000000
+::date 2010-07-31
+::title linux, аргумент предыдущей команды
+::tags linux, bash
+::body
+Пример, выполняем команду из 2-х аргументов //tail// и // /etc/group//, следующей команде что-б поставить аргумент нужно указать **!:N** - где N номер аргумента начиная с 0.
+[[tail /etc/group
+...
+nano !:1
+nano /etc/group]]
+Последний аргумент предыдущей команды[[nano !$]]а если нажать **Alt + '.'** (Альт + точка на символьной клавиатуре) то предыдущий аргумент сразу подставиться
+
+::html
+Пример, выполняем команду из 2-х аргументов <i>tail</i> и <i> /etc/group</i>, следующей команде что-б поставить аргумент нужно указать <b>!:N</b> - где N номер аргумента начиная с 0.<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">tail</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">group</span>
+<span class="o">...</span>
+<span class="n">nano</span> <span class="err">!</span><span class="p">:</span><span class="mi">1</span>
+<span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">group</span>
+</pre></div>
+</div><br />
+Последний аргумент предыдущей команды<div class="codebox"><div class="highlight"><pre><span class="n">nano</span> <span class="err">!$</span>
+</pre></div>
+</div>а если нажать <b>Alt + '.'</b> (Альт + точка на символьной клавиатуре) то предыдущий аргумент сразу подставиться<br />

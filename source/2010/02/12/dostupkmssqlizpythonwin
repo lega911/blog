@@ -1,0 +1,92 @@
+::id 4bfb3c691d41c846bc000053
+::date 2010-02-12
+::title Доступ к MSSQL из python (win)
+::tags python, mssql
+::body
+Доступ к серверу средствами ODBC, ставим пакет **pyodbc**
+
+Примеры использования:
+[[def sqlBackup(nHost,nBase,nFileName):
+    try:
+        connection = pyodbc.connect(driver='SQL Server Native Client 10.0',host=nHost,trusted_connection='yes',autocommit=True)
+        cursor = connection.cursor()
+        cursor.execute("BACKUP DATABASE "+nBase+" TO DISK = '"+nFileName+"' with INIT")
+    except Exception as e:
+        print e
+        raise]]В данном примере выполняется команда бекапа БД, подключение через //SQL Server Native Client 10.0// + доменная авторизация
+
+
+**Старый вариант**
+[[def sqlconnect(nHost='localhost',nBase='',nUser='',nPasw=''):
+    try:
+        return pyodbc.connect('DRIVER={SQL Server};SERVER='+nHost+';DATABASE='+nBase+';UID='+nUser+';PWD='+nPasw)
+    except:
+        return ''
+
+def main():
+    con = sqlconnect(serv,base,user,pasw)
+    if not con:
+        print 'Error connect to db'
+        return
+    try:
+        cursor = con.cursor()
+        res = cursor.execute('select 1+1')
+        row = res.fetchone()
+        while row:
+            print row
+            row = res.fetchone()
+    except:
+        print 'Error query to sql'
+]]данный метод позволяет работать с версиями MSSQL 2000,2005,2008
+Данные могут возвращаться в разных кодировках, пример как привести все поля в строку уникода:[[for i in row:
+    if type(i) == str: i = i.decode('cp1251').strip()
+    elif type(i) == int: i = str(i)
+    else: i = str(i).decode('utf-8').strip()
+    print i]]
+
+::html
+Доступ к серверу средствами ODBC, ставим пакет <b>pyodbc</b><br />
+<br />
+Примеры использования:<br />
+<div class="codebox"><div class="highlight"><pre><span class="k">def</span> <span class="nf">sqlBackup</span><span class="p">(</span><span class="n">nHost</span><span class="p">,</span><span class="n">nBase</span><span class="p">,</span><span class="n">nFileName</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">connection</span> <span class="o">=</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">driver</span><span class="o">=</span><span class="s">&#39;SQL Server Native Client 10.0&#39;</span><span class="p">,</span><span class="n">host</span><span class="o">=</span><span class="n">nHost</span><span class="p">,</span><span class="n">trusted_connection</span><span class="o">=</span><span class="s">&#39;yes&#39;</span><span class="p">,</span><span class="n">autocommit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;BACKUP DATABASE &quot;</span><span class="o">+</span><span class="n">nBase</span><span class="o">+</span><span class="s">&quot; TO DISK = &#39;&quot;</span><span class="o">+</span><span class="n">nFileName</span><span class="o">+</span><span class="s">&quot;&#39; with INIT&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span> <span class="n">e</span>
+        <span class="k">raise</span>
+</pre></div>
+</div>В данном примере выполняется команда бекапа БД, подключение через <i>SQL Server Native Client 10.0</i> + доменная авторизация<br />
+<br />
+<br />
+<b>Старый вариант</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="k">def</span> <span class="nf">sqlconnect</span><span class="p">(</span><span class="n">nHost</span><span class="o">=</span><span class="s">&#39;localhost&#39;</span><span class="p">,</span><span class="n">nBase</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span><span class="n">nUser</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span><span class="n">nPasw</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&#39;DRIVER={SQL Server};SERVER=&#39;</span><span class="o">+</span><span class="n">nHost</span><span class="o">+</span><span class="s">&#39;;DATABASE=&#39;</span><span class="o">+</span><span class="n">nBase</span><span class="o">+</span><span class="s">&#39;;UID=&#39;</span><span class="o">+</span><span class="n">nUser</span><span class="o">+</span><span class="s">&#39;;PWD=&#39;</span><span class="o">+</span><span class="n">nPasw</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">&#39;&#39;</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">con</span> <span class="o">=</span> <span class="n">sqlconnect</span><span class="p">(</span><span class="n">serv</span><span class="p">,</span><span class="n">base</span><span class="p">,</span><span class="n">user</span><span class="p">,</span><span class="n">pasw</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">con</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&#39;Error connect to db&#39;</span>
+        <span class="k">return</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&#39;select 1+1&#39;</span><span class="p">)</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+        <span class="k">while</span> <span class="n">row</span><span class="p">:</span>
+            <span class="k">print</span> <span class="n">row</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&#39;Error query to sql&#39;</span>
+</pre></div>
+</div>данный метод позволяет работать с версиями MSSQL 2000,2005,2008<br />
+Данные могут возвращаться в разных кодировках, пример как привести все поля в строку уникода:<div class="codebox"><div class="highlight"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span> <span class="n">i</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&#39;cp1251&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span> <span class="n">i</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span> <span class="n">i</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">print</span> <span class="n">i</span>
+</pre></div>
+</div><br />

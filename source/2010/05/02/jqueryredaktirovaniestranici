@@ -1,0 +1,204 @@
+::id 4bfb3c6b1d41c846bc0000d0
+::date 2010-05-02
+::title jquery редактирование страницы
+::tags jquery, ajax, bottle
+::body
+В данной заметке приведен пример изменения данных без перезагрузки страницы, будем изменять вики страницу.
+
+Для разметки вики страницы загрузите pymark, загрузим его текущую папку
+[[hg clone http://bitbucket.org/lega911/pymark]]
+В качестве веб фреймворка будем использовать web bottle, вы его можете установить либо просто положить в текущую папку
+[[wget http://github.com/defnull/bottle/raw/master/bottle.py]]
+В текущей папке создадим файл - веб приложение
+[[#!/usr/bin/python
+# coding: utf8
+
+from bottle import run, debug, route, request
+from pymark import mark1
+import os
+
+@route('/:fname')
+def getfile(fname):
+    if os.path.isfile(fname): return open(fname,'rb')
+    if fname == 'msg': return 'new message'
+    abort(404)
+
+@route('/mark/:fname')
+def getfile(fname):
+    return mark1(open(fname,'rb').read())
+
+@route('/')
+def main():
+    buf = open('page.html','rb').read()
+    if os.path.isfile('msg'): msg = mark1(open('msg','rb').read())
+    else: msg = 'new message'
+    return buf.replace('{{msg}}', msg )
+
+@route('/send', method='POST')
+def send():
+    if 'msg' in request.POST:
+        data = request.POST['msg']
+        open('msg','wb').write(data)
+        return mark1(data)
+    return 'error post'
+
+debug(True)
+run(port=8080,reloader=True)]]
+Теперь создадим главную страницу, и сохраним в текущую папку под именем **page.html**
+[[html#
+<html>
+<head>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" language="javascript">
+        $(document).ready(function() {
+            $("#but_save").hide();
+            $("#but_cancel").hide();
+            $("#but_edit").bind("click", function(e){
+                $("#but_edit").hide();
+                data = $("#msg").text();
+                $("#msg").html( '<textarea style="width: 300px; height: 200px;" id="emsg">loading...</textarea>' );
+                $.get("/msg", function(data) {
+                    $("#emsg").text(data);
+                    $("#but_save").show();
+                    $("#but_cancel").show();
+                });
+            });
+            $("#but_save").bind("click", function(e){
+                $("#but_save").hide();
+                $("#but_cancel").hide();
+                data = $("#emsg").val();
+                $.post("/send", { msg: data },
+                    function(data){
+                    $("#msg").html(data);
+                    $("#but_edit").show();
+                });
+            });
+            $("#but_cancel").bind("click", function(e){
+                $("#but_save").hide();
+                $("#but_cancel").hide();
+                $.get("/mark/msg", function(data) {
+                    $("#msg").html(data);
+                    $("#but_edit").show();
+                });
+            });
+        });
+    </script>
+    <style>
+        .mess { border: 4px double black; margin: 5px; padding: 5px; width: 300px; height: 200px; }
+        .menu { border: 1px solid blue; cursor: pointer; padding: 3px; }
+    </style>
+</head>
+<body>
+    <br />
+    <div id="msg" class="mess">{{msg}}</div>
+    <br />
+    <span class="menu" id="but_edit">edit</span>
+    <span class="menu" id="but_save">save</span>
+    <span class="menu" id="but_cancel">cancel</span>
+</body>
+</html>]]
+Готово, можно запускать веб приложение.
+
+::html
+В данной заметке приведен пример изменения данных без перезагрузки страницы, будем изменять вики страницу.<br />
+<br />
+Для разметки вики страницы загрузите pymark, загрузим его текущую папку<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">hg</span> <span class="n">clone</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">bitbucket</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">lega911</span><span class="o">/</span><span class="n">pymark</span>
+</pre></div>
+</div><br />
+В качестве веб фреймворка будем использовать web bottle, вы его можете установить либо просто положить в текущую папку<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">defnull</span><span class="o">/</span><span class="n">bottle</span><span class="o">/</span><span class="n">raw</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">bottle</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div><br />
+В текущей папке создадим файл - веб приложение<br />
+<div class="codebox"><div class="highlight"><pre><span class="c">#!/usr/bin/python</span>
+<span class="c"># coding: utf8</span>
+
+<span class="kn">from</span> <span class="nn">bottle</span> <span class="kn">import</span> <span class="n">run</span><span class="p">,</span> <span class="n">debug</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">pymark</span> <span class="kn">import</span> <span class="n">mark1</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="nd">@route</span><span class="p">(</span><span class="s">&#39;/:fname&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">getfile</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span> <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="s">&#39;rb&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">fname</span> <span class="o">==</span> <span class="s">&#39;msg&#39;</span><span class="p">:</span> <span class="k">return</span> <span class="s">&#39;new message&#39;</span>
+    <span class="n">abort</span><span class="p">(</span><span class="mi">404</span><span class="p">)</span>
+
+<span class="nd">@route</span><span class="p">(</span><span class="s">&#39;/mark/:fname&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">getfile</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">mark1</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="s">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+<span class="nd">@route</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">buf</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;page.html&#39;</span><span class="p">,</span><span class="s">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s">&#39;msg&#39;</span><span class="p">):</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">mark1</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;msg&#39;</span><span class="p">,</span><span class="s">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&#39;new message&#39;</span>
+    <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;{{msg}}&#39;</span><span class="p">,</span> <span class="n">msg</span> <span class="p">)</span>
+
+<span class="nd">@route</span><span class="p">(</span><span class="s">&#39;/send&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;POST&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">send</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s">&#39;msg&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;msg&#39;</span><span class="p">]</span>
+        <span class="nb">open</span><span class="p">(</span><span class="s">&#39;msg&#39;</span><span class="p">,</span><span class="s">&#39;wb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mark1</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&#39;error post&#39;</span>
+
+<span class="n">debug</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span><span class="n">reloader</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div><br />
+Теперь создадим главную страницу, и сохраним в текущую папку под именем <b>page.html</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;http://code.jquery.com/jquery-1.4.2.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">language=</span><span class="s">&quot;javascript&quot;</span><span class="nt">&gt;</span>
+        <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#but_save&quot;</span><span class="p">).</span><span class="nx">hide</span><span class="p">();</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#but_cancel&quot;</span><span class="p">).</span><span class="nx">hide</span><span class="p">();</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#but_edit&quot;</span><span class="p">).</span><span class="nx">bind</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#but_edit&quot;</span><span class="p">).</span><span class="nx">hide</span><span class="p">();</span>
+                <span class="nx">data</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#msg&quot;</span><span class="p">).</span><span class="nx">text</span><span class="p">();</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#msg&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span> <span class="s1">&#39;&lt;textarea style=&quot;width: 300px; height: 200px;&quot; id=&quot;emsg&quot;&gt;loading...&lt;/textarea&gt;&#39;</span> <span class="p">);</span>
+                <span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/msg&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#emsg&quot;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+                    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#but_save&quot;</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
+                    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#but_cancel&quot;</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
+                <span class="p">});</span>
+            <span class="p">});</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#but_save&quot;</span><span class="p">).</span><span class="nx">bind</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#but_save&quot;</span><span class="p">).</span><span class="nx">hide</span><span class="p">();</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#but_cancel&quot;</span><span class="p">).</span><span class="nx">hide</span><span class="p">();</span>
+                <span class="nx">data</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#emsg&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+                <span class="nx">$</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">&quot;/send&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">msg</span><span class="o">:</span> <span class="nx">data</span> <span class="p">},</span>
+                    <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+                    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#msg&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+                    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#but_edit&quot;</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
+                <span class="p">});</span>
+            <span class="p">});</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#but_cancel&quot;</span><span class="p">).</span><span class="nx">bind</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#but_save&quot;</span><span class="p">).</span><span class="nx">hide</span><span class="p">();</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#but_cancel&quot;</span><span class="p">).</span><span class="nx">hide</span><span class="p">();</span>
+                <span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/mark/msg&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#msg&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+                    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#but_edit&quot;</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
+                <span class="p">});</span>
+            <span class="p">});</span>
+        <span class="p">});</span>
+    <span class="nt">&lt;/script&gt;</span>
+    <span class="nt">&lt;style&gt;</span>
+        <span class="nc">.mess</span> <span class="p">{</span> <span class="k">border</span><span class="o">:</span> <span class="m">4px</span> <span class="k">double</span> <span class="nb">black</span><span class="p">;</span> <span class="k">margin</span><span class="o">:</span> <span class="m">5px</span><span class="p">;</span> <span class="k">padding</span><span class="o">:</span> <span class="m">5px</span><span class="p">;</span> <span class="k">width</span><span class="o">:</span> <span class="m">300px</span><span class="p">;</span> <span class="k">height</span><span class="o">:</span> <span class="m">200px</span><span class="p">;</span> <span class="p">}</span>
+        <span class="nc">.menu</span> <span class="p">{</span> <span class="k">border</span><span class="o">:</span> <span class="m">1px</span> <span class="k">solid</span> <span class="nb">blue</span><span class="p">;</span> <span class="k">cursor</span><span class="o">:</span> <span class="k">pointer</span><span class="p">;</span> <span class="k">padding</span><span class="o">:</span> <span class="m">3px</span><span class="p">;</span> <span class="p">}</span>
+    <span class="nt">&lt;/style&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;msg&quot;</span> <span class="na">class=</span><span class="s">&quot;mess&quot;</span><span class="nt">&gt;</span>{{msg}}<span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;menu&quot;</span> <span class="na">id=</span><span class="s">&quot;but_edit&quot;</span><span class="nt">&gt;</span>edit<span class="nt">&lt;/span&gt;</span>
+    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;menu&quot;</span> <span class="na">id=</span><span class="s">&quot;but_save&quot;</span><span class="nt">&gt;</span>save<span class="nt">&lt;/span&gt;</span>
+    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;menu&quot;</span> <span class="na">id=</span><span class="s">&quot;but_cancel&quot;</span><span class="nt">&gt;</span>cancel<span class="nt">&lt;/span&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+</div><br />
+Готово, можно запускать веб приложение.<br />

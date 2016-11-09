@@ -1,0 +1,67 @@
+::id 4bfb3c6a1d41c846bc00008c
+::date 2010-03-24
+::title Упрощение команд в python
+::tags python
+::body
+Упрощенное использование частых команд в python
+
+!Поиск в подстроке
+[[s = 'hello world'
+if s.find('wo') >= 0: print 'Yes'
+
+if 'wo' in s: print 'Yes']]
+
+
+!Проверка на пустую строку
+[[s = 'Test'
+if len(s) > 0: print 'full'
+
+if s: print 'full']]
+!Условие
+[[a = True
+if a: print 'this true'
+    else: 'this false'
+
+print 'this true' if a else 'this false']]
+!Список
+[[# Пример 1
+d = []
+for x in xrange(5):
+    d.append(x*x)
+print d
+
+# Пример 2
+print [x*x for x in xrange(5)]
+
+# Пример 3
+print map(lambda x:x*x,xrange(5)) ]]
+
+::html
+Упрощенное использование частых команд в python<br />
+<h3>Поиск в подстроке</h3><br />
+<div class="codebox"><pre><code>s = 'hello world'
+if s.find('wo') &gt;= 0: print 'Yes'
+
+if 'wo' in s: print 'Yes'</code></pre></div><br />
+<br />
+<h3>Проверка на пустую строку</h3><br />
+<div class="codebox"><pre><code>s = 'Test'
+if len(s) &gt; 0: print 'full'
+
+if s: print 'full'</code></pre></div><h3>Условие</h3><br />
+<div class="codebox"><pre><code>a = True
+if a: print 'this true'
+    else: 'this false'
+
+print 'this true' if a else 'this false'</code></pre></div><h3>Список</h3><br />
+<div class="codebox"><pre><code># Пример 1
+d = []
+for x in xrange(5):
+    d.append(x*x)
+print d
+
+# Пример 2
+print [x*x for x in xrange(5)]
+
+# Пример 3
+print map(lambda x:x*x,xrange(5)) </code></pre></div><br />

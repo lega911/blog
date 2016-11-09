@@ -1,0 +1,31 @@
+::id 4caf4bf41d41c81169000005
+::date 2010-10-08
+::title ffmpeg2theora (theora + vorbis)
+::tags ffmpeg2theora, видео, кодирование
+::body
+Утилита для кодирования в свободные кодеки **theora** и **vorbis**
+[[ffmpeg2theora [опции] input_file]]
+
+!Опции
+#|
+||**-o** file_name|Конечный файл
+||**-c** 2|Кол-во каналов звука
+||**-A** 128k|Битрейт звука
+||**-V** 800k|Видео битрейт
+||**-x** 640 **-y** 480|Размер видео
+||**-K** 64|Опорные кадры, по умолчанию 64
+||**-s** 10 **-e** 50|Начальное и конечное время в сек.
+||**-F** 50|Количество кадров в скунду
+|#
+
+!Примеры
+[[ffmpeg2theora -o output.ogv -c 1 -F 10 -K 50 input.avi
+]]
+::html
+Утилита для кодирования в свободные кодеки <b>theora</b> и <b>vorbis</b><br />
+<div class="codebox"><pre><code>ffmpeg2theora [опции] input_file</code></pre></div><br />
+<h3>Опции</h3><br />
+<table class="pymark_table"><tr><td></td></tr><tr><td><b>-o</b> file_name</td><td>Конечный файл</td></tr><tr><td><b>-c</b> 2</td><td>Кол-во каналов звука</td></tr><tr><td><b>-A</b> 128k</td><td>Битрейт звука</td></tr><tr><td><b>-V</b> 800k</td><td>Видео битрейт</td></tr><tr><td><b>-x</b> 640 <b>-y</b> 480</td><td>Размер видео</td></tr><tr><td><b>-K</b> 64</td><td>Опорные кадры, по умолчанию 64</td></tr><tr><td><b>-s</b> 10 <b>-e</b> 50</td><td>Начальное и конечное время в сек.</td></tr><tr><td><b>-F</b> 50</td><td>Количество кадров в скунду</td></tr></table><br />
+<h3>Примеры</h3><br />
+<div class="codebox"><pre><code>ffmpeg2theora -o output.ogv -c 1 -F 10 -K 50 input.avi
+</code></pre></div>

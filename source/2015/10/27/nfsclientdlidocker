@@ -1,0 +1,12 @@
+::id 562f5ad79f75b613412a7766
+::date 2015-10-27
+::title NFS client для Docker
+::tags nfs, docker
+::body
+Что-бы подключить nfs раздел, можно поднять рутовый контейнер рядом и сделать там mount:
+
+```bash
+$ docker run --privileged=true -it --name nfs-client --link other-container ubuntu bash
+> apt-get install nfs-common -y
+> mount -t nfs host:/path /srv -rw
+```

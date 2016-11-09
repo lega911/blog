@@ -1,0 +1,105 @@
+::id 4c0c762f1d41c80f34000000
+::date 2010-06-07
+::title Простой скрипт создания репозиториев для mercurial сервера
+::tags python, mercurial
+::body
+Данный скрипт:
+ * Создает репозиторий
+ * Прописывает его в файл настроек
+ * Добавляет права на push в новый репозиторий
+
+Сохраним его как /var/hg/rep/**append.wsgi**
+[[# coding: utf-8
+
+import sys
+import os
+
+path = os.path.dirname(__file__)
+sys.path.append(path)
+os.chdir(path)
+
+def application(environ, start_response):
+    status = '200 OK'
+    output = '<form methos="GET" action="/append"><input type="text" name="new" /><input type="submit" /></form><br/>\n'
+    output += '<b>Projects</b><br/>\n'
+    ok = 0
+    for s in open('hgwebdir.conf','r').readlines():
+        s = s.rstrip()
+        if s=='[paths]':
+            ok = 1
+            continue
+        if ok==1:
+            d = s.split('=')
+            if len(d)==2: output += '<a href="/%s">%s</a><br/>\n' % (d[0],d[0])
+    q = environ['QUERY_STRING']
+    if q[:4]=='new=':
+        name = q[4:]
+        if name and not os.path.isdir(name):
+            os.system('hg init ' + name)
+            open('hgwebdir.conf','a').write('%s = /var/hg/rep/%s\n' % (name,name))
+            open(name+'/.hg/hgrc','a').write('\n[web]\nallow_push = *\npush_ssl = false\n')
+            output = 'append ok<br/>\n<a href="/append">return</a>'
+
+    response_headers = [('Content-type', 'text/html; charset=utf-8'),
+                        ('Content-Length', str(len(output)))]
+    start_response(status, response_headers)
+
+    return [output] ]]
+
+И пропишем в виртуальный-хост: /etc/apache2/sites-available/mercurial
+[[...
+    WSGIScriptAlias /append /var/hg/rep/append.wsgi
+...]]
+
+Готово
+
+::html
+Данный скрипт:
+<br />&nbsp;&#8226;&nbsp;Создает репозиторий
+<br />&nbsp;&#8226;&nbsp;Прописывает его в файл настроек
+<br />&nbsp;&#8226;&nbsp;Добавляет права на push в новый репозиторий<br />
+<br />
+Сохраним его как /var/hg/rep/<b>append.wsgi</b><br />
+<div class="codebox"><pre><code># coding: utf-8
+
+import sys
+import os
+
+path = os.path.dirname(__file__)
+sys.path.append(path)
+os.chdir(path)
+
+def application(environ, start_response):
+    status = '200 OK'
+    output = '&lt;form methos="GET" action="/append"&gt;&lt;input type="text" name="new" /&gt;&lt;input type="submit" /&gt;&lt;/form&gt;&lt;br/&gt;\n'
+    output += '&lt;b&gt;Projects&lt;/b&gt;&lt;br/&gt;\n'
+    ok = 0
+    for s in open('hgwebdir.conf','r').readlines():
+        s = s.rstrip()
+        if s=='[paths]':
+            ok = 1
+            continue
+        if ok==1:
+            d = s.split('=')
+            if len(d)==2: output += '&lt;a href="/%s"&gt;%s&lt;/a&gt;&lt;br/&gt;\n' % (d[0],d[0])
+    q = environ['QUERY_STRING']
+    if q[:4]=='new=':
+        name = q[4:]
+        if name and not os.path.isdir(name):
+            os.system('hg init ' + name)
+            open('hgwebdir.conf','a').write('%s = /var/hg/rep/%s\n' % (name,name))
+            open(name+'/.hg/hgrc','a').write('\n[web]\nallow_push = *\npush_ssl = false\n')
+            output = 'append ok&lt;br/&gt;\n&lt;a href="/append"&gt;return&lt;/a&gt;'
+
+    response_headers = [('Content-type', 'text/html; charset=utf-8'),
+                        ('Content-Length', str(len(output)))]
+    start_response(status, response_headers)
+
+    return [output] </code></pre></div><br />
+<br />
+И пропишем в виртуальный-хост: /etc/apache2/sites-available/mercurial<br />
+<div class="codebox"><pre><code>...
+    WSGIScriptAlias /append /var/hg/rep/append.wsgi
+...</code></pre></div><br />
+<br />
+Готово<br />

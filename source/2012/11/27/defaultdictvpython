@@ -1,0 +1,109 @@
+::id 50b4448ebbddbd5c63000000
+::date 2012-11-27
+::title DefaultDict в Python
+::tags python, collections, defaultdict
+::body
+Часто в задачах сбора информации или построения отчетов полезно использовать словарь в котором элементы существуют изначально и имеют определенную структуру, в python для этих целей можно использовать **defaultdict**, он позволяет писать код короче, этот код
+[[d = {}
+if key not in d: d[key] = value
+else: d[key] += value]]
+аналогичен этому
+[[d = defaultdict(int)
+d[key] += value]]
+
+**Другие примеры использования **defaultdict** в python**
+[[# coding: utf8
+
+from collections import defaultdict
+
+# int
+d = defaultdict(int)
+d['a'] += 3
+print d
+
+# list
+d = defaultdict(list)
+d['a'].append(3)
+d['a'] += [5,7]
+print d
+
+# set
+d = defaultdict(set)
+d['a'].add(3)
+d['a'].add(3)
+print d
+
+# Произвольная структура
+d = defaultdict(lambda :{ 'name':'', 'count':0 })
+d['a']['count'] += 3
+d['a']['title'] = 'test'
+d['b']['count'] += 5
+print d
+
+# Чтение значений по умолчанию
+d = defaultdict(lambda :'<missing>')
+d['a'] = 'test'
+print '%(a)s %(b)s %(c)s' % d]]
+**Результат**
+[[defaultdict(<type 'int'>, {'a': 3})
+defaultdict(<type 'list'>, {'a': [3, 5, 7]})
+defaultdict(<type 'set'>, {'a': set([3])})
+defaultdict(<function <lambda> at 0xb733b764>, {'a': {'count': 3, 'name': '', 'title': 'test'}, 'b': {'count': 5, 'name': ''}})
+test <missing> <missing>]]
+
+::html
+Часто в задачах сбора информации или построения отчетов полезно использовать словарь в котором элементы существуют изначально и имеют определенную структуру, в python для этих целей можно использовать <b>defaultdict</b>, он позволяет писать код короче, этот код<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+<span class="k">else</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+=</span> <span class="n">value</span>
+</pre></div>
+</div><br />
+аналогичен этому<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">d</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+=</span> <span class="n">value</span>
+</pre></div>
+</div><br />
+<br />
+<b>Другие примеры использования </b>defaultdict<b> в python</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="c"># int</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">d</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">3</span>
+<span class="k">print</span> <span class="n">d</span>
+
+<span class="c"># list</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+<span class="n">d</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">d</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+<span class="k">print</span> <span class="n">d</span>
+
+<span class="c"># set</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+<span class="n">d</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">d</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">d</span>
+
+<span class="c"># Произвольная структура</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span> <span class="p">:{</span> <span class="s">&#39;name&#39;</span><span class="p">:</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;count&#39;</span><span class="p">:</span><span class="mi">0</span> <span class="p">})</span>
+<span class="n">d</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">][</span><span class="s">&#39;count&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">3</span>
+<span class="n">d</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">][</span><span class="s">&#39;title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;test&#39;</span>
+<span class="n">d</span><span class="p">[</span><span class="s">&#39;b&#39;</span><span class="p">][</span><span class="s">&#39;count&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">5</span>
+<span class="k">print</span> <span class="n">d</span>
+
+<span class="c"># Чтение значений по умолчанию</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span> <span class="p">:</span><span class="s">&#39;&lt;missing&gt;&#39;</span><span class="p">)</span>
+<span class="n">d</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;test&#39;</span>
+<span class="k">print</span> <span class="s">&#39;</span><span class="si">%(a)s</span><span class="s"> </span><span class="si">%(b)s</span><span class="s"> </span><span class="si">%(c)s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">d</span>
+</pre></div>
+</div><br />
+<b>Результат</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">defaultdict</span><span class="p">(</span><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;int&#39;</span><span class="o">&gt;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
+<span class="n">defaultdict</span><span class="p">(</span><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;list&#39;</span><span class="o">&gt;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">]})</span>
+<span class="n">defaultdict</span><span class="p">(</span><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;set&#39;</span><span class="o">&gt;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="mi">3</span><span class="p">])})</span>
+<span class="n">defaultdict</span><span class="p">(</span><span class="o">&lt;</span><span class="n">function</span> <span class="o">&lt;</span><span class="k">lambda</span><span class="o">&gt;</span> <span class="n">at</span> <span class="mh">0xb733b764</span><span class="o">&gt;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;count&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="s">&#39;test&#39;</span><span class="p">},</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;count&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;&#39;</span><span class="p">}})</span>
+<span class="n">test</span> <span class="o">&lt;</span><span class="n">missing</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">missing</span><span class="o">&gt;</span>
+</pre></div>
+</div><br />

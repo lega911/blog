@@ -1,0 +1,41 @@
+::id 4fe9f7efbbddbd0e61000000
+::date 2012-06-27
+::title Добавление программ в Unity панель
+::tags unity
+::body
+На примере Sublime редактора:
+
+Создайте файл **sublime.desktop** в **~/.local/share/applications**
+или в **/usr/share/applications** если нужно добавить для всех пользователей (в последнем случае нужны права root)
+
+Пример содержимого файла:
+[[!^[Desktop Entry]
+Name=Sublime Text Editor 2.0
+Comment=Sublime Text Editor 2.0
+Exec="/home/user/bin/sublime_text2/sublime_text" %F
+MimeType=text/plain;
+Terminal=false
+Type=Application
+Icon=/home/user/bin/sublime_text2/Icon/48x48/sublime_text.png
+Categories=GNOME;GTK;Utility;TextEditor;Development;Utility;]]
+После этого программа будет доступна в меню от куда её можно добавить на панель Unity.
+
+::html
+На примере Sublime редактора:<br />
+<br />
+Создайте файл <b>sublime.desktop</b> в <b>~/.local/share/applications</b><br />
+или в <b>/usr/share/applications</b> если нужно добавить для всех пользователей (в последнем случае нужны права root)<br />
+<br />
+Пример содержимого файла:<br />
+<div class="codebox"><div class="highlight"><pre><span class="p">[</span><span class="n">Desktop</span> <span class="n">Entry</span><span class="p">]</span>
+<span class="n">Name</span><span class="o">=</span><span class="n">Sublime</span> <span class="n">Text</span> <span class="n">Editor</span> <span class="mf">2.0</span>
+<span class="n">Comment</span><span class="o">=</span><span class="n">Sublime</span> <span class="n">Text</span> <span class="n">Editor</span> <span class="mf">2.0</span>
+<span class="n">Exec</span><span class="o">=</span><span class="s">&quot;/home/user/bin/sublime_text2/sublime_text&quot;</span> <span class="o">%</span><span class="n">F</span>
+<span class="n">MimeType</span><span class="o">=</span><span class="n">text</span><span class="o">/</span><span class="n">plain</span><span class="p">;</span>
+<span class="n">Terminal</span><span class="o">=</span><span class="n">false</span>
+<span class="n">Type</span><span class="o">=</span><span class="n">Application</span>
+<span class="n">Icon</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">sublime_text2</span><span class="o">/</span><span class="n">Icon</span><span class="o">/</span><span class="mi">48</span><span class="n">x48</span><span class="o">/</span><span class="n">sublime_text</span><span class="o">.</span><span class="n">png</span>
+<span class="n">Categories</span><span class="o">=</span><span class="n">GNOME</span><span class="p">;</span><span class="n">GTK</span><span class="p">;</span><span class="n">Utility</span><span class="p">;</span><span class="n">TextEditor</span><span class="p">;</span><span class="n">Development</span><span class="p">;</span><span class="n">Utility</span><span class="p">;</span>
+</pre></div>
+</div><br />
+После этого программа будет доступна в меню от куда её можно добавить на панель Unity.<br />

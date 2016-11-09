@@ -1,0 +1,15 @@
+::id 4bfb3c691d41c846bc000029
+::date 2010-01-29
+::title myBoard в svn
+::tags svn, myboard, исходники
+::body
+[[svn co https://myboard.svn.sourceforge.net/svnroot/myboard myboard]]
+
+
+
+::html
+<div class="codebox"><div class="highlight"><pre><span class="n">svn</span> <span class="n">co</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">myboard</span><span class="o">.</span><span class="n">svn</span><span class="o">.</span><span class="n">sourceforge</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">svnroot</span><span class="o">/</span><span class="n">myboard</span> <span class="n">myboard</span>
+</pre></div>
+</div><br />
+<br />
+<br />

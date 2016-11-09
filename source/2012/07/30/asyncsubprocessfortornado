@@ -1,0 +1,197 @@
+::id 501627e2bbddbd261e000000
+::date 2012-07-30
+::title Async subprocess for tornado
+::tags python, tornado, web, async, subprocess
+::body
+Пример асинхронного запуска процесса через subprocess из tornado.
+
+**Построчная выборка**
+[[import tornado.httpserver
+import tornado.ioloop
+import tornado.web
+import subprocess
+
+class MainHandler(tornado.web.RequestHandler):
+    @tornado.web.asynchronous
+    def get(self):
+        cmd = 'sleep 3; echo "1\n2\n3\n"; sleep 3; date; sleep 3'
+        
+        def send(data):
+            if data:
+                self.write(data)
+                self.flush()
+            else:
+                self.finish()
+                
+        self.subprocess(cmd, send)
+        
+    def subprocess(self, cmd, callback):
+        ioloop = tornado.ioloop.IOLoop.instance()
+        PIPE = subprocess.PIPE
+        pipe = subprocess.Popen(cmd , shell=True, stdin=PIPE, stdout=PIPE,
+                            stderr=subprocess.STDOUT, close_fds=True)
+        fd = pipe.stdout.fileno()
+        
+        def recv(*args):
+            data = pipe.stdout.readline()
+            if data: callback(data)
+            elif pipe.poll() is not None:
+                ioloop.remove_handler(fd)
+                callback(None)
+        
+        # read handler
+        ioloop.add_handler(fd, recv, ioloop.READ)
+
+class TestHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.write('Test')
+
+application = tornado.web.Application([
+    (r"/", MainHandler),
+    (r"/test/", TestHandler),
+], debug=True)
+
+if __name__ == "__main__":
+    http_server = tornado.httpserver.HTTPServer(application)
+    http_server.listen(8888)
+    tornado.ioloop.IOLoop.instance().start()]]
+
+**Если нужен только конечный результат**
+[[import tornado.httpserver
+import tornado.ioloop
+import tornado.web
+import subprocess
+from tornado import gen
+
+class MainHandler(tornado.web.RequestHandler):
+    @tornado.web.asynchronous
+    @gen.engine
+    def get(self):
+        cmd = 'sleep 3; echo "1\n2\n3\n"; sleep 3; date; sleep 3'
+        result = yield gen.Task(self.subprocess, cmd)
+        self.finish(result)
+        
+    def subprocess(self, cmd, callback):
+        ioloop = tornado.ioloop.IOLoop.instance()
+        PIPE = subprocess.PIPE
+        pipe = subprocess.Popen(cmd , shell=True, stdin=PIPE, stdout=PIPE,
+                        stderr=subprocess.STDOUT, close_fds=True)
+        fd = pipe.stdout.fileno()
+        result = []
+        
+        def recv(*args):
+            data = pipe.stdout.readline()
+            if data: result.append(data)
+            elif pipe.poll() is not None:
+                ioloop.remove_handler(fd)
+                callback(''.join(result))
+        
+        ioloop.add_handler(fd, recv, ioloop.READ)
+
+application = tornado.web.Application([
+    (r"/", MainHandler),
+])
+
+if __name__ == "__main__":
+    http_server = tornado.httpserver.HTTPServer(application)
+    http_server.listen(8888)
+    tornado.ioloop.IOLoop.instance().start()]]
+
+::html
+Пример асинхронного запуска процесса через subprocess из tornado.<br />
+<br />
+<b>Построчная выборка</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">tornado.httpserver</span>
+<span class="kn">import</span> <span class="nn">tornado.ioloop</span>
+<span class="kn">import</span> <span class="nn">tornado.web</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="k">class</span> <span class="nc">MainHandler</span><span class="p">(</span><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    <span class="nd">@tornado.web.asynchronous</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s">&#39;sleep 3; echo &quot;1</span><span class="se">\n</span><span class="s">2</span><span class="se">\n</span><span class="s">3</span><span class="se">\n</span><span class="s">&quot;; sleep 3; date; sleep 3&#39;</span>
+        
+        <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+                
+        <span class="bp">self</span><span class="o">.</span><span class="n">subprocess</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">send</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">subprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="n">ioloop</span> <span class="o">=</span> <span class="n">tornado</span><span class="o">.</span><span class="n">ioloop</span><span class="o">.</span><span class="n">IOLoop</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
+        <span class="n">PIPE</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
+        <span class="n">pipe</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span> <span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span>
+                            <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">close_fds</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">fd</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span>
+        
+        <span class="k">def</span> <span class="nf">recv</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">:</span> <span class="n">callback</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">pipe</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">ioloop</span><span class="o">.</span><span class="n">remove_handler</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
+                <span class="n">callback</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+        
+        <span class="c"># read handler</span>
+        <span class="n">ioloop</span><span class="o">.</span><span class="n">add_handler</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">recv</span><span class="p">,</span> <span class="n">ioloop</span><span class="o">.</span><span class="n">READ</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">TestHandler</span><span class="p">(</span><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Test&#39;</span><span class="p">)</span>
+
+<span class="n">application</span> <span class="o">=</span> <span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">Application</span><span class="p">([</span>
+    <span class="p">(</span><span class="s">r&quot;/&quot;</span><span class="p">,</span> <span class="n">MainHandler</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">r&quot;/test/&quot;</span><span class="p">,</span> <span class="n">TestHandler</span><span class="p">),</span>
+<span class="p">],</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">http_server</span> <span class="o">=</span> <span class="n">tornado</span><span class="o">.</span><span class="n">httpserver</span><span class="o">.</span><span class="n">HTTPServer</span><span class="p">(</span><span class="n">application</span><span class="p">)</span>
+    <span class="n">http_server</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">8888</span><span class="p">)</span>
+    <span class="n">tornado</span><span class="o">.</span><span class="n">ioloop</span><span class="o">.</span><span class="n">IOLoop</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div><br />
+<br />
+<b>Если нужен только конечный результат</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">tornado.httpserver</span>
+<span class="kn">import</span> <span class="nn">tornado.ioloop</span>
+<span class="kn">import</span> <span class="nn">tornado.web</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">tornado</span> <span class="kn">import</span> <span class="n">gen</span>
+
+<span class="k">class</span> <span class="nc">MainHandler</span><span class="p">(</span><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    <span class="nd">@tornado.web.asynchronous</span>
+    <span class="nd">@gen.engine</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s">&#39;sleep 3; echo &quot;1</span><span class="se">\n</span><span class="s">2</span><span class="se">\n</span><span class="s">3</span><span class="se">\n</span><span class="s">&quot;; sleep 3; date; sleep 3&#39;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">gen</span><span class="o">.</span><span class="n">Task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subprocess</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">subprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="n">ioloop</span> <span class="o">=</span> <span class="n">tornado</span><span class="o">.</span><span class="n">ioloop</span><span class="o">.</span><span class="n">IOLoop</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
+        <span class="n">PIPE</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
+        <span class="n">pipe</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span> <span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span>
+                        <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">close_fds</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">fd</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">def</span> <span class="nf">recv</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">pipe</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">ioloop</span><span class="o">.</span><span class="n">remove_handler</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
+                <span class="n">callback</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+        
+        <span class="n">ioloop</span><span class="o">.</span><span class="n">add_handler</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">recv</span><span class="p">,</span> <span class="n">ioloop</span><span class="o">.</span><span class="n">READ</span><span class="p">)</span>
+
+<span class="n">application</span> <span class="o">=</span> <span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">Application</span><span class="p">([</span>
+    <span class="p">(</span><span class="s">r&quot;/&quot;</span><span class="p">,</span> <span class="n">MainHandler</span><span class="p">),</span>
+<span class="p">])</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">http_server</span> <span class="o">=</span> <span class="n">tornado</span><span class="o">.</span><span class="n">httpserver</span><span class="o">.</span><span class="n">HTTPServer</span><span class="p">(</span><span class="n">application</span><span class="p">)</span>
+    <span class="n">http_server</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">8888</span><span class="p">)</span>
+    <span class="n">tornado</span><span class="o">.</span><span class="n">ioloop</span><span class="o">.</span><span class="n">IOLoop</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div><br />

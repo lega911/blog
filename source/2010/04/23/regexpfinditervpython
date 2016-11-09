@@ -1,0 +1,37 @@
+::id 4bfb3c6a1d41c846bc0000c8
+::date 2010-04-23
+::title regexp finditer в python
+::tags python, regexp
+::body
+Пример использования **finditer**
+[[import re
+d = re.finditer(r'(?P<word>\w+)', 'Hello world, this system nipil')
+for i in d:
+    print i.start(),i.end(),i.group(),i.groups(),i.span(),i.groupdict()]]
+**Результат**
+[[0 5 Hello ('Hello',) (0, 5) {'word': 'Hello'}
+6 11 world ('world',) (6, 11) {'word': 'world'}
+13 17 this ('this',) (13, 17) {'word': 'this'}
+18 24 system ('system',) (18, 24) {'word': 'system'}
+25 30 nipil ('nipil',) (25, 30) {'word': 'nipil'}]]
+
+см. [/page/63 regexp методы в python]
+
+::html
+Пример использования <b>finditer</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">re</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="s">r&#39;(?P&lt;word&gt;\w+)&#39;</span><span class="p">,</span> <span class="s">&#39;Hello world, this system nipil&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">i</span><span class="o">.</span><span class="n">start</span><span class="p">(),</span><span class="n">i</span><span class="o">.</span><span class="n">end</span><span class="p">(),</span><span class="n">i</span><span class="o">.</span><span class="n">group</span><span class="p">(),</span><span class="n">i</span><span class="o">.</span><span class="n">groups</span><span class="p">(),</span><span class="n">i</span><span class="o">.</span><span class="n">span</span><span class="p">(),</span><span class="n">i</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
+</pre></div>
+</div><br />
+<b>Результат</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="mi">0</span> <span class="mi">5</span> <span class="n">Hello</span> <span class="p">(</span><span class="s">&#39;Hello&#39;</span><span class="p">,)</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span><span class="s">&#39;word&#39;</span><span class="p">:</span> <span class="s">&#39;Hello&#39;</span><span class="p">}</span>
+<span class="mi">6</span> <span class="mi">11</span> <span class="n">world</span> <span class="p">(</span><span class="s">&#39;world&#39;</span><span class="p">,)</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span> <span class="p">{</span><span class="s">&#39;word&#39;</span><span class="p">:</span> <span class="s">&#39;world&#39;</span><span class="p">}</span>
+<span class="mi">13</span> <span class="mi">17</span> <span class="n">this</span> <span class="p">(</span><span class="s">&#39;this&#39;</span><span class="p">,)</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">17</span><span class="p">)</span> <span class="p">{</span><span class="s">&#39;word&#39;</span><span class="p">:</span> <span class="s">&#39;this&#39;</span><span class="p">}</span>
+<span class="mi">18</span> <span class="mi">24</span> <span class="n">system</span> <span class="p">(</span><span class="s">&#39;system&#39;</span><span class="p">,)</span> <span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span> <span class="p">{</span><span class="s">&#39;word&#39;</span><span class="p">:</span> <span class="s">&#39;system&#39;</span><span class="p">}</span>
+<span class="mi">25</span> <span class="mi">30</span> <span class="n">nipil</span> <span class="p">(</span><span class="s">&#39;nipil&#39;</span><span class="p">,)</span> <span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span> <span class="p">{</span><span class="s">&#39;word&#39;</span><span class="p">:</span> <span class="s">&#39;nipil&#39;</span><span class="p">}</span>
+</pre></div>
+</div><br />
+<br />
+см. <a href="/page/63">regexp методы в python</a><br />

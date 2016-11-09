@@ -1,0 +1,100 @@
+::id 4f7928ccbbddbd4f85000000
+::date 2012-04-02
+::title Replica set for mongodb
+::tags mongodb, replica, replicaset
+::body
+Пример настройки реплики для mongodb с авторизацией
+
+**1. Секретный ключ для авторизации**
+Генерируем секретный ключ-файл file.key и закрываем к нему доступ
+//Местоположение файла может быть любым//
+[[dd if=/dev/random of=/var/local/file.key bs=40 count=1
+chmod 400 /var/local/file.key
+sudo chown mongodb:mongodb /var/local/file.key]]
+Копируем этот ключ на все ноды //(серверы)//.
+
+**2. Конфигурируем ноду**
+Настраиваем **/etc/mongodb.conf**, выбираем любое имя реплики (//replica1//)
+Нужно добавить параметры:[[
+auth = true
+replSet = replica1
+keyFile = /var/local/file.key
+]]
+И перезапускаем mongodb[[
+sudo service mongodb stop
+sudo service mongodb start]]
+Настраиваем это на каждой ноде.
+
+**3.** Инициализация реплики и подключение нод.
+Заходим на одну ноду
+[[mongo --host host1]]
+Инициализируем реплику и подключаем ноды
+[[
+config = {_id: 'replica1', members: [
+                          {_id: 0, host: 'localhost:27017'},
+                          {_id: 1, host: 'host2:27017'}]
+           }
+rs.initiate(config)
+]]
+Добавить ноду можно командой **rs.add()**
+[[rs.add({ "_id" : 3,
+    "host" : "host3:27017",
+    "votes" : 0,
+    "priority" : 0
+}]]
+[http://www.mongodb.org/display/DOCS/Replica+Set+Configuration#ReplicaSetConfiguration-Memberoptions Возможные параметры ноды]
+При установленных параметрах **"votes"=0** и **"priority"=0**, нода не будет претендовать быть мастер-нодой.
+
+Готово.
+
+::html
+Пример настройки реплики для mongodb с авторизацией<br />
+<br />
+<b>1. Секретный ключ для авторизации</b><br />
+Генерируем секретный ключ-файл file.key и закрываем к нему доступ<br />
+<i>Местоположение файла может быть любым</i><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">dd</span> <span class="k">if</span><span class="o">=/</span><span class="n">dev</span><span class="o">/</span><span class="n">random</span> <span class="n">of</span><span class="o">=/</span><span class="n">var</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">file</span><span class="o">.</span><span class="n">key</span> <span class="n">bs</span><span class="o">=</span><span class="mi">40</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">chmod</span> <span class="mi">400</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">file</span><span class="o">.</span><span class="n">key</span>
+<span class="n">sudo</span> <span class="n">chown</span> <span class="n">mongodb</span><span class="p">:</span><span class="n">mongodb</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">file</span><span class="o">.</span><span class="n">key</span>
+</pre></div>
+</div><br />
+Копируем этот ключ на все ноды <i>(серверы)</i>.<br />
+<br />
+<b>2. Конфигурируем ноду</b><br />
+Настраиваем <b>/etc/mongodb.conf</b>, выбираем любое имя реплики (<i>replica1</i>)<br />
+Нужно добавить параметры:<div class="codebox"><div class="highlight"><pre><span class="n">auth</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">replSet</span> <span class="o">=</span> <span class="n">replica1</span>
+<span class="n">keyFile</span> <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">file</span><span class="o">.</span><span class="n">key</span>
+</pre></div>
+</div><br />
+И перезапускаем mongodb<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">service</span> <span class="n">mongodb</span> <span class="n">stop</span>
+<span class="n">sudo</span> <span class="n">service</span> <span class="n">mongodb</span> <span class="n">start</span>
+</pre></div>
+</div><br />
+Настраиваем это на каждой ноде.<br />
+<br />
+<b>3.</b> Инициализация реплики и подключение нод.<br />
+Заходим на одну ноду<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">mongo</span> <span class="o">--</span><span class="n">host</span> <span class="n">host1</span>
+</pre></div>
+</div><br />
+Инициализируем реплику и подключаем ноды<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="n">_id</span><span class="p">:</span> <span class="s">&#39;replica1&#39;</span><span class="p">,</span> <span class="n">members</span><span class="p">:</span> <span class="p">[</span>
+                          <span class="p">{</span><span class="n">_id</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="s">&#39;localhost:27017&#39;</span><span class="p">},</span>
+                          <span class="p">{</span><span class="n">_id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="s">&#39;host2:27017&#39;</span><span class="p">}]</span>
+           <span class="p">}</span>
+<span class="n">rs</span><span class="o">.</span><span class="n">initiate</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div><br />
+Добавить ноду можно командой <b>rs.add()</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">rs</span><span class="o">.</span><span class="n">add</span><span class="p">({</span> <span class="s">&quot;_id&quot;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s">&quot;host&quot;</span> <span class="p">:</span> <span class="s">&quot;host3:27017&quot;</span><span class="p">,</span>
+    <span class="s">&quot;votes&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s">&quot;priority&quot;</span> <span class="p">:</span> <span class="mi">0</span>
+<span class="p">}</span>
+</pre></div>
+</div><br />
+<a target=_blank href="http://www.mongodb.org/display/DOCS/Replica+Set+Configuration#ReplicaSetConfiguration-Memberoptions">Возможные параметры ноды</a><br />
+При установленных параметрах <b>"votes"=0</b> и <b>"priority"=0</b>, нода не будет претендовать быть мастер-нодой.<br />
+<br />
+Готово.<br />

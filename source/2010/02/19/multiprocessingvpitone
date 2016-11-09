@@ -1,0 +1,48 @@
+::id 4bfb3c691d41c846bc000064
+::date 2010-02-19
+::title multiprocessing в питоне
+::tags python, multiprocessing
+::body
+Из за GIL в питоне потоки не дают увеличения производительности, для использования всей мощи процессора есть пакет multiprocessing, он позволяет запускать отельный функционал в отдельном процессе, пример использования
+
+[[def count(n):
+    while n > 0: n -= 1
+
+def line():
+    count(100000000)
+    count(100000000)
+
+def mproc():
+    from multiprocessing import Process
+    
+    p = Process(target=count, args=(100000000,))
+    p.start()
+
+    p2 = Process(target=count, args=(100000000,))
+    p2.start()
+    
+    p.join()
+    p2.join()]]на моей машине время выполнения ф-ий line и mproc составляет **16**сек и **6**сек соответственно (Intel Core2Duo), как видно из результата, прирост производительности более чем в 2 раза
+::html
+Из за GIL в питоне потоки не дают увеличения производительности, для использования всей мощи процессора есть пакет multiprocessing, он позволяет запускать отельный функционал в отдельном процессе, пример использования<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">while</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">n</span> <span class="o">-=</span> <span class="mi">1</span>
+
+<span class="k">def</span> <span class="nf">line</span><span class="p">():</span>
+    <span class="n">count</span><span class="p">(</span><span class="mi">100000000</span><span class="p">)</span>
+    <span class="n">count</span><span class="p">(</span><span class="mi">100000000</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">mproc</span><span class="p">():</span>
+    <span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span>
+    
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">count</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">100000000</span><span class="p">,))</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="n">p2</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">count</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">100000000</span><span class="p">,))</span>
+    <span class="n">p2</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    
+    <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="n">p2</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+</pre></div>
+</div>на моей машине время выполнения ф-ий line и mproc составляет <b>16</b>сек и <b>6</b>сек соответственно (Intel Core2Duo), как видно из результата, прирост производительности более чем в 2 раза

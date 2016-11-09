@@ -1,0 +1,21 @@
+::id 4bfb3c6a1d41c846bc0000b9
+::date 2010-04-09
+::title Полезные команды для windows
+::tags windows
+::body
+Закрытие открытого файла по сети[[net file
+net file myfile_id /close]]
+
+Время запуска машины[[net statistics server]]
+
+
+//Статья будет пополнятся//
+
+::html
+Закрытие открытого файла по сети<div class="codebox"><pre><code>net file
+net file myfile_id /close</code></pre></div><br />
+<br />
+Время запуска машины<div class="codebox"><pre><code>net statistics server</code></pre></div><br />
+<br />
+<br />
+<i>Статья будет пополнятся</i><br />

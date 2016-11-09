@@ -1,0 +1,41 @@
+::id 4c66a3451d41c85ded000003
+::date 2010-08-14
+::title Делаем фильтр для jinja2 под bottle
+::tags jinja, bottle
+::body
+В примере - вывод времени с фильтром
+
+[[# coding:utf8
+
+from datetime import datetime
+from bottle import jinja2_template as tpl
+
+def onlytime(v,mode=0):
+    return v.strftime('%H-%M-%S') if mode else v.strftime('%H:%M:%S')
+
+print tpl("{{ dt|onlytime }}, {{ dt|onlytime(1) }}\n",dt=datetime.now(),
+    template_settings={ 'filters':{ 'onlytime':onlytime } } )
+]]
+**Результат**
+[[
+02:21:18, 02-21-18
+]]
+::html
+В примере - вывод времени с фильтром<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding:utf8</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">bottle</span> <span class="kn">import</span> <span class="n">jinja2_template</span> <span class="k">as</span> <span class="n">tpl</span>
+
+<span class="k">def</span> <span class="nf">onlytime</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">v</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;%H-%M-%S&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">mode</span> <span class="k">else</span> <span class="n">v</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;%H:%M:%S&#39;</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="n">tpl</span><span class="p">(</span><span class="s">&quot;{{ dt|onlytime }}, {{ dt|onlytime(1) }}</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">dt</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+    <span class="n">template_settings</span><span class="o">=</span><span class="p">{</span> <span class="s">&#39;filters&#39;</span><span class="p">:{</span> <span class="s">&#39;onlytime&#39;</span><span class="p">:</span><span class="n">onlytime</span> <span class="p">}</span> <span class="p">}</span> <span class="p">)</span>
+</pre></div>
+</div><br />
+<b>Результат</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="mo">02</span><span class="p">:</span><span class="mi">21</span><span class="p">:</span><span class="mi">18</span><span class="p">,</span> <span class="mo">02</span><span class="o">-</span><span class="mi">21</span><span class="o">-</span><span class="mi">18</span>
+</pre></div>
+</div>

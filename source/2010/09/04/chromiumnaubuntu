@@ -1,0 +1,21 @@
+::id 4c8259ed1d41c85041000000
+::date 2010-09-04
+::title chromium на ubuntu
+::tags chromium
+::body
+Установка свежего chromium на ubuntu 10.04 (lucid).
+Нужно выполнить от root:
+[[
+echo "deb http://ppa.launchpad.net/chromium-daily/ppa/ubuntu lucid main" >> /etc/apt/sources.list
+aptitude update
+aptitude install chromium-browser
+]]
+
+::html
+Установка свежего chromium на ubuntu 10.04 (lucid).<br />
+Нужно выполнить от root:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">echo</span> <span class="s">&quot;deb http://ppa.launchpad.net/chromium-daily/ppa/ubuntu lucid main&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">apt</span><span class="o">/</span><span class="n">sources</span><span class="o">.</span><span class="n">list</span>
+<span class="n">aptitude</span> <span class="n">update</span>
+<span class="n">aptitude</span> <span class="n">install</span> <span class="n">chromium</span><span class="o">-</span><span class="n">browser</span>
+</pre></div>
+</div><br />

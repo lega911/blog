@@ -1,0 +1,45 @@
+::id 51bde91594fa041285d9ff57
+::date 2013-06-16
+::title Удобный перехват исключения используя with.
+::tags python, exception, with
+::body
+Пример перехвата исключения с использованием with statement.
+
+[[from contextlib import contextmanager
+
+@contextmanager
+def safe(exception=Exception):
+    try:
+        yield
+    except exception:
+        pass
+
+
+# example
+
+with safe(ZeroDivisionError):
+    0 / 0
+
+print 'success finished'
+]]
+::html
+Пример перехвата исключения с использованием with statement.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+
+<span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">safe</span><span class="p">(</span><span class="n">exception</span><span class="o">=</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span>
+    <span class="k">except</span> <span class="n">exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+
+<span class="c"># example</span>
+
+<span class="k">with</span> <span class="n">safe</span><span class="p">(</span><span class="ne">ZeroDivisionError</span><span class="p">):</span>
+    <span class="mi">0</span> <span class="o">/</span> <span class="mi">0</span>
+
+<span class="k">print</span> <span class="s">&#39;success finished&#39;</span>
+</pre></div>
+</div>

@@ -1,0 +1,59 @@
+::id 4bfb3c6a1d41c846bc0000b5
+::date 2010-04-06
+::title JSON в python, преобразование данных в текст
+::tags python, json
+::body
+Пример преобразования данных в строку и обратно
+
+[[# coding: utf-8
+
+import json
+
+# to string
+data = ['Test data', {'Structure':'Any'} ]
+s = json.dumps(data)
+print s
+
+# from string
+print json.loads(s)]]
+
+Сохранение в файл и загрузка
+[[
+# save
+data = ['Test data', {'Structure':'Any'} ]
+json.dump(data, open('test', 'w'))
+
+# load
+data = json.load( open('test', 'r') )
+]]
+
+похожее [/page/36 pickle]
+
+::html
+Пример преобразования данных в строку и обратно<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf-8</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="c"># to string</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Test data&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;Structure&#39;</span><span class="p">:</span><span class="s">&#39;Any&#39;</span><span class="p">}</span> <span class="p">]</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">s</span>
+
+<span class="c"># from string</span>
+<span class="k">print</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<br />
+Сохранение в файл и загрузка<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># save</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Test data&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;Structure&#39;</span><span class="p">:</span><span class="s">&#39;Any&#39;</span><span class="p">}</span> <span class="p">]</span>
+<span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;test&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">))</span>
+
+<span class="c"># load</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;test&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="p">)</span>
+</pre></div>
+</div><br />
+<br />
+похожее <a href="/page/36">pickle</a><br />

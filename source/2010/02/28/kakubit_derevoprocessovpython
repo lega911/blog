@@ -1,0 +1,48 @@
+::id 4bfb3c691d41c846bc00007e
+::date 2010-02-28
+::title Как убить дерево процессов, python
+::tags python
+::body
+Метод работает в linux и windows
+
+[[# coding: utf-8
+
+def killTree(pid):
+    import platform
+    import subprocess
+    import re
+    pl = platform.system()
+    if pl == 'Windows':
+        subprocess.Popen('taskkill /PID %d /T /f' % pid, shell = True)
+    elif pl == 'Linux':
+        PIPE = subprocess.PIPE
+        p = subprocess.Popen('pstree -p %d' % pid, shell=True, stdin=PIPE, stdout=PIPE,
+                stderr=subprocess.STDOUT, close_fds=True)
+        res = ''.join( p.stdout.readlines() )
+        d = re.findall('\((\d+)\)',res)
+        if d:
+            for i in d:
+                subprocess.Popen('kill -9 ' + i, shell = True)]]
+::html
+Метод работает в linux и windows<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf-8</span>
+
+<span class="k">def</span> <span class="nf">killTree</span><span class="p">(</span><span class="n">pid</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">platform</span>
+    <span class="kn">import</span> <span class="nn">subprocess</span>
+    <span class="kn">import</span> <span class="nn">re</span>
+    <span class="n">pl</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">pl</span> <span class="o">==</span> <span class="s">&#39;Windows&#39;</span><span class="p">:</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="s">&#39;taskkill /PID </span><span class="si">%d</span><span class="s"> /T /f&#39;</span> <span class="o">%</span> <span class="n">pid</span><span class="p">,</span> <span class="n">shell</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">pl</span> <span class="o">==</span> <span class="s">&#39;Linux&#39;</span><span class="p">:</span>
+        <span class="n">PIPE</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="s">&#39;pstree -p </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">pid</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">close_fds</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">p</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span> <span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&#39;\((\d+)\)&#39;</span><span class="p">,</span><span class="n">res</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">d</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="s">&#39;kill -9 &#39;</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">shell</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>

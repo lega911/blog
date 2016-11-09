@@ -1,0 +1,13 @@
+::id 4c0490811d41c8298f000002
+::date 2010-06-01
+::title Подключение и отключение виртуальных хостов apache
+::tags apache
+::body
+Для того что-б подключть/отключить виртуальный хост который прописан в файле **/etc/apache2/sites-available/mercurial** нужно выполнить:
+Для подключения [[sudo a2ensite mercurial]]
+Для отключения [[sudo a2dissite mercurial]]
+
+::html
+Для того что-б подключть/отключить виртуальный хост который прописан в файле <b>/etc/apache2/sites-available/mercurial</b> нужно выполнить:<br />
+Для подключения <div class="codebox"><pre><code>sudo a2ensite mercurial</code></pre></div><br />
+Для отключения <div class="codebox"><pre><code>sudo a2dissite mercurial</code></pre></div><br />

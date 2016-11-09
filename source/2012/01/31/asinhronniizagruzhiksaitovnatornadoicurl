@@ -1,0 +1,146 @@
+::id 4f278211bbddbd0322000000
+::date 2012-01-31
+::title Асинхронный загрузчик сайтов на tornado и curl
+::tags python, tornado, curl, internet, async
+::body
+Пример асинхронного загрузчика сайтов на tornado и curl.
+//Пример для python2.7//
+
+[[# coding: utf8
+
+import tornado
+from tornado import httpclient
+from tornado import gen
+from functools import partial
+import Queue
+
+gloop = tornado.ioloop.IOLoop.instance()
+qinput = Queue.Queue()
+process_count = 0
+
+process_max = 10    # maximum count of query for one moment
+
+# fill queue
+for i in xrange(100):
+    qinput.put('http://www.wikipedia.org/')
+
+def data_process(data):
+    # method for process data
+    pass
+
+@gen.engine
+def process(url):
+    global process_count, worker
+    try:
+        http_client = httpclient.AsyncHTTPClient()
+        response = yield gen.Task(http_client.fetch, str(url))
+        if response.error: raise Exception(response.error)
+        data_process(response.body)
+    except Exception as e:
+        print e
+    process_count -= 1
+    gloop.add_callback(worker)
+
+def worker():
+    global gloop, process_count, process_max
+    print '# %d / %d (%d)' % (process_count, process_max, qinput.qsize())
+    while process_count < process_max:
+        if qinput.empty(): break
+        url = qinput.get_nowait()
+        process_count += 1
+        gloop.add_callback(partial(process, url))
+    if qinput.empty():
+        if not process_count: gloop.stop()
+
+print 'start'
+gloop.add_callback(worker)
+tornado.httpclient.AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
+gloop.start()
+print 'finish']]
+
+Параметры которые можно указать при запросе к **http_client.fetch**
+[[method="GET", headers=None, body=None,
+auth_username=None, auth_password=None,
+connect_timeout=20.0, request_timeout=20.0,
+if_modified_since=None, follow_redirects=True,
+max_redirects=5, user_agent=None, use_gzip=True,
+network_interface=None, streaming_callback=None,
+header_callback=None, prepare_curl_callback=None,
+proxy_host=None, proxy_port=None, proxy_username=None,
+proxy_password='', allow_nonstandard_methods=False,
+validate_cert=True, ca_certs=None,
+allow_ipv6=None,
+client_key=None, client_cert=None]]
+::html
+Пример асинхронного загрузчика сайтов на tornado и curl.<br />
+<i>Пример для python2.7</i><br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">import</span> <span class="nn">tornado</span>
+<span class="kn">from</span> <span class="nn">tornado</span> <span class="kn">import</span> <span class="n">httpclient</span>
+<span class="kn">from</span> <span class="nn">tornado</span> <span class="kn">import</span> <span class="n">gen</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span> <span class="nn">Queue</span>
+
+<span class="n">gloop</span> <span class="o">=</span> <span class="n">tornado</span><span class="o">.</span><span class="n">ioloop</span><span class="o">.</span><span class="n">IOLoop</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
+<span class="n">qinput</span> <span class="o">=</span> <span class="n">Queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+<span class="n">process_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">process_max</span> <span class="o">=</span> <span class="mi">10</span>    <span class="c"># maximum count of query for one moment</span>
+
+<span class="c"># fill queue</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">qinput</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">&#39;http://www.wikipedia.org/&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">data_process</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c"># method for process data</span>
+    <span class="k">pass</span>
+
+<span class="nd">@gen.engine</span>
+<span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">process_count</span><span class="p">,</span> <span class="n">worker</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">http_client</span> <span class="o">=</span> <span class="n">httpclient</span><span class="o">.</span><span class="n">AsyncHTTPClient</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">gen</span><span class="o">.</span><span class="n">Task</span><span class="p">(</span><span class="n">http_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">error</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">error</span><span class="p">)</span>
+        <span class="n">data_process</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span> <span class="n">e</span>
+    <span class="n">process_count</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="n">gloop</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="n">worker</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">worker</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">gloop</span><span class="p">,</span> <span class="n">process_count</span><span class="p">,</span> <span class="n">process_max</span>
+    <span class="k">print</span> <span class="s">&#39;# </span><span class="si">%d</span><span class="s"> / </span><span class="si">%d</span><span class="s"> (</span><span class="si">%d</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">process_count</span><span class="p">,</span> <span class="n">process_max</span><span class="p">,</span> <span class="n">qinput</span><span class="o">.</span><span class="n">qsize</span><span class="p">())</span>
+    <span class="k">while</span> <span class="n">process_count</span> <span class="o">&lt;</span> <span class="n">process_max</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">qinput</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span> <span class="k">break</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">qinput</span><span class="o">.</span><span class="n">get_nowait</span><span class="p">()</span>
+        <span class="n">process_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">gloop</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">url</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">qinput</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">process_count</span><span class="p">:</span> <span class="n">gloop</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+
+<span class="k">print</span> <span class="s">&#39;start&#39;</span>
+<span class="n">gloop</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="n">worker</span><span class="p">)</span>
+<span class="n">tornado</span><span class="o">.</span><span class="n">httpclient</span><span class="o">.</span><span class="n">AsyncHTTPClient</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="s">&quot;tornado.curl_httpclient.CurlAsyncHTTPClient&quot;</span><span class="p">)</span>
+<span class="n">gloop</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="k">print</span> <span class="s">&#39;finish&#39;</span>
+</pre></div>
+</div><br />
+<br />
+Параметры которые можно указать при запросе к <b>http_client.fetch</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">method</span><span class="o">=</span><span class="s">&quot;GET&quot;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+<span class="n">auth_username</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">auth_password</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+<span class="n">connect_timeout</span><span class="o">=</span><span class="mf">20.0</span><span class="p">,</span> <span class="n">request_timeout</span><span class="o">=</span><span class="mf">20.0</span><span class="p">,</span>
+<span class="n">if_modified_since</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">follow_redirects</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+<span class="n">max_redirects</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">user_agent</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">use_gzip</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+<span class="n">network_interface</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">streaming_callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+<span class="n">header_callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">prepare_curl_callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+<span class="n">proxy_host</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">proxy_port</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">proxy_username</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+<span class="n">proxy_password</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">allow_nonstandard_methods</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+<span class="n">validate_cert</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ca_certs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+<span class="n">allow_ipv6</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+<span class="n">client_key</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">client_cert</span><span class="o">=</span><span class="bp">None</span>
+</pre></div>
+</div>

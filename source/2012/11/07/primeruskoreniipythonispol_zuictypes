@@ -1,0 +1,108 @@
+::id 50997be0bbddbd2f44000002
+::date 2012-11-07
+::title Пример ускорения python используя ctypes
+::tags python, ctypes
+::body
+Один из вариантов ускорить выполнение кода Python - переписать медленный метод на язык C, с помощью ctypes можно подключать библиотеки написанные на C.
+Ниже пример вызова C-метода и сравнение производительности.
+
+1) Пишем метод (файл **myfib.c**)
+[[unsigned long fib(unsigned long x)
+{
+    if(x < 2) return x;
+    return fib(x-1) + fib(x-2);
+}]]
+2) Компилируем:
+[[gcc -shared -Wl,-soname,myfib.so -o myfib.so -fPIC myfib.c]]
+3) Вызываем из Python и сравниваем с функцией написанной на чистом python:
+[[import ctypes
+import timeit
+
+fib = ctypes.CDLL('./myfib.so').fib
+fib.restype = ctypes.c_long
+fib.argtypes = (ctypes.c_ulong,)
+
+print(timeit.timeit('fib(32)', 'from __main__ import fib', number=1))
+
+def pyfib(x):
+    if x < 2: return x
+    return pyfib(x-1) + pyfib(x-2)
+
+print(timeit.timeit('pyfib(32)', 'from __main__ import pyfib', number=1))
+]]
+Результат:
+[[0.0463268756866
+1.08009696007]]
+В итоге, за счет использования ctypes, мы получили ускорение в **23** раза.
+
+Если использовать оптимизацию при компиляции, то можно получить большую производительность, для этого нужно указать ключ оптимизации:
+[[gcc -O3 -shared -Wl,-soname,myfib.so -o myfib.so -fPIC myfib.c]]
+Варианты ключей оптимизации:
+**-O1** - Базовая оптимизация
+**-O2** - GCC выполняет почти все поддерживаемые оптимизации, эта опция уменьшает как время компиляции так и время выполнения сгенерированного кода.
+**-O3** - Более сильная оптимизация, включает -O2 + некоторые дополнительные опции.
+
+С учетом оптимизации -O3, мы получили такой результат:
+[[0.023335695266
+1.08294892311]]
+Это быстрее в **46** раз чем на чистом python.
+
+//Тестировалось на ubuntu 11.10, python 2.7//
+
+::html
+Один из вариантов ускорить выполнение кода Python - переписать медленный метод на язык C, с помощью ctypes можно подключать библиотеки написанные на C.<br />
+Ниже пример вызова C-метода и сравнение производительности.<br />
+<br />
+1) Пишем метод (файл <b>myfib.c</b>)<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">unsigned</span> <span class="nb">long</span> <span class="n">fib</span><span class="p">(</span><span class="n">unsigned</span> <span class="nb">long</span> <span class="n">x</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="k">return</span> <span class="n">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">fib</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fib</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div><br />
+2) Компилируем:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">gcc</span> <span class="o">-</span><span class="n">shared</span> <span class="o">-</span><span class="n">Wl</span><span class="p">,</span><span class="o">-</span><span class="n">soname</span><span class="p">,</span><span class="n">myfib</span><span class="o">.</span><span class="n">so</span> <span class="o">-</span><span class="n">o</span> <span class="n">myfib</span><span class="o">.</span><span class="n">so</span> <span class="o">-</span><span class="n">fPIC</span> <span class="n">myfib</span><span class="o">.</span><span class="n">c</span>
+</pre></div>
+</div><br />
+3) Вызываем из Python и сравниваем с функцией написанной на чистом python:<br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">ctypes</span>
+<span class="kn">import</span> <span class="nn">timeit</span>
+
+<span class="n">fib</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">CDLL</span><span class="p">(</span><span class="s">&#39;./myfib.so&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fib</span>
+<span class="n">fib</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_long</span>
+<span class="n">fib</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_ulong</span><span class="p">,)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s">&#39;fib(32)&#39;</span><span class="p">,</span> <span class="s">&#39;from __main__ import fib&#39;</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">pyfib</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span> <span class="k">return</span> <span class="n">x</span>
+    <span class="k">return</span> <span class="n">pyfib</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">pyfib</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s">&#39;pyfib(32)&#39;</span><span class="p">,</span> <span class="s">&#39;from __main__ import pyfib&#39;</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div><br />
+Результат:<br />
+<div class="codebox"><div class="highlight"><pre><span class="mf">0.0463268756866</span>
+<span class="mf">1.08009696007</span>
+</pre></div>
+</div><br />
+В итоге, за счет использования ctypes, мы получили ускорение в <b>23</b> раза.<br />
+<br />
+Если использовать оптимизацию при компиляции, то можно получить большую производительность, для этого нужно указать ключ оптимизации:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">gcc</span> <span class="o">-</span><span class="n">O3</span> <span class="o">-</span><span class="n">shared</span> <span class="o">-</span><span class="n">Wl</span><span class="p">,</span><span class="o">-</span><span class="n">soname</span><span class="p">,</span><span class="n">myfib</span><span class="o">.</span><span class="n">so</span> <span class="o">-</span><span class="n">o</span> <span class="n">myfib</span><span class="o">.</span><span class="n">so</span> <span class="o">-</span><span class="n">fPIC</span> <span class="n">myfib</span><span class="o">.</span><span class="n">c</span>
+</pre></div>
+</div><br />
+Варианты ключей оптимизации:<br />
+<b>-O1</b> - Базовая оптимизация<br />
+<b>-O2</b> - GCC выполняет почти все поддерживаемые оптимизации, эта опция уменьшает как время компиляции так и время выполнения сгенерированного кода.<br />
+<b>-O3</b> - Более сильная оптимизация, включает -O2 + некоторые дополнительные опции.<br />
+<br />
+С учетом оптимизации -O3, мы получили такой результат:<br />
+<div class="codebox"><div class="highlight"><pre><span class="mf">0.023335695266</span>
+<span class="mf">1.08294892311</span>
+</pre></div>
+</div><br />
+Это быстрее в <b>46</b> раз чем на чистом python.<br />
+<br />
+<i>Тестировалось на ubuntu 11.10, python 2.7</i><br />

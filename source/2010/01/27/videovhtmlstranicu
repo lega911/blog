@@ -1,0 +1,11 @@
+::id 4bfb3c691d41c846bc000005
+::date 2010-01-27
+::title Видео в html страницу
+::tags html, video
+::body
+Пример как можно вставить видео в html
+[[<embed src="http://domen.com/files/example.mpeg" autostart="false" />]]
+
+::html
+Пример как можно вставить видео в html<br />
+<div class="codebox"><pre><code>&lt;embed src="http://domen.com/files/example.mpeg" autostart="false" /&gt;</code></pre></div><br />

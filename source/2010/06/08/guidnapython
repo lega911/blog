@@ -1,0 +1,17 @@
+::id 4c0e07b41d41c80f34000001
+::date 2010-06-08
+::title guid на python
+::tags python
+::body
+Пример получения guid:
+[[import uuid
+print uuid.uuid1()]]
+Результат:
+[[0177a83a-72dd-11df-8b32-e0cb4ea11cfb]]
+
+::html
+Пример получения guid:<br />
+<div class="codebox"><pre><code>import uuid
+print uuid.uuid1()</code></pre></div><br />
+Результат:<br />
+<div class="codebox"><pre><code>0177a83a-72dd-11df-8b32-e0cb4ea11cfb</code></pre></div><br />

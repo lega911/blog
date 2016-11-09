@@ -1,0 +1,19 @@
+::id 4bfb3c6b1d41c846bc0000d3
+::date 2010-05-10
+::title sudo без ввода пароля
+::tags sudo, linux
+::body
+Для этого нужно добавить в конец файла **/etc/sudoers** строку
+[[%admin ALL = NOPASSWD: ALL
+user ALL = NOPASSWD: /bin/touch]]
+Данный пример дает возможность для пользователей группы //admin// разрешить команду sudo без ввода пароля на скрипт ///bin/touch//
+Вместо //%группы// можно задать имя пользователя
+
+::html
+Для этого нужно добавить в конец файла <b>/etc/sudoers</b> строку<br />
+<div class="codebox"><div class="highlight"><pre><span class="o">%</span><span class="n">admin</span> <span class="n">ALL</span> <span class="o">=</span> <span class="n">NOPASSWD</span><span class="p">:</span> <span class="n">ALL</span>
+<span class="n">user</span> <span class="n">ALL</span> <span class="o">=</span> <span class="n">NOPASSWD</span><span class="p">:</span> <span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">touch</span>
+</pre></div>
+</div><br />
+Данный пример дает возможность для пользователей группы <i>admin</i> разрешить команду sudo без ввода пароля на скрипт <i>/bin/touch</i><br />
+Вместо <i>%группы</i> можно задать имя пользователя<br />

@@ -1,0 +1,46 @@
+::id 4d9561441d41c81a44000002
+::date 2011-04-01
+::title rsync, синхронизация через ssh
+::tags rsync, ssh
+::body
+[[$ rsync  -rcD -t -e ssh --exclude=tmp --rsync-path=/usr/bin/rsync \
+--temp-dir=/tmp user@host:/home/user/data /home/user/backup]]
+**Параметры**
+#|
+||-r|рекурсивно
+||-c|использовать контрольную сумму
+||-D|включая скрытые файлы
+||-t|сохранять время модификации
+||-e ssh|использовать SSH
+||--exclude=tmp|исключить файл по шаблону
+||–rsync-path=/usr/bin/rsync|путь до rsync на машине-источнике
+||–temp-dir=/tmp|каталог для временных файлов
+||user@host:/home/user/data|путь-источник данных
+||/home/user/backup|путь для сохранения
+|#
+
+Если в каталоге-источнике указать в конце слэш - то в каталоге назначения появится содержимое каталога-источника. Если же слэш не указывать - то в каталоге-приемнике появится копия каталога источника.
+
+**Докачка файла с помощью rsync** (пример докачки на удаленный хост)
+[[rsync -av --partial --rsh=ssh /path/file.name user@host:/path/]]
+
+
+см. [4c063a5f1d41c867ae000000 ssh без ввода пароля]
+
+::html
+<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">rsync</span>  <span class="o">-</span><span class="n">rcD</span> <span class="o">-</span><span class="n">t</span> <span class="o">-</span><span class="n">e</span> <span class="n">ssh</span> <span class="o">--</span><span class="n">exclude</span><span class="o">=</span><span class="n">tmp</span> <span class="o">--</span><span class="n">rsync</span><span class="o">-</span><span class="n">path</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">rsync</span> \
+<span class="o">--</span><span class="n">temp</span><span class="o">-</span><span class="nb">dir</span><span class="o">=/</span><span class="n">tmp</span> <span class="n">user</span><span class="nd">@host</span><span class="p">:</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">data</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">backup</span>
+</pre></div>
+</div><br />
+<b>Параметры</b><br />
+<table class="pymark_table"><tr><td></td></tr><tr><td>-r</td><td>рекурсивно</td></tr><tr><td>-c</td><td>использовать контрольную сумму</td></tr><tr><td>-D</td><td>включая скрытые файлы</td></tr><tr><td>-t</td><td>сохранять время модификации</td></tr><tr><td>-e ssh</td><td>использовать SSH</td></tr><tr><td>--exclude=tmp</td><td>исключить файл по шаблону</td></tr><tr><td>–rsync-path=/usr/bin/rsync</td><td>путь до rsync на машине-источнике</td></tr><tr><td>–temp-dir=/tmp</td><td>каталог для временных файлов</td></tr><tr><td>user@host:/home/user/data</td><td>путь-источник данных</td></tr><tr><td>/home/user/backup</td><td>путь для сохранения</td></tr></table><br />
+<br />
+Если в каталоге-источнике указать в конце слэш - то в каталоге назначения появится содержимое каталога-источника. Если же слэш не указывать - то в каталоге-приемнике появится копия каталога источника.<br />
+<br />
+<b>Докачка файла с помощью rsync</b> (пример докачки на удаленный хост)<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">rsync</span> <span class="o">-</span><span class="n">av</span> <span class="o">--</span><span class="n">partial</span> <span class="o">--</span><span class="n">rsh</span><span class="o">=</span><span class="n">ssh</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="nb">file</span><span class="o">.</span><span class="n">name</span> <span class="n">user</span><span class="nd">@host</span><span class="p">:</span><span class="o">/</span><span class="n">path</span><span class="o">/</span>
+</pre></div>
+</div><br />
+<br />
+<br />
+см. <a href="4c063a5f1d41c867ae000000">ssh без ввода пароля</a><br />

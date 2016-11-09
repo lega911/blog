@@ -1,0 +1,25 @@
+::id 4bfb3c691d41c846bc00004f
+::date 2010-02-07
+::title Форматирование раздела в linux
+::tags linux, format, disk
+::body
+примечание: все действия должны производится при отмонированом разделе
+!Форматирование
+[[sudo mkfs -t типФС /dev/устройство]]пример: [[sudo mkfs -t ext4 /dev/sda6]]
+
+!Убрать резервирование части места для рута
+[[tune2fs -m 0 /dev/hda6]]
+!Монтирование при загрузке
+дописать в файл **/etc/fstub**[[/dev/sda6 /media/storage ext4 defaults,noatime 0 0]]
+
+::html
+примечание: все действия должны производится при отмонированом разделе<h3>Форматирование</h3><div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">mkfs</span> <span class="o">-</span><span class="n">t</span> <span class="err">типФС</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="err">устройство</span>
+</pre></div>
+</div>пример: <div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">mkfs</span> <span class="o">-</span><span class="n">t</span> <span class="n">ext4</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda6</span>
+</pre></div>
+</div><br />
+<h3>Убрать резервирование части места для рута</h3><div class="codebox"><div class="highlight"><pre><span class="n">tune2fs</span> <span class="o">-</span><span class="n">m</span> <span class="mi">0</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">hda6</span>
+</pre></div>
+</div><h3>Монтирование при загрузке</h3>дописать в файл <b>/etc/fstub</b><div class="codebox"><div class="highlight"><pre><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda6</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">storage</span> <span class="n">ext4</span> <span class="n">defaults</span><span class="p">,</span><span class="n">noatime</span> <span class="mi">0</span> <span class="mi">0</span>
+</pre></div>
+</div><br />

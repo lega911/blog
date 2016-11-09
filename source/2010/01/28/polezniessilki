@@ -1,0 +1,63 @@
+::id 4bfb3c691d41c846bc000012
+::date 2010-01-28
+::title Полезные ссылки
+::tags templates, icons, links, radio
+::body
+Ссылки на интересные и полезные ресурсы
+
+!Шаблоны сайтов
+[http://www.freecsstemplates.org/ Бесплатные шаблоны сайтов]
+[http://dryicons.com/ Бесплатные иконки, шаблоны сайтов и т.п. ]
+[http://www.templatemonster.com/ templatemonster (Платные шаблоны)]
+
+!Иконки, баннеры, картинки
+[http://dryicons.com/ Бесплатные иконки, шаблоны сайтов и т.п. dryicons.com]
+[http://www.freegraphicsworld.com/ Бесплатные кнопки, баннеры и т.п. www.freegraphicsworld.com]
+[http://iconizer.net/en/free_icons iconizer.net]
+
+!Информационный материал
+[http://www.addedbytes.com/cheat-sheets/ Шпаргалки по кодингу]
+[http://www.google.com/analytics/ Google Analytics]
+
+!Радио
+[http://www.ipfm.net/ Список радиостанций]
+[http://www.bassdrive.com/v2/streams/BassDrive6.pls Drum and Bass]
+[http://djstation.ru/ djstation.ru]
+[http://w02-sw01.akadostream.ru:8000/russianradio128.mp3 Русское радио]
+[http://radio.silver.ru:8000/radio2 Серебряный дождь]
+[http://ware.catv.ext.ru:8000/radioretro128.mp3 Ретро FM]
+[mms://85.25.86.129/c1_1_128 Радио101]
+[http://88.212.196.54:80/nashe-192 Наше радио]
+[http://w02-sw01.akadostream.ru:8108/shanson128.mp3 Шансон]
+[http://ware.catv.ext.ru:8000/radiopopsa128.mp3 Радио попса]
+[http://w02-sw01.akadostream.ru:8000/europaplus128.mp3 Европа плюс]
+[http://realaudio.aradio.ru/energy/ Радио Энергия]
+
+!Продвижение сайта
+[http://forum.searchengines.ru/showthread.php?t=197239 ускорение индексации сайта]
+
+
+::html
+Ссылки на интересные и полезные ресурсы<br />
+<h3>Шаблоны сайтов</h3><a target=_blank href="http://www.freecsstemplates.org/">Бесплатные шаблоны сайтов</a><br />
+<a target=_blank href="http://dryicons.com/">Бесплатные иконки, шаблоны сайтов и т.п. </a><br />
+<a target=_blank href="http://www.templatemonster.com/">templatemonster (Платные шаблоны)</a><br />
+<h3>Иконки, баннеры, картинки</h3><a target=_blank href="http://dryicons.com/">Бесплатные иконки, шаблоны сайтов и т.п. dryicons.com</a><br />
+<a target=_blank href="http://www.freegraphicsworld.com/">Бесплатные кнопки, баннеры и т.п. www.freegraphicsworld.com</a><br />
+<a target=_blank href="http://iconizer.net/en/free_icons">iconizer.net</a><br />
+<h3>Информационный материал</h3><a target=_blank href="http://www.addedbytes.com/cheat-sheets/">Шпаргалки по кодингу</a><br />
+<a target=_blank href="http://www.google.com/analytics/">Google Analytics</a><br />
+<h3>Радио</h3><a target=_blank href="http://www.ipfm.net/">Список радиостанций</a><br />
+<a target=_blank href="http://www.bassdrive.com/v2/streams/BassDrive6.pls">Drum and Bass</a><br />
+<a target=_blank href="http://djstation.ru/">djstation.ru</a><br />
+<a target=_blank href="http://w02-sw01.akadostream.ru:8000/russianradio128.mp3">Русское радио</a><br />
+<a target=_blank href="http://radio.silver.ru:8000/radio2">Серебряный дождь</a><br />
+<a target=_blank href="http://ware.catv.ext.ru:8000/radioretro128.mp3">Ретро FM</a><br />
+<a href="mms://85.25.86.129/c1_1_128">Радио101</a><br />
+<a target=_blank href="http://88.212.196.54:80/nashe-192">Наше радио</a><br />
+<a target=_blank href="http://w02-sw01.akadostream.ru:8108/shanson128.mp3">Шансон</a><br />
+<a target=_blank href="http://ware.catv.ext.ru:8000/radiopopsa128.mp3">Радио попса</a><br />
+<a target=_blank href="http://w02-sw01.akadostream.ru:8000/europaplus128.mp3">Европа плюс</a><br />
+<a target=_blank href="http://realaudio.aradio.ru/energy/">Радио Энергия</a><br />
+<h3>Продвижение сайта</h3><a target=_blank href="http://forum.searchengines.ru/showthread.php?t=197239">ускорение индексации сайта</a><br />
+<br />

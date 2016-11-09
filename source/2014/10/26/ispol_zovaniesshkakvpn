@@ -1,0 +1,62 @@
+::id 544c89b73ad2ff5ac508266f
+::date 2014-10-26
+::title Использование SSH как VPN
+::tags ssh, vpn
+::body
+//Проверено на ubuntu 14.04//
+ 
+Цель: Сделать туннель в удаленную сеть через 
+ 
+**1)** Желательно сделать [http://www.py-my.ru/post/4c063a5f1d41c867ae000000 авторизацию по ключам] от локального root в root на сервере. Root нужен для того что-б OpenSSH мог создать tun интерфейс (хотя есть возможность использовать авторизацию по паролю).
+
+**2)** На сервере нужно в **/etc/ssh/sshd_config** добавить строку
+[[PermitTunnel point-to-point]] и перезагрузить OpenSSH сервер
+[[service ssh restart]]
+**3)** Поднимаем туннель, выполняем на сервере от **root**:
+[[ifconfig tun0 10.0.0.1/30 pointopoint 10.0.0.2
+sysctl -w net.ipv4.ip_forward="1"
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE]]Выполняем на клиенте:
+[[ssh -p 22 root@8.8.8.8 -w 0:0 -N
+ifconfig tun0 10.0.0.2/30 pointopoint 10.0.0.1
+route add -net 192.168.4.0 netmask 255.255.255.0 dev tun0]]
+10.0.0.1/10.0.0.2 - устанавливаем адреса сервера и клиента для tun интерфейса
+8.8.8.8 - адрес сервера
+-w 0:0 - создает tun0 и tun0 на сервере
+192.168.4.0 - пробрасываем 192.168.4.0/24 подсеть в tun0
+
+Готово, теперь удаленная подсеть 192.168.4.0/24 должна быть доступна на клиенте.
+
+[http://www.py-my.ru/post/4d1465a31d41c81a2d000005 Туннелирование через ssh (проброс порта)]
+::html
+<i>Проверено на ubuntu 14.04</i><br />
+ <br />
+Цель: Сделать туннель в удаленную сеть через <br />
+ <br />
+<b>1)</b> Желательно сделать <a target=_blank href="http://www.py-my.ru/post/4c063a5f1d41c867ae000000">авторизацию по ключам</a> от локального root в root на сервере. Root нужен для того что-б OpenSSH мог создать tun интерфейс (хотя есть возможность использовать авторизацию по паролю).<br />
+<br />
+<b>2)</b> На сервере нужно в <b>/etc/ssh/sshd_config</b> добавить строку<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">PermitTunnel</span> <span class="n">point</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">point</span>
+</pre></div>
+</div> и перезагрузить OpenSSH сервер<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">service</span> <span class="n">ssh</span> <span class="n">restart</span>
+</pre></div>
+</div><br />
+<b>3)</b> Поднимаем туннель, выполняем на сервере от <b>root</b>:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">ifconfig</span> <span class="n">tun0</span> <span class="mf">10.0</span><span class="o">.</span><span class="mf">0.1</span><span class="o">/</span><span class="mi">30</span> <span class="n">pointopoint</span> <span class="mf">10.0</span><span class="o">.</span><span class="mf">0.2</span>
+<span class="n">sysctl</span> <span class="o">-</span><span class="n">w</span> <span class="n">net</span><span class="o">.</span><span class="n">ipv4</span><span class="o">.</span><span class="n">ip_forward</span><span class="o">=</span><span class="s">&quot;1&quot;</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">t</span> <span class="n">nat</span> <span class="o">-</span><span class="n">A</span> <span class="n">POSTROUTING</span> <span class="o">-</span><span class="n">o</span> <span class="n">eth0</span> <span class="o">-</span><span class="n">j</span> <span class="n">MASQUERADE</span>
+</pre></div>
+</div>Выполняем на клиенте:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">ssh</span> <span class="o">-</span><span class="n">p</span> <span class="mi">22</span> <span class="n">root</span><span class="nd">@8.8.8.8</span> <span class="o">-</span><span class="n">w</span> <span class="mi">0</span><span class="p">:</span><span class="mi">0</span> <span class="o">-</span><span class="n">N</span>
+<span class="n">ifconfig</span> <span class="n">tun0</span> <span class="mf">10.0</span><span class="o">.</span><span class="mf">0.2</span><span class="o">/</span><span class="mi">30</span> <span class="n">pointopoint</span> <span class="mf">10.0</span><span class="o">.</span><span class="mf">0.1</span>
+<span class="n">route</span> <span class="n">add</span> <span class="o">-</span><span class="n">net</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">4.0</span> <span class="n">netmask</span> <span class="mf">255.255</span><span class="o">.</span><span class="mf">255.0</span> <span class="n">dev</span> <span class="n">tun0</span>
+</pre></div>
+</div><br />
+10.0.0.1/10.0.0.2 - устанавливаем адреса сервера и клиента для tun интерфейса<br />
+8.8.8.8 - адрес сервера<br />
+-w 0:0 - создает tun0 и tun0 на сервере<br />
+192.168.4.0 - пробрасываем 192.168.4.0/24 подсеть в tun0<br />
+<br />
+Готово, теперь удаленная подсеть 192.168.4.0/24 должна быть доступна на клиенте.<br />
+<br />
+<a target=_blank href="http://www.py-my.ru/post/4d1465a31d41c81a2d000005">Туннелирование через ssh (проброс порта)</a>

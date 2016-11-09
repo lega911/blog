@@ -1,0 +1,89 @@
+::id 4bfb3c6a1d41c846bc0000c4
+::date 2010-04-22
+::title Запуск полного процессинга OLAP из python
+::tags python, olap
+::body
+Для работы скрипта нужен дополнительный пакет **pywin32**
+
+**Процессинг всей базы OLAP**
+[[from win32com.client import Dispatch
+import pythoncom
+
+def olap_process():
+    strServerName = "localhost"
+    strDBName = "olap 2"
+    try:
+        pythoncom.CoInitialize()
+        dsoServer = Dispatch("DSO.Server")
+        dsoServer.Connect(strServerName)
+        dsoDB = dsoServer.MDStores.Item(strDBName)
+        print 'server name:',dsoServer.Name
+        print 'db name:',dsoDB.Name
+        dsoDB.Process(1)
+        print 'Process ok'
+        pythoncom.CoUninitialize()
+    except Exception as e:
+        print e]]
+
+**Процессинг отдельного куба OLAP**
+[[from win32com.client import Dispatch
+import pythoncom
+
+def olap_process():
+    strServerName = "localhost"
+    strDBName = "olap 2"
+    strCubeName = u"Взаиморасчеты"
+    try:
+        pythoncom.CoInitialize()
+        dsoServer = Dispatch("DSO.Server")
+        dsoServer.Connect(strServerName)
+        dsoDB = dsoServer.MDStores.Item(strDBName)
+        dsoCube = dsoDB.MDStores(strCubeName)
+        dsoCube.Process(1)
+        print 'Process ok'
+        pythoncom.CoUninitialize()
+    except Exception as e:
+        print e]]
+
+::html
+Для работы скрипта нужен дополнительный пакет <b>pywin32</b><br />
+<br />
+<b>Процессинг всей базы OLAP</b><br />
+<div class="codebox"><pre><code>from win32com.client import Dispatch
+import pythoncom
+
+def olap_process():
+    strServerName = "localhost"
+    strDBName = "olap 2"
+    try:
+        pythoncom.CoInitialize()
+        dsoServer = Dispatch("DSO.Server")
+        dsoServer.Connect(strServerName)
+        dsoDB = dsoServer.MDStores.Item(strDBName)
+        print 'server name:',dsoServer.Name
+        print 'db name:',dsoDB.Name
+        dsoDB.Process(1)
+        print 'Process ok'
+        pythoncom.CoUninitialize()
+    except Exception as e:
+        print e</code></pre></div><br />
+<br />
+<b>Процессинг отдельного куба OLAP</b><br />
+<div class="codebox"><pre><code>from win32com.client import Dispatch
+import pythoncom
+
+def olap_process():
+    strServerName = "localhost"
+    strDBName = "olap 2"
+    strCubeName = u"Взаиморасчеты"
+    try:
+        pythoncom.CoInitialize()
+        dsoServer = Dispatch("DSO.Server")
+        dsoServer.Connect(strServerName)
+        dsoDB = dsoServer.MDStores.Item(strDBName)
+        dsoCube = dsoDB.MDStores(strCubeName)
+        dsoCube.Process(1)
+        print 'Process ok'
+        pythoncom.CoUninitialize()
+    except Exception as e:
+        print e</code></pre></div><br />

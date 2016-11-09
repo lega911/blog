@@ -1,0 +1,117 @@
+::id 4db327631d41c816f2000001
+::date 2011-04-24
+::title Apache2 через nginx, проксирование.
+::tags nginx, apache, proxy
+::body
+Настроим **nginx** как прокси сервер + отдача статики, сам сайт лежит под apache.
+//Пример для ubuntu 10.04, для других дистрибутивов может немного отличаться//
+//Для примера, сайт www.example.com//
+
+
+!1) Меняем порт apache2
+**$ sudo nano /etc/apache2/ports.conf**
+[[NameVirtualHost *:8000
+Listen 8000]]
+Так же у виртуального сервера меняем порт:
+**$ sudo nano /etc/apache2/sites-available/www.example.com**
+[[<VirtualHost *:8000>]]
+
+!2) Настраиваем виртуальный сервер на nginx
+**$ sudo nano /etc/nginx/sites-available/www.example.com**
+[[server {
+        listen   80; # Используемый порт
+
+        server_name www.example.com; # доменное имя сайта
+
+        # Проксируем сайт
+        location / {
+                proxy_pass        http://localhost:8000;
+                proxy_set_header  Host       $host;
+                proxy_set_header  X-Real-IP  $remote_addr;
+                proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+
+        # Настройка статики /static/ и /uploads/
+        location /static/.*$ {
+                root /var/www/www.example.com/main/static/;
+                autoindex off;
+        }
+
+        location /uploads/.*$ {
+                root /var/www/www.example.com/main/uploads/;
+                autoindex off;
+        }
+
+        # Файл логов
+        access_log  /var/log/nginx/www.example.com.access.log;
+}]]
+Подключаем виртуальный сервер
+**$ sudo ln -s /etc/nginx/sites-available/www.example.com /etc/nginx/sites-enabled/www.example.com**
+
+
+!3 Получение реального ip клиента на apache
+Для этого нужно установить модуль rpaf:[[sudo aptitude install libapache2-mod-rpaf
+sudo a2enmod rpaf]]
+
+!4 Перезагружаем
+[[sudo /etc/init.d/apache2 restart
+sudo /etc/init.d/nginx start]]
+Готово, как установить **ngnix** можно прочесть [4d34854a1d41c819a7000006 тут]
+
+::html
+Настроим <b>nginx</b> как прокси сервер + отдача статики, сам сайт лежит под apache.<br />
+<i>Пример для ubuntu 10.04, для других дистрибутивов может немного отличаться</i><br />
+<i>Для примера, сайт www.example.com</i><br />
+<br />
+<h3>1) Меняем порт apache2</h3><b>$ sudo nano /etc/apache2/ports.conf</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">NameVirtualHost</span> <span class="o">*</span><span class="p">:</span><span class="mi">8000</span>
+<span class="n">Listen</span> <span class="mi">8000</span>
+</pre></div>
+</div><br />
+Так же у виртуального сервера меняем порт:<br />
+<b>$ sudo nano /etc/apache2/sites-available/www.example.com</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&lt;</span><span class="n">VirtualHost</span> <span class="o">*</span><span class="p">:</span><span class="mi">8000</span><span class="o">&gt;</span>
+</pre></div>
+</div><br />
+<h3>2) Настраиваем виртуальный сервер на nginx</h3><b>$ sudo nano /etc/nginx/sites-available/www.example.com</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">server</span> <span class="p">{</span>
+        <span class="n">listen</span>   <span class="mi">80</span><span class="p">;</span> <span class="c"># Используемый порт</span>
+
+        <span class="n">server_name</span> <span class="n">www</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="p">;</span> <span class="c"># доменное имя сайта</span>
+
+        <span class="c"># Проксируем сайт</span>
+        <span class="n">location</span> <span class="o">/</span> <span class="p">{</span>
+                <span class="n">proxy_pass</span>        <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8000</span><span class="p">;</span>
+                <span class="n">proxy_set_header</span>  <span class="n">Host</span>       <span class="err">$</span><span class="n">host</span><span class="p">;</span>
+                <span class="n">proxy_set_header</span>  <span class="n">X</span><span class="o">-</span><span class="n">Real</span><span class="o">-</span><span class="n">IP</span>  <span class="err">$</span><span class="n">remote_addr</span><span class="p">;</span>
+                <span class="n">proxy_set_header</span>  <span class="n">X</span><span class="o">-</span><span class="n">Forwarded</span><span class="o">-</span><span class="n">For</span> <span class="err">$</span><span class="n">proxy_add_x_forwarded_for</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c"># Настройка статики /static/ и /uploads/</span>
+        <span class="n">location</span> <span class="o">/</span><span class="n">static</span><span class="o">/.*</span><span class="err">$</span> <span class="p">{</span>
+                <span class="n">root</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">www</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="p">;</span>
+                <span class="n">autoindex</span> <span class="n">off</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">location</span> <span class="o">/</span><span class="n">uploads</span><span class="o">/.*</span><span class="err">$</span> <span class="p">{</span>
+                <span class="n">root</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">www</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">uploads</span><span class="o">/</span><span class="p">;</span>
+                <span class="n">autoindex</span> <span class="n">off</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c"># Файл логов</span>
+        <span class="n">access_log</span>  <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">www</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">.</span><span class="n">access</span><span class="o">.</span><span class="n">log</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div><br />
+Подключаем виртуальный сервер<br />
+<b>$ sudo ln -s /etc/nginx/sites-available/www.example.com /etc/nginx/sites-enabled/www.example.com</b><br />
+<br />
+<h3>3 Получение реального ip клиента на apache</h3>Для этого нужно установить модуль rpaf:<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">aptitude</span> <span class="n">install</span> <span class="n">libapache2</span><span class="o">-</span><span class="n">mod</span><span class="o">-</span><span class="n">rpaf</span>
+<span class="n">sudo</span> <span class="n">a2enmod</span> <span class="n">rpaf</span>
+</pre></div>
+</div><br />
+<h3>4 Перезагружаем</h3><div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">apache2</span> <span class="n">restart</span>
+<span class="n">sudo</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">nginx</span> <span class="n">start</span>
+</pre></div>
+</div><br />
+Готово, как установить <b>ngnix</b> можно прочесть <a href="4d34854a1d41c819a7000006">тут</a><br />

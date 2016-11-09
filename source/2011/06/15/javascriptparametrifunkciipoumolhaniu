@@ -1,0 +1,26 @@
+::id 4df83a991d41c86c36000000
+::date 2011-06-15
+::title Javascript: параметры функции по умолчанию
+::tags javascript
+::body
+В ф-ию можно передать сколько угодно параметров (даже больше 3-х для данного примера), в примере показано 2 способа (переменная **b** и **c**) сделать параметры "по умолчанию":
+[[function foo(a,b,c) { 
+	if(typeof(a) == 'undefined') a = 1;
+	if(typeof(b) == 'undefined') b = 2;
+	c = c || 3;
+	alert(a + ' ' + b + ' ' + c);
+}
+foo(5);]]
+Пример выдаст сообщение "5 2 3"
+::html
+В ф-ию можно передать сколько угодно параметров (даже больше 3-х для данного примера), в примере показано 2 способа (переменная <b>b</b> и <b>c</b>) сделать параметры "по умолчанию":<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">function</span> <span class="n">foo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span> <span class="p">{</span> 
+	<span class="k">if</span><span class="p">(</span><span class="n">typeof</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">==</span> <span class="s">&#39;undefined&#39;</span><span class="p">)</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">typeof</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">==</span> <span class="s">&#39;undefined&#39;</span><span class="p">)</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+	<span class="n">c</span> <span class="o">=</span> <span class="n">c</span> <span class="o">||</span> <span class="mi">3</span><span class="p">;</span>
+	<span class="n">alert</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="s">&#39; &#39;</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="s">&#39; &#39;</span> <span class="o">+</span> <span class="n">c</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">foo</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+</pre></div>
+</div><br />
+Пример выдаст сообщение "5 2 3"

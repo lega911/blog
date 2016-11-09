@@ -1,0 +1,106 @@
+::id 4e8379981d41c821a8000004
+::date 2011-09-29
+::title Получение информации о товаре через Amazon API
+::tags python, amazon
+::body
+Пример получения информации о товаре через Amazon API
+
+Нужно зарегистрироваться на амазоне взять ключи со страницы [https://aws-portal.amazon.com/gp/aws/developer/account/index.html?ie=UTF8&action=access-key Security Credentials], подставить их в скрипт
+[[# coding:utf8
+
+url = 'http://webservices.amazon.com/AWSECommerceService/AWSECommerceService.wsdl'
+access_key = 'Your access key'
+secret_key = 'Your secret key'
+
+def get_headers(method):
+    from suds.sax.element import Element
+    from datetime import datetime
+    import base64
+    import hmac
+    import hashlib
+    
+    dtime = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+    digest = hmac.new(secret_key, method+dtime, hashlib.sha256).digest()
+    signature = base64.encodestring(digest).rstrip()
+
+    res = []
+    ssnns = ('ns2', 'http://security.amazonaws.com/doc/2007-01-01/')
+    res.append( Element('AWSAccessKeyId', ns=ssnns).setText(access_key) )
+    res.append( Element('Timestamp', ns=ssnns).setText(dtime) )
+    res.append( Element('Signature', ns=ssnns).setText(signature) )
+    #print res
+    return res
+
+def get_item(ItemId):
+    from suds.client import Client
+    client = Client(url)
+    myheaders = get_headers('ItemLookup')
+    client.set_options(soapheaders=myheaders)
+    #print client
+    
+    d = {}
+    d['AssociateTag'] = 'ASSOCIATE TAG'
+    d['AWSAccessKeyId'] = access_key
+    d['Request'] = { 'ItemId':ItemId, 'ResponseGroup':'Medium' }
+    result = client.service['AWSECommerceServicePortUS'].ItemLookup(**d)
+    #print result
+    return result
+
+def main():
+    result = get_item('B00428ZRFE')
+    print result
+    print result.Items[0].Item[0].SalesRank
+
+main()]]
+::html
+Пример получения информации о товаре через Amazon API<br />
+<br />
+Нужно зарегистрироваться на амазоне взять ключи со страницы <a target=_blank href="https://aws-portal.amazon.com/gp/aws/developer/account/index.html?ie=UTF8&action=access-key">Security Credentials</a>, подставить их в скрипт<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding:utf8</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s">&#39;http://webservices.amazon.com/AWSECommerceService/AWSECommerceService.wsdl&#39;</span>
+<span class="n">access_key</span> <span class="o">=</span> <span class="s">&#39;Your access key&#39;</span>
+<span class="n">secret_key</span> <span class="o">=</span> <span class="s">&#39;Your secret key&#39;</span>
+
+<span class="k">def</span> <span class="nf">get_headers</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">suds.sax.element</span> <span class="kn">import</span> <span class="n">Element</span>
+    <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+    <span class="kn">import</span> <span class="nn">base64</span>
+    <span class="kn">import</span> <span class="nn">hmac</span>
+    <span class="kn">import</span> <span class="nn">hashlib</span>
+    
+    <span class="n">dtime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s">T%H:%M:%SZ&#39;</span><span class="p">)</span>
+    <span class="n">digest</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">method</span><span class="o">+</span><span class="n">dtime</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
+    <span class="n">signature</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">encodestring</span><span class="p">(</span><span class="n">digest</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ssnns</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;ns2&#39;</span><span class="p">,</span> <span class="s">&#39;http://security.amazonaws.com/doc/2007-01-01/&#39;</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">Element</span><span class="p">(</span><span class="s">&#39;AWSAccessKeyId&#39;</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="n">ssnns</span><span class="p">)</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">access_key</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">Element</span><span class="p">(</span><span class="s">&#39;Timestamp&#39;</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="n">ssnns</span><span class="p">)</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">dtime</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">Element</span><span class="p">(</span><span class="s">&#39;Signature&#39;</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="n">ssnns</span><span class="p">)</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">signature</span><span class="p">)</span> <span class="p">)</span>
+    <span class="c">#print res</span>
+    <span class="k">return</span> <span class="n">res</span>
+
+<span class="k">def</span> <span class="nf">get_item</span><span class="p">(</span><span class="n">ItemId</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">suds.client</span> <span class="kn">import</span> <span class="n">Client</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">myheaders</span> <span class="o">=</span> <span class="n">get_headers</span><span class="p">(</span><span class="s">&#39;ItemLookup&#39;</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">soapheaders</span><span class="o">=</span><span class="n">myheaders</span><span class="p">)</span>
+    <span class="c">#print client</span>
+    
+    <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">d</span><span class="p">[</span><span class="s">&#39;AssociateTag&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;ASSOCIATE TAG&#39;</span>
+    <span class="n">d</span><span class="p">[</span><span class="s">&#39;AWSAccessKeyId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">access_key</span>
+    <span class="n">d</span><span class="p">[</span><span class="s">&#39;Request&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#39;ItemId&#39;</span><span class="p">:</span><span class="n">ItemId</span><span class="p">,</span> <span class="s">&#39;ResponseGroup&#39;</span><span class="p">:</span><span class="s">&#39;Medium&#39;</span> <span class="p">}</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">service</span><span class="p">[</span><span class="s">&#39;AWSECommerceServicePortUS&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ItemLookup</span><span class="p">(</span><span class="o">**</span><span class="n">d</span><span class="p">)</span>
+    <span class="c">#print result</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">get_item</span><span class="p">(</span><span class="s">&#39;B00428ZRFE&#39;</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">result</span>
+    <span class="k">print</span> <span class="n">result</span><span class="o">.</span><span class="n">Items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">Item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">SalesRank</span>
+
+<span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>

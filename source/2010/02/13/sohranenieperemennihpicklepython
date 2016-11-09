@@ -1,0 +1,85 @@
+::id 4bfb3c691d41c846bc000057
+::date 2010-02-13
+::title Сохранение переменных, pickle, python
+::tags python, pickle
+::body
+Пакет **Pickle** (**cPickle** - более производительная реализация) позволяет сделать дамп произвольных данных
+
+
+
+!Пример сохранения данных в строку
+[[# coding: utf-8
+
+import cPickle
+
+data = ['Test data', {'Structure':'Any'} ]
+print data
+
+# dump
+s = cPickle.dumps(data)
+
+# load
+data = cPickle.loads(s)
+print data]]
+
+!Пример сохранения в файл
+[[# coding: utf-8
+
+import cPickle
+
+data = ['Test data', {'Structure':'Any'} ]
+print data
+
+# save
+file = open("file.txt", 'w')
+cPickle.dump(data, file)
+file.close()
+
+# load
+file = open("file.txt", 'r')
+data = cPickle.load(file)
+file.close()
+print data]]
+
+похожее [4bfb3c6a1d41c846bc0000b5 JSON]
+
+::html
+Пакет <b>Pickle</b> (<b>cPickle</b> - более производительная реализация) позволяет сделать дамп произвольных данных<br />
+<br />
+<br />
+<h3>Пример сохранения данных в строку</h3><div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf-8</span>
+
+<span class="kn">import</span> <span class="nn">cPickle</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Test data&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;Structure&#39;</span><span class="p">:</span><span class="s">&#39;Any&#39;</span><span class="p">}</span> <span class="p">]</span>
+<span class="k">print</span> <span class="n">data</span>
+
+<span class="c"># dump</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">cPickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c"># load</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">cPickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">data</span>
+</pre></div>
+</div><br />
+<h3>Пример сохранения в файл</h3><div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf-8</span>
+
+<span class="kn">import</span> <span class="nn">cPickle</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Test data&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;Structure&#39;</span><span class="p">:</span><span class="s">&#39;Any&#39;</span><span class="p">}</span> <span class="p">]</span>
+<span class="k">print</span> <span class="n">data</span>
+
+<span class="c"># save</span>
+<span class="nb">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;file.txt&quot;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">cPickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">file</span><span class="p">)</span>
+<span class="nb">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c"># load</span>
+<span class="nb">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;file.txt&quot;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">cPickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+<span class="nb">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">data</span>
+</pre></div>
+</div><br />
+<br />
+похожее <a href="4bfb3c6a1d41c846bc0000b5">JSON</a><br />

@@ -1,0 +1,65 @@
+::id 4bfb3c691d41c846bc000040
+::date 2010-02-03
+::title cron, crontab, автозапуск, планировщик в linux
+::tags cron, linux
+::body
+Заметка о том как настроить запуск приложения через **cron** на ubuntu.
+
+выполняем команду для редактирования крон-файла:
+[[crontab -e]]
+колонки времени:
+[[* * * * * выполняемая команда
+| | | | |
+| | | | ----- День недели (0 - 7) (Воскресенье =0 или =7)
+| | | ------- Месяц (1 - 12)
+| | --------- День (1 - 31)
+| ----------- Час (0 - 23)
+------------- Минута (0 - 59)]]
+прописываем время запуска и задачи:
+[[# выполнять каждый день в 0 часов 7 минут
+7 0 * * * /home/user/start.sh >> /tmp/1.log
+# выполнять каждую четную минуту
+*/2 * * * * echo '1'
+# каждую минуту в периоде от 1 до 9 часов
+* 1-9 * * * echo '1'
+# выполняется в 7:05 и 9:05 каждый понедельник и среду
+5 7,9 * * 1,3 echo '1'
+# Выполнять при запуске системы
+@reboot echo '1']]
+рестарт крон-сервиса
+[[service cron restart]]
+
+::html
+Заметка о том как настроить запуск приложения через <b>cron</b> на ubuntu.<br />
+<br />
+выполняем команду для редактирования крон-файла:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">crontab</span> <span class="o">-</span><span class="n">e</span>
+</pre></div>
+</div><br />
+колонки времени:<br />
+<div class="codebox"><div class="highlight"><pre><span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="err">выполняемая</span> <span class="err">команда</span>
+<span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">-----</span> <span class="err">День</span> <span class="err">недели</span> <span class="p">(</span><span class="mi">0</span> <span class="o">-</span> <span class="mi">7</span><span class="p">)</span> <span class="p">(</span><span class="err">Воскресенье</span> <span class="o">=</span><span class="mi">0</span> <span class="err">или</span> <span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+<span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">-------</span> <span class="err">Месяц</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span>
+<span class="o">|</span> <span class="o">|</span> <span class="o">---------</span> <span class="err">День</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">31</span><span class="p">)</span>
+<span class="o">|</span> <span class="o">-----------</span> <span class="err">Час</span> <span class="p">(</span><span class="mi">0</span> <span class="o">-</span> <span class="mi">23</span><span class="p">)</span>
+<span class="o">-------------</span> <span class="err">Минута</span> <span class="p">(</span><span class="mi">0</span> <span class="o">-</span> <span class="mi">59</span><span class="p">)</span>
+</pre></div>
+</div><br />
+прописываем время запуска и задачи:<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># выполнять каждый день в 0 часов 7 минут</span>
+<span class="mi">7</span> <span class="mi">0</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">start</span><span class="o">.</span><span class="n">sh</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="mf">1.</span><span class="n">log</span>
+<span class="c"># выполнять каждую четную минуту</span>
+<span class="o">*/</span><span class="mi">2</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">echo</span> <span class="s">&#39;1&#39;</span>
+<span class="c"># каждую минуту в периоде от 1 до 9 часов</span>
+<span class="o">*</span> <span class="mi">1</span><span class="o">-</span><span class="mi">9</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">echo</span> <span class="s">&#39;1&#39;</span>
+<span class="c"># выполняется в 7:05 и 9:05 каждый понедельник и среду</span>
+<span class="mi">5</span> <span class="mi">7</span><span class="p">,</span><span class="mi">9</span> <span class="o">*</span> <span class="o">*</span> <span class="mi">1</span><span class="p">,</span><span class="mi">3</span> <span class="n">echo</span> <span class="s">&#39;1&#39;</span>
+<span class="c"># Выполнять при запуске системы</span>
+<span class="nd">@reboot</span> <span class="n">echo</span> <span class="s">&#39;1&#39;</span>
+</pre></div>
+</div><br />
+рестарт крон-сервиса<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">service</span> <span class="n">cron</span> <span class="n">restart</span>
+</pre></div>
+</div><br />

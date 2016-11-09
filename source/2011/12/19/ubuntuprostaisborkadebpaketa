@@ -1,0 +1,37 @@
+::id 4eee501f1d41c87bef000000
+::date 2011-12-19
+::title ubuntu простая сборка deb пакета
+::tags linux, ubuntu, deb, install
+::body
+Пример установки программы и создание deb пакета.
+
+Устанавливаем необходимые пакеты.
+[[sudo apt-get install build-essential]]
+
+Заходим в папку с исходниками, и выполняем:
+[[./configure --prefix=/usr/local
+make
+sudo checkinstall -D]]
+checkinstall будет задавать вопросы, можно будет нажимать Enter - выбор по умолчанию.
+
+Если все прошло гладко, то в текущей папке должен появиться deb пакет.
+//Если сборка не пройдет то возможно отсутствуют зависимые пакеты//
+
+::html
+Пример установки программы и создание deb пакета.<br />
+<br />
+Устанавливаем необходимые пакеты.<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">build</span><span class="o">-</span><span class="n">essential</span>
+</pre></div>
+</div><br />
+<br />
+Заходим в папку с исходниками, и выполняем:<br />
+<div class="codebox"><div class="highlight"><pre><span class="o">./</span><span class="n">configure</span> <span class="o">--</span><span class="n">prefix</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span>
+<span class="n">make</span>
+<span class="n">sudo</span> <span class="n">checkinstall</span> <span class="o">-</span><span class="n">D</span>
+</pre></div>
+</div><br />
+checkinstall будет задавать вопросы, можно будет нажимать Enter - выбор по умолчанию.<br />
+<br />
+Если все прошло гладко, то в текущей папке должен появиться deb пакет.<br />
+<i>Если сборка не пройдет то возможно отсутствуют зависимые пакеты</i><br />

@@ -1,0 +1,15 @@
+::id 4c40336b1d41c82d48000008
+::date 2010-07-16
+::title CSS вертикальное выравнивание в div
+::tags web, css
+::body
+У блоков нет вертикального выравнивания. Чтобы обойти это, высоту строки приравнивают к высоте блока.
+[[
+<div style="line-height:50px; height:50px; border: 1px solid #CCC;">hello</div>
+]]
+
+::html
+У блоков нет вертикального выравнивания. Чтобы обойти это, высоту строки приравнивают к высоте блока.<br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&lt;</span><span class="n">div</span> <span class="n">style</span><span class="o">=</span><span class="s">&quot;line-height:50px; height:50px; border: 1px solid #CCC;&quot;</span><span class="o">&gt;</span><span class="n">hello</span><span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</pre></div>
+</div><br />

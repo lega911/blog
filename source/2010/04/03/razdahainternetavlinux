@@ -1,0 +1,47 @@
+::id 4bfb3c6a1d41c846bc0000ae
+::date 2010-04-03
+::title Раздача интернета в linux
+::tags iptables, linux
+::body
+**ppp0** - устройство подключенное к интернет
+**eth1** - устройство смотрящее в локальную сеть
+[[ifconfig eth1 192.168.0.1 netmask 255.255.255.0
+ifconfig eth1 up
+sysctl -w net.ipv4.ip_forward="1"
+iptables -t nat -A POSTROUTING -o ppp0 -j MASQUERADE
+dnsmasq]]
+
+Что-б этот код выполнялся при запуске системы его можно поместить в **/etc/rc.local**
+
+при отключении сетевого кабеля ip адрес может сбрасываться, что-б этого не происходило нужно прописать в **/etc/network/interfaces**
+[[auto eth1
+iface eth1 inet static
+address 192.168.0.1
+netmask 255.255.255.0]]
+
+На клиентской машине нужно прописать, если не определится автоматический:
+ip адрес: 192.168.0.2
+шлюз: 192.168.0.1
+dns сервер: 192.168.0.1
+
+::html
+<b>ppp0</b> - устройство подключенное к интернет<br />
+<b>eth1</b> - устройство смотрящее в локальную сеть<br />
+<div class="codebox"><pre><code>ifconfig eth1 192.168.0.1 netmask 255.255.255.0
+ifconfig eth1 up
+sysctl -w net.ipv4.ip_forward="1"
+iptables -t nat -A POSTROUTING -o ppp0 -j MASQUERADE
+dnsmasq</code></pre></div><br />
+<br />
+Что-б этот код выполнялся при запуске системы его можно поместить в <b>/etc/rc.local</b><br />
+<br />
+при отключении сетевого кабеля ip адрес может сбрасываться, что-б этого не происходило нужно прописать в <b>/etc/network/interfaces</b><br />
+<div class="codebox"><pre><code>auto eth1
+iface eth1 inet static
+address 192.168.0.1
+netmask 255.255.255.0</code></pre></div><br />
+<br />
+На клиентской машине нужно прописать, если не определится автоматический:<br />
+ip адрес: 192.168.0.2<br />
+шлюз: 192.168.0.1<br />
+dns сервер: 192.168.0.1<br />

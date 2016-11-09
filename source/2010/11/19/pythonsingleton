@@ -1,0 +1,96 @@
+::id 4ce692431d41c862f0000000
+::date 2010-11-19
+::title Python Singleton
+::tags python, singleton
+::body
+[[class Singleton(object):
+    _instance = None
+    def __new__(self):
+        if self._instance is None:
+            self._instance = super(Singleton, self).__new__(self)
+        return self._instance
+ 
+if __name__ == '__main__':
+    a=Singleton()
+    b=Singleton()
+    print id(a),id(b)
+]]Результат[[148991052 148991052]]
+
+**По идентификатору:**
+[[class Singleton(object):
+    _instance = {}
+    def __new__(self, id):
+        try:
+            return self._instance[id]
+        except:
+            d = super(Singleton, self).__new__(self) 
+            self._instance[id] = d
+            return d
+
+if __name__ == '__main__':
+    a=Singleton('aaa')
+    b=Singleton('bbb')
+    c=Singleton('aaa')
+    print id(a),id(b),id(c)]]Результат[[144925580 144925516 144925580]]
+
+**Общие параметры, но разные экземпляры**
+[[class Singleton(dict):
+    _singltone = {}
+    def __init__(self):
+        self.__dict__ = self._singltone
+
+a = Singleton()
+b = Singleton()
+a.var = 'hello'
+print b.var # Выдаст 'hello']]
+
+::html
+<div class="codebox"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Singleton</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">_instance</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Singleton</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance</span>
+ 
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">a</span><span class="o">=</span><span class="n">Singleton</span><span class="p">()</span>
+    <span class="n">b</span><span class="o">=</span><span class="n">Singleton</span><span class="p">()</span>
+    <span class="k">print</span> <span class="nb">id</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="nb">id</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>Результат<div class="codebox"><div class="highlight"><pre><span class="mi">148991052</span> <span class="mi">148991052</span>
+</pre></div>
+</div><br />
+<br />
+<b>По идентификатору:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Singleton</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">_instance</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Singleton</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">_instance</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
+            <span class="k">return</span> <span class="n">d</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">a</span><span class="o">=</span><span class="n">Singleton</span><span class="p">(</span><span class="s">&#39;aaa&#39;</span><span class="p">)</span>
+    <span class="n">b</span><span class="o">=</span><span class="n">Singleton</span><span class="p">(</span><span class="s">&#39;bbb&#39;</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">=</span><span class="n">Singleton</span><span class="p">(</span><span class="s">&#39;aaa&#39;</span><span class="p">)</span>
+    <span class="k">print</span> <span class="nb">id</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="nb">id</span><span class="p">(</span><span class="n">b</span><span class="p">),</span><span class="nb">id</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+</pre></div>
+</div>Результат<div class="codebox"><div class="highlight"><pre><span class="mi">144925580</span> <span class="mi">144925516</span> <span class="mi">144925580</span>
+</pre></div>
+</div><br />
+<br />
+<b>Общие параметры, но разные экземпляры</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Singleton</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="n">_singltone</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_singltone</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">Singleton</span><span class="p">()</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">Singleton</span><span class="p">()</span>
+<span class="n">a</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="s">&#39;hello&#39;</span>
+<span class="k">print</span> <span class="n">b</span><span class="o">.</span><span class="n">var</span> <span class="c"># Выдаст &#39;hello&#39;</span>
+</pre></div>
+</div><br />

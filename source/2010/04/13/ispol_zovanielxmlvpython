@@ -1,0 +1,167 @@
+::id 4bfb3c6a1d41c846bc0000be
+::date 2010-04-13
+::title Использование lxml в python
+::tags python, xml, lxml
+::body
+Пример использования **lxml** [http://lxml.de/tutorial.html tutorial]
+
+[[# coding: utf8
+
+xml = '''<?xml version="1.0" encoding="UTF-8"?>
+<soft>
+    <os> 
+        <item name="linux" dist="ubuntu">
+            This text about linux
+        </item>             
+        <item name="mac os">
+            Apple company
+        </item>             
+        <item name="windows" dist="XP" />             
+    </os>
+</soft>'''
+
+from lxml import etree
+
+tree = etree.XML(xml) # Парсинг строки
+#tree = etree.parse('1.xml') # Парсинг файла
+
+nodes = tree.xpath('/soft/os/item') # Открываем раздел
+for node in nodes: # Перебираем элементы
+    print node.tag,node.keys(),node.values()
+    print 'name =',node.get('name') # Выводим параметр name
+    print 'text =',[node.text] # Выводим текст элемента
+
+# Доступ к тексту напрямую, с указанием фильтра
+print 'text1',tree.xpath('/soft/os/item[@name="linux"]/text()')
+print 'text2',tree.xpath('/soft/os/item[2]/text()')
+# Доступ к параметру напрямую
+print 'dist',tree.xpath('/soft/os/item[@name="linux"]')[0].get('dist')
+# Выборка по ключу
+print 'dist by key',tree.xpath('//*[@name="windows"]')[0].get('dist')
+
+print 'iterfind:'
+for node in tree.iterfind('.//item'): # поиск элементов
+    print node.get('name')
+    
+# Рекурсивный перебор элементов
+print 'recursiely:'
+def getn(node):
+    print node.tag,node.keys()
+    for n in node:
+        getn(n)
+getn(tree.getroottree().getroot())]]
+**Результат**
+[[item ['name', 'dist'] ['linux', 'ubuntu']
+name = linux
+text = ['\n            This text about linux\n        ']
+item ['name'] ['mac os']
+name = mac os
+text = ['\n            Apple company\n        ']
+item ['name', 'dist'] ['windows', 'XP']
+name = windows
+text = [None]
+text1 ['\n            This text about linux\n        ']
+text2 ['\n            Apple company\n        ']
+dist ubuntu
+dist by key XP
+iterfind:
+linux
+mac os
+windows
+recursiely:
+soft []
+os []
+item ['name', 'dist']
+item ['name']
+item ['name', 'dist'] ]]
+
+**Можно отобразить звено в виде xml текста**
+[[
+d = tree.xpath('//*')[0]
+print etree.tostring(d)
+print etree.tounicode(d)
+]]
+
+::html
+Пример использования <b>lxml</b> <a target=_blank href="http://lxml.de/tutorial.html">tutorial</a><br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="n">xml</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="s">&lt;soft&gt;</span>
+<span class="s">    &lt;os&gt; </span>
+<span class="s">        &lt;item name=&quot;linux&quot; dist=&quot;ubuntu&quot;&gt;</span>
+<span class="s">            This text about linux</span>
+<span class="s">        &lt;/item&gt;             </span>
+<span class="s">        &lt;item name=&quot;mac os&quot;&gt;</span>
+<span class="s">            Apple company</span>
+<span class="s">        &lt;/item&gt;             </span>
+<span class="s">        &lt;item name=&quot;windows&quot; dist=&quot;XP&quot; /&gt;             </span>
+<span class="s">    &lt;/os&gt;</span>
+<span class="s">&lt;/soft&gt;&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
+
+<span class="n">tree</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">XML</span><span class="p">(</span><span class="n">xml</span><span class="p">)</span> <span class="c"># Парсинг строки</span>
+<span class="c">#tree = etree.parse(&#39;1.xml&#39;) # Парсинг файла</span>
+
+<span class="n">nodes</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s">&#39;/soft/os/item&#39;</span><span class="p">)</span> <span class="c"># Открываем раздел</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span> <span class="c"># Перебираем элементы</span>
+    <span class="k">print</span> <span class="n">node</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span><span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span><span class="n">node</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+    <span class="k">print</span> <span class="s">&#39;name =&#39;</span><span class="p">,</span><span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">)</span> <span class="c"># Выводим параметр name</span>
+    <span class="k">print</span> <span class="s">&#39;text =&#39;</span><span class="p">,[</span><span class="n">node</span><span class="o">.</span><span class="n">text</span><span class="p">]</span> <span class="c"># Выводим текст элемента</span>
+
+<span class="c"># Доступ к тексту напрямую, с указанием фильтра</span>
+<span class="k">print</span> <span class="s">&#39;text1&#39;</span><span class="p">,</span><span class="n">tree</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s">&#39;/soft/os/item[@name=&quot;linux&quot;]/text()&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&#39;text2&#39;</span><span class="p">,</span><span class="n">tree</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s">&#39;/soft/os/item[2]/text()&#39;</span><span class="p">)</span>
+<span class="c"># Доступ к параметру напрямую</span>
+<span class="k">print</span> <span class="s">&#39;dist&#39;</span><span class="p">,</span><span class="n">tree</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s">&#39;/soft/os/item[@name=&quot;linux&quot;]&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;dist&#39;</span><span class="p">)</span>
+<span class="c"># Выборка по ключу</span>
+<span class="k">print</span> <span class="s">&#39;dist by key&#39;</span><span class="p">,</span><span class="n">tree</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s">&#39;//*[@name=&quot;windows&quot;]&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;dist&#39;</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s">&#39;iterfind:&#39;</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">iterfind</span><span class="p">(</span><span class="s">&#39;.//item&#39;</span><span class="p">):</span> <span class="c"># поиск элементов</span>
+    <span class="k">print</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">)</span>
+    
+<span class="c"># Рекурсивный перебор элементов</span>
+<span class="k">print</span> <span class="s">&#39;recursiely:&#39;</span>
+<span class="k">def</span> <span class="nf">getn</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">node</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span><span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">node</span><span class="p">:</span>
+        <span class="n">getn</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">getn</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">getroottree</span><span class="p">()</span><span class="o">.</span><span class="n">getroot</span><span class="p">())</span>
+</pre></div>
+</div><br />
+<b>Результат</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">item</span> <span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;dist&#39;</span><span class="p">]</span> <span class="p">[</span><span class="s">&#39;linux&#39;</span><span class="p">,</span> <span class="s">&#39;ubuntu&#39;</span><span class="p">]</span>
+<span class="n">name</span> <span class="o">=</span> <span class="n">linux</span>
+<span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">            This text about linux</span><span class="se">\n</span><span class="s">        &#39;</span><span class="p">]</span>
+<span class="n">item</span> <span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span> <span class="p">[</span><span class="s">&#39;mac os&#39;</span><span class="p">]</span>
+<span class="n">name</span> <span class="o">=</span> <span class="n">mac</span> <span class="n">os</span>
+<span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">            Apple company</span><span class="se">\n</span><span class="s">        &#39;</span><span class="p">]</span>
+<span class="n">item</span> <span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;dist&#39;</span><span class="p">]</span> <span class="p">[</span><span class="s">&#39;windows&#39;</span><span class="p">,</span> <span class="s">&#39;XP&#39;</span><span class="p">]</span>
+<span class="n">name</span> <span class="o">=</span> <span class="n">windows</span>
+<span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="bp">None</span><span class="p">]</span>
+<span class="n">text1</span> <span class="p">[</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">            This text about linux</span><span class="se">\n</span><span class="s">        &#39;</span><span class="p">]</span>
+<span class="n">text2</span> <span class="p">[</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">            Apple company</span><span class="se">\n</span><span class="s">        &#39;</span><span class="p">]</span>
+<span class="n">dist</span> <span class="n">ubuntu</span>
+<span class="n">dist</span> <span class="n">by</span> <span class="n">key</span> <span class="n">XP</span>
+<span class="n">iterfind</span><span class="p">:</span>
+<span class="n">linux</span>
+<span class="n">mac</span> <span class="n">os</span>
+<span class="n">windows</span>
+<span class="n">recursiely</span><span class="p">:</span>
+<span class="n">soft</span> <span class="p">[]</span>
+<span class="n">os</span> <span class="p">[]</span>
+<span class="n">item</span> <span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;dist&#39;</span><span class="p">]</span>
+<span class="n">item</span> <span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span>
+<span class="n">item</span> <span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;dist&#39;</span><span class="p">]</span> 
+</pre></div>
+</div><br />
+<br />
+<b>Можно отобразить звено в виде xml текста</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">d</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s">&#39;//*&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">print</span> <span class="n">etree</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">etree</span><span class="o">.</span><span class="n">tounicode</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</pre></div>
+</div><br />

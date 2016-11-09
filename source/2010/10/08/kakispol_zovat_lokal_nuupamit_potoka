@@ -1,0 +1,73 @@
+::id 4cae490f1d41c81169000004
+::date 2010-10-08
+::title Как использовать локальную память потока
+::tags python, threading, потоки
+::body
+Для этого нужно создать один экземпляр класса **threading.local()** и использовать его во всех потоках.
+
+!Пример
+[[# coding:utf8
+
+import thread
+import threading
+import time
+from random import randint
+
+storage = threading.local()
+
+def foo():
+    print storage.A
+
+def myThread():
+    storage.A = randint(0,100)
+    for x in xrange(10):
+        foo()
+        time.sleep(0.4)
+
+thread.start_new_thread(myThread, tuple([]))
+thread.start_new_thread(myThread, tuple([]))
+thread.start_new_thread(myThread, tuple([]))
+time.sleep(5)]]
+!Результат
+[[100
+50
+27
+100
+50
+27
+...]]Каждый поток имеет свое значение **storage.A**
+
+::html
+Для этого нужно создать один экземпляр класса <b>threading.local()</b> и использовать его во всех потоках.<br />
+<h3>Пример</h3><div class="codebox"><div class="highlight"><pre><span class="c"># coding:utf8</span>
+
+<span class="kn">import</span> <span class="nn">thread</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
+
+<span class="n">storage</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">local</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="k">print</span> <span class="n">storage</span><span class="o">.</span><span class="n">A</span>
+
+<span class="k">def</span> <span class="nf">myThread</span><span class="p">():</span>
+    <span class="n">storage</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">foo</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.4</span><span class="p">)</span>
+
+<span class="n">thread</span><span class="o">.</span><span class="n">start_new_thread</span><span class="p">(</span><span class="n">myThread</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">([]))</span>
+<span class="n">thread</span><span class="o">.</span><span class="n">start_new_thread</span><span class="p">(</span><span class="n">myThread</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">([]))</span>
+<span class="n">thread</span><span class="o">.</span><span class="n">start_new_thread</span><span class="p">(</span><span class="n">myThread</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">([]))</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div><h3>Результат</h3><div class="codebox"><div class="highlight"><pre><span class="mi">100</span>
+<span class="mi">50</span>
+<span class="mi">27</span>
+<span class="mi">100</span>
+<span class="mi">50</span>
+<span class="mi">27</span>
+<span class="o">...</span>
+</pre></div>
+</div>Каждый поток имеет свое значение <b>storage.A</b><br />

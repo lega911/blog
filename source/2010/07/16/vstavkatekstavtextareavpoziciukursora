@@ -1,0 +1,47 @@
+::id 4c402cff1d41c82d48000007
+::date 2010-07-16
+::title Вставка текста в textarea в позицию курсора
+::tags web, javascript, html
+::body
+[[function insertAtCursor(obj, val) {
+	//IE support
+	if(document.selection){
+		obj.focus();
+		sel = document.selection.createRange();
+		sel.text = val;
+	} else //MOZILLA/NETSCAPE support
+	if (obj.selectionStart || obj.selectionStart == '0') {
+	var startPos = obj.selectionStart;
+	var endPos = obj.selectionEnd;
+	obj.value = obj.value.substring(0, startPos) + val + obj.value.substring(endPos, obj.value.length);
+	} else obj.value += val;
+	return false;
+}
+]]
+**Использование**
+[[
+<forum name="formedit"><textarea name="content"></textarea></form>
+<a href="#" onclick="return insertAtCursor(document.formedit.content,'8')">8</a>
+]]
+::html
+<div class="codebox"><div class="highlight"><pre><span class="n">function</span> <span class="n">insertAtCursor</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+	<span class="o">//</span><span class="n">IE</span> <span class="n">support</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">selection</span><span class="p">){</span>
+		<span class="n">obj</span><span class="o">.</span><span class="n">focus</span><span class="p">();</span>
+		<span class="n">sel</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">selection</span><span class="o">.</span><span class="n">createRange</span><span class="p">();</span>
+		<span class="n">sel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">val</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="o">//</span><span class="n">MOZILLA</span><span class="o">/</span><span class="n">NETSCAPE</span> <span class="n">support</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">selectionStart</span> <span class="o">||</span> <span class="n">obj</span><span class="o">.</span><span class="n">selectionStart</span> <span class="o">==</span> <span class="s">&#39;0&#39;</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">var</span> <span class="n">startPos</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">selectionStart</span><span class="p">;</span>
+	<span class="n">var</span> <span class="n">endPos</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">selectionEnd</span><span class="p">;</span>
+	<span class="n">obj</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">startPos</span><span class="p">)</span> <span class="o">+</span> <span class="n">val</span> <span class="o">+</span> <span class="n">obj</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="n">endPos</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">length</span><span class="p">);</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="n">obj</span><span class="o">.</span><span class="n">value</span> <span class="o">+=</span> <span class="n">val</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div><br />
+<b>Использование</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&lt;</span><span class="n">forum</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;formedit&quot;</span><span class="o">&gt;&lt;</span><span class="n">textarea</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;content&quot;</span><span class="o">&gt;&lt;/</span><span class="n">textarea</span><span class="o">&gt;&lt;/</span><span class="n">form</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;#&quot;</span> <span class="n">onclick</span><span class="o">=</span><span class="s">&quot;return insertAtCursor(document.formedit.content,&#39;8&#39;)&quot;</span><span class="o">&gt;</span><span class="mi">8</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+</pre></div>
+</div>

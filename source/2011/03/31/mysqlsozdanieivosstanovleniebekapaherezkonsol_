@@ -1,0 +1,32 @@
+::id 4d9417761d41c87373000000
+::date 2011-03-31
+::title mysql, создание и восстановление бекапа через консоль
+::tags mysql, restore, mysqldump, dump, backup
+::body
+**Восстановить бекап в нужной кодировке**
+[[mysql --user=:username: --password=:password: \
+--default-character-set=:cp1251: :db_name: < :file_name.sql:]]
+файл **:file_name.sql:** должен быть в указанной кодировке, в данном случае в cp1251
+
+**Сделать дамп БД**
+[[mysqldump -u:username: -p:password: :db_name: > :file_name.sql:]]
+#|**:username:**|Имя пользователя
+||**:password:**|Пароль
+||**:db_name:**|База данных
+||**:file_name.sql:**|Имя файла
+||**:cp1251:**|Кодировка
+|#
+
+::html
+<b>Восстановить бекап в нужной кодировке</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">mysql</span> <span class="o">--</span><span class="n">user</span><span class="o">=</span><span class="p">:</span><span class="n">username</span><span class="p">:</span> <span class="o">--</span><span class="n">password</span><span class="o">=</span><span class="p">:</span><span class="n">password</span><span class="p">:</span> \
+<span class="o">--</span><span class="n">default</span><span class="o">-</span><span class="n">character</span><span class="o">-</span><span class="nb">set</span><span class="o">=</span><span class="p">:</span><span class="n">cp1251</span><span class="p">:</span> <span class="p">:</span><span class="n">db_name</span><span class="p">:</span> <span class="o">&lt;</span> <span class="p">:</span><span class="n">file_name</span><span class="o">.</span><span class="n">sql</span><span class="p">:</span>
+</pre></div>
+</div><br />
+файл <b>:file_name.sql:</b> должен быть в указанной кодировке, в данном случае в cp1251<br />
+<br />
+<b>Сделать дамп БД</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">mysqldump</span> <span class="o">-</span><span class="n">u</span><span class="p">:</span><span class="n">username</span><span class="p">:</span> <span class="o">-</span><span class="n">p</span><span class="p">:</span><span class="n">password</span><span class="p">:</span> <span class="p">:</span><span class="n">db_name</span><span class="p">:</span> <span class="o">&gt;</span> <span class="p">:</span><span class="n">file_name</span><span class="o">.</span><span class="n">sql</span><span class="p">:</span>
+</pre></div>
+</div><br />
+<table class="pymark_table"><tr><td><b>:username:</b></td><td>Имя пользователя</td></tr><tr><td><b>:password:</b></td><td>Пароль</td></tr><tr><td><b>:db_name:</b></td><td>База данных</td></tr><tr><td><b>:file_name.sql:</b></td><td>Имя файла</td></tr><tr><td><b>:cp1251:</b></td><td>Кодировка</td></tr></table><br />

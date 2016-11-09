@@ -1,0 +1,12 @@
+::id 4bfb3c691d41c846bc000076
+::date 2010-02-24
+::title Мониторинг сетевого трафика из консоли
+::tags мониторинг, linux
+::body
+Мониторинг сетевого трафика можно осуществить консольной утилитой **trafshow**
+[[sudo apt-get install trafshow
+sudo trafshow]]
+::html
+Мониторинг сетевого трафика можно осуществить консольной утилитой <b>trafshow</b><br />
+<div class="codebox"><pre><code>sudo apt-get install trafshow
+sudo trafshow</code></pre></div>

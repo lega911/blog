@@ -1,0 +1,89 @@
+::id 4d14f1e11d41c81a2d00000a
+::date 2010-12-25
+::title kvm + libvirt, Виртуализация на linux
+::tags виртуализация, kvm, libvirt, linux
+::body
+В заметке описана установка kmv и создание виртуальной машины, все действия проделывались на ubuntu 10.10
+
+
+!1. Установим необходимые пакеты
+[[sudo apt-get install kvm libvirt-bin bridge-utils virtinst
+]]
+
+!2. Проверяем существование интерфейса bridge
+После установки должен появиться сетевой интерфейс **virbr0**, проверить можно командой **ifconfig**, если его нет - перезагрузите машину.
+
+
+!3. Создаем виртуальную машину
+Сначала проверим, запущен ли **kvm**, должен выйти пустой список
+[[virsh list --all
+]]
+Создаем ВМ:
+[[sudo virt-install -n vm1 -r 512 -f v1.img -s 7 -c ubuntu-10.10-server-amd64.iso --accelerate --os-type=linux --os-variant=generic26 -v --vnc -w bridge:virbr0]]где:
+#|
+||**-n** //vm1//|имя ВМ
+||**-r** //512//|выделяемый объем ОЗУ для ВМ
+||**-f** //v1.img//|файл-образ жесткого диска
+||**-s** //7//|объем этого диска в гигабайтах
+||**-c** //ubuntu-10.10-server-amd64.iso//|образ cdrom
+||**-!^-accelerate -!^-os-type=linux -!^-os-variant=generic26 -v**|указываем тип ОС для оптимизации и включаем аппаратную виртуализацию, параметры для других ОС см. в **man virt-install**
+||**--vnc**|запускаем vnc-сервер для ВМ
+||**-w bridge:**//virbr0//|использовать сетевой мост
+|#
+
+!4. Запускаем
+[[virsh start vm1
+]]подключится к ВМ можно через VNC, у первой ВМ порт VNC = 5900, у последующих ВМ рядом, 5901, 5902...
+!Основные команды
+#|
+||**virsh help**|Список команд
+||**virsh list --all**|Список ВМ и их состояние
+||**virsh start** //vm1//|Старт ВМ
+||**virsh shutdown** //vm1//|Послать команду завершения в ВМ
+||**virsh destroy** //vm1//|Выключить ВМ
+||**virsh undefine** //vm1//|Удалить ВМ
+||**virsh edit** //vm1//|Изменить конфигурацию ВМ, (редактор можно изменить: export EDITOR=/usr/bin/nano
+|#
+
+**Примечание**
+Если у вас выскакивает ошибка: "qemu: could not open disk image ... : Permission denied",
+для её решения можно приписать в файл **/etc/libvirt/qemu.conf** имя пользователя и группу используемые для открытия файла:
+[[user = "root"
+group = "root"]]
+
+Для простого управления ВМ, можно установить визуальный менеждер **[http://virt-manager.org/ virt-manager]**
+
+см [4d2304b81d41c81282000000 Настройка моста bridge для kvm]
+
+::html
+В заметке описана установка kmv и создание виртуальной машины, все действия проделывались на ubuntu 10.10<br />
+<br />
+<h3>1. Установим необходимые пакеты</h3><div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">kvm</span> <span class="n">libvirt</span><span class="o">-</span><span class="nb">bin</span> <span class="n">bridge</span><span class="o">-</span><span class="n">utils</span> <span class="n">virtinst</span>
+</pre></div>
+</div><br />
+<h3>2. Проверяем существование интерфейса bridge</h3>После установки должен появиться сетевой интерфейс <b>virbr0</b>, проверить можно командой <b>ifconfig</b>, если его нет - перезагрузите машину.<br />
+<br />
+<h3>3. Создаем виртуальную машину</h3>Сначала проверим, запущен ли <b>kvm</b>, должен выйти пустой список<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">virsh</span> <span class="nb">list</span> <span class="o">--</span><span class="nb">all</span>
+</pre></div>
+</div><br />
+Создаем ВМ:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">virt</span><span class="o">-</span><span class="n">install</span> <span class="o">-</span><span class="n">n</span> <span class="n">vm1</span> <span class="o">-</span><span class="n">r</span> <span class="mi">512</span> <span class="o">-</span><span class="n">f</span> <span class="n">v1</span><span class="o">.</span><span class="n">img</span> <span class="o">-</span><span class="n">s</span> <span class="mi">7</span> <span class="o">-</span><span class="n">c</span> <span class="n">ubuntu</span><span class="o">-</span><span class="mf">10.10</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="n">amd64</span><span class="o">.</span><span class="n">iso</span> <span class="o">--</span><span class="n">accelerate</span> <span class="o">--</span><span class="n">os</span><span class="o">-</span><span class="nb">type</span><span class="o">=</span><span class="n">linux</span> <span class="o">--</span><span class="n">os</span><span class="o">-</span><span class="n">variant</span><span class="o">=</span><span class="n">generic26</span> <span class="o">-</span><span class="n">v</span> <span class="o">--</span><span class="n">vnc</span> <span class="o">-</span><span class="n">w</span> <span class="n">bridge</span><span class="p">:</span><span class="n">virbr0</span>
+</pre></div>
+</div>где:<br />
+<table class="pymark_table"><tr><td></td></tr><tr><td><b>-n</b> <i>vm1</i></td><td>имя ВМ</td></tr><tr><td><b>-r</b> <i>512</i></td><td>выделяемый объем ОЗУ для ВМ</td></tr><tr><td><b>-f</b> <i>v1.img</i></td><td>файл-образ жесткого диска</td></tr><tr><td><b>-s</b> <i>7</i></td><td>объем этого диска в гигабайтах</td></tr><tr><td><b>-c</b> <i>ubuntu-10.10-server-amd64.iso</i></td><td>образ cdrom</td></tr><tr><td><b>--accelerate --os-type=linux --os-variant=generic26 -v</b></td><td>указываем тип ОС для оптимизации и включаем аппаратную виртуализацию, параметры для других ОС см. в <b>man virt-install</b></td></tr><tr><td><b>--vnc</b></td><td>запускаем vnc-сервер для ВМ</td></tr><tr><td><b>-w bridge:</b><i>virbr0</i></td><td>использовать сетевой мост</td></tr></table><br />
+<h3>4. Запускаем</h3><div class="codebox"><div class="highlight"><pre><span class="n">virsh</span> <span class="n">start</span> <span class="n">vm1</span>
+</pre></div>
+</div>подключится к ВМ можно через VNC, у первой ВМ порт VNC = 5900, у последующих ВМ рядом, 5901, 5902...<h3>Основные команды</h3><table class="pymark_table"><tr><td></td></tr><tr><td><b>virsh help</b></td><td>Список команд</td></tr><tr><td><b>virsh list --all</b></td><td>Список ВМ и их состояние</td></tr><tr><td><b>virsh start</b> <i>vm1</i></td><td>Старт ВМ</td></tr><tr><td><b>virsh shutdown</b> <i>vm1</i></td><td>Послать команду завершения в ВМ</td></tr><tr><td><b>virsh destroy</b> <i>vm1</i></td><td>Выключить ВМ</td></tr><tr><td><b>virsh undefine</b> <i>vm1</i></td><td>Удалить ВМ</td></tr><tr><td><b>virsh edit</b> <i>vm1</i></td><td>Изменить конфигурацию ВМ, (редактор можно изменить: export EDITOR=/usr/bin/nano</td></tr></table><br />
+<br />
+<b>Примечание</b><br />
+Если у вас выскакивает ошибка: "qemu: could not open disk image ... : Permission denied",<br />
+для её решения можно приписать в файл <b>/etc/libvirt/qemu.conf</b> имя пользователя и группу используемые для открытия файла:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">user</span> <span class="o">=</span> <span class="s">&quot;root&quot;</span>
+<span class="n">group</span> <span class="o">=</span> <span class="s">&quot;root&quot;</span>
+</pre></div>
+</div><br />
+<br />
+Для простого управления ВМ, можно установить визуальный менеждер <b><a target=_blank href="http://virt-manager.org/">virt-manager</a></b><br />
+<br />
+см <a href="4d2304b81d41c81282000000">Настройка моста bridge для kvm</a><br />

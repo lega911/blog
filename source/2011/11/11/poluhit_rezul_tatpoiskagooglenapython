@@ -1,0 +1,43 @@
+::id 4ebcb8b61d41c8676c000000
+::date 2011-11-11
+::title Получить результат поиска google на python
+::tags python, google, search
+::body
+Пример получения результата поиска google.
+
+[[import urllib
+import pprint
+import json
+import httplib2
+
+def google_search(query):
+    url = "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&" + \
+        urllib.urlencode({'q':query});
+    referer = "http://wikipedia.org"
+    h = httplib2.Http({})
+    resp, content = h.request(url, "GET", headers={'Referer': referer})
+    if resp.status == 200: pprint.pprint( json.loads(content) )
+    else: print('Error')
+
+google_search('bill')]]
+
+::html
+Пример получения результата поиска google.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">httplib2</span>
+
+<span class="k">def</span> <span class="nf">google_search</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s">&quot;http://ajax.googleapis.com/ajax/services/search/web?v=1.0&amp;&quot;</span> <span class="o">+</span> \
+        <span class="n">urllib</span><span class="o">.</span><span class="n">urlencode</span><span class="p">({</span><span class="s">&#39;q&#39;</span><span class="p">:</span><span class="n">query</span><span class="p">});</span>
+    <span class="n">referer</span> <span class="o">=</span> <span class="s">&quot;http://wikipedia.org&quot;</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">httplib2</span><span class="o">.</span><span class="n">Http</span><span class="p">({})</span>
+    <span class="n">resp</span><span class="p">,</span> <span class="n">content</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="s">&quot;GET&quot;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;Referer&#39;</span><span class="p">:</span> <span class="n">referer</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">content</span><span class="p">)</span> <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span> <span class="k">print</span><span class="p">(</span><span class="s">&#39;Error&#39;</span><span class="p">)</span>
+
+<span class="n">google_search</span><span class="p">(</span><span class="s">&#39;bill&#39;</span><span class="p">)</span>
+</pre></div>
+</div><br />

@@ -1,0 +1,90 @@
+::id 4bfb3c6a1d41c846bc0000b7
+::date 2010-04-07
+::title sitemap на jinja2 + bottle
+::tags python, jinja, bottle, sitemap
+::body
+Делаем страничку **/sitemap.xml**, нам нужно получить только ссылки на страницы и время их последнего изменения
+
+[[@route('/sitemap.xml')
+def sitemap():
+    curtime = time.strftime("%Y-%m-%dT%H:%M+00:00", time.gmtime())
+    res = []
+    # Запрос к базе данных
+    cur.execute('SELECT id,dtime FROM pages')
+    for r in cur:
+        res.append( [r[0], time.strftime("%Y-%m-%dT%H:%M+00:00",time.localtime(r[1]))] )
+    
+    return template('sitemap',res=res,curtime=curtime)]]
+а вот шаблон sitemap.tpl
+[[html#
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+<url>
+  <loc>http://example.com/</loc>
+  <lastmod>{{curtime}}</lastmod>
+</url>{% for m in res %}
+<url>
+  <loc>http://example.com/page/{{m[0]}}</loc>
+  <lastmod>{{m[1]}}</lastmod>
+</url>{% endfor %}
+</urlset>]]Подставляем свой url сайта.
+Все, sitemap готов.
+
+
+В довесок можно сделать **robot.txt**, для того что-б поисковики индексировали все
+[[@route('/robots.txt')
+def robots():
+    return 'User-agent: *\nAllow: /\n\n']]
+
+подобное: [/page/67 RSS на bottle + jinja2]
+
+::html
+Делаем страничку <b>/sitemap.xml</b>, нам нужно получить только ссылки на страницы и время их последнего изменения<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="nd">@route</span><span class="p">(</span><span class="s">&#39;/sitemap.xml&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">sitemap</span><span class="p">():</span>
+    <span class="n">curtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%Y-%m-</span><span class="si">%d</span><span class="s">T%H:%M+00:00&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">())</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c"># Запрос к базе данных</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&#39;SELECT id,dtime FROM pages&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">cur</span><span class="p">:</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%Y-%m-</span><span class="si">%d</span><span class="s">T%H:%M+00:00&quot;</span><span class="p">,</span><span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]))]</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">template</span><span class="p">(</span><span class="s">&#39;sitemap&#39;</span><span class="p">,</span><span class="n">res</span><span class="o">=</span><span class="n">res</span><span class="p">,</span><span class="n">curtime</span><span class="o">=</span><span class="n">curtime</span><span class="p">)</span>
+</pre></div>
+</div><br />
+а вот шаблон sitemap.tpl<br />
+<div class="codebox"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;urlset</span>
+      <span class="na">xmlns=</span><span class="s">&quot;http://www.sitemaps.org/schemas/sitemap/0.9&quot;</span>
+      <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+      <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://www.sitemaps.org/schemas/sitemap/0.9</span>
+<span class="s">            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd&quot;</span><span class="nt">&gt;</span>
+
+<span class="nt">&lt;url&gt;</span>
+  <span class="nt">&lt;loc&gt;</span>http://example.com/<span class="nt">&lt;/loc&gt;</span>
+  <span class="nt">&lt;lastmod&gt;</span>{{curtime}}<span class="nt">&lt;/lastmod&gt;</span>
+<span class="nt">&lt;/url&gt;</span>{% for m in res %}
+<span class="nt">&lt;url&gt;</span>
+  <span class="nt">&lt;loc&gt;</span>http://example.com/page/{{m[0]}}<span class="nt">&lt;/loc&gt;</span>
+  <span class="nt">&lt;lastmod&gt;</span>{{m[1]}}<span class="nt">&lt;/lastmod&gt;</span>
+<span class="nt">&lt;/url&gt;</span>{% endfor %}
+<span class="nt">&lt;/urlset&gt;</span>
+</pre></div>
+</div>Подставляем свой url сайта.<br />
+Все, sitemap готов.<br />
+<br />
+<br />
+В довесок можно сделать <b>robot.txt</b>, для того что-б поисковики индексировали все<br />
+<div class="codebox"><div class="highlight"><pre><span class="nd">@route</span><span class="p">(</span><span class="s">&#39;/robots.txt&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">robots</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">&#39;User-agent: *</span><span class="se">\n</span><span class="s">Allow: /</span><span class="se">\n\n</span><span class="s">&#39;</span>
+</pre></div>
+</div><br />
+<br />
+подобное: <a href="/page/67">RSS на bottle + jinja2</a><br />

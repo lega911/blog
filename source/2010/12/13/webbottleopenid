@@ -1,0 +1,12 @@
+::id 4d0527041d41c80dd9000000
+::date 2010-12-13
+::title web bottle + OpenID
+::tags python, web, bottle, openid
+::body
+Пример **OpenID** на web bottle.
+**Проверено на:** google, yandex, vkontakte
+[file:%id%/openid_bottle.py Исходник]
+::html
+Пример <b>OpenID</b> на web bottle.<br />
+<b>Проверено на:</b> google, yandex, vkontakte<br />
+<a href="/uploads/4d0527041d41c80dd9000000/openid_bottle.py">Исходник</a>

@@ -1,0 +1,35 @@
+::id 4bfb3c691d41c846bc000066
+::date 2010-02-19
+::title Очередь в python, (Queue)
+::tags python, queue
+::body
+**Queue** - класс для организации очереди, есть работа с коллизиями
+пример использования:
+
+[[import Queue
+q = Queue.Queue()
+q.put(1) # Добавить значение
+print q.empty() #Пустая ли очередь?
+print q.get() # Взять значение]]
+**Queue.Queue()** - отдает значения по принципу "первый пришел - первый ушел"
+**Queue.LifoQueue()** - "последний пришел - первый ушел"
+**Queue.put(item [ , block [ , timeout]])** - при добавлении значения можно блокировать очередь, что-б не возникало коллизий
+**Queue.get([ block [ , timeout]])** - при получении значения можно блокировать очередь, что-б одновременной другой поток не выхватил данные, данная ф-ия ждет пока не появятся данные, при истечении тайм аута, если он задан, срабатывает exception
+**Queue.get_nowait()** - взять значение без ожидания, если данных нет то срабатывает **exception Queue.Empty**
+
+::html
+<b>Queue</b> - класс для организации очереди, есть работа с коллизиями<br />
+пример использования:<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">Queue</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+<span class="n">q</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c"># Добавить значение</span>
+<span class="k">print</span> <span class="n">q</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span> <span class="c">#Пустая ли очередь?</span>
+<span class="k">print</span> <span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="c"># Взять значение</span>
+</pre></div>
+</div><br />
+<b>Queue.Queue()</b> - отдает значения по принципу "первый пришел - первый ушел"<br />
+<b>Queue.LifoQueue()</b> - "последний пришел - первый ушел"<br />
+<b>Queue.put(item [ , block [ , timeout]])</b> - при добавлении значения можно блокировать очередь, что-б не возникало коллизий<br />
+<b>Queue.get([ block [ , timeout]])</b> - при получении значения можно блокировать очередь, что-б одновременной другой поток не выхватил данные, данная ф-ия ждет пока не появятся данные, при истечении тайм аута, если он задан, срабатывает exception<br />
+<b>Queue.get_nowait()</b> - взять значение без ожидания, если данных нет то срабатывает <b>exception Queue.Empty</b><br />

@@ -1,0 +1,28 @@
+::id 4bfb3c691d41c846bc00001c
+::date 2010-01-28
+::title настрйка inadyn для использования DynDNS
+::tags inadyn, dyndns, dns
+::body
+Все действия проводились для Ubuntu 9.10
+
+!Установка
+[[sudo aptitude install inadyn]]
+
+
+!Запуск
+Создать скрипт "start_inadyn.sh" с командой:
+[[inadyn --username __user__ --password __pasw__ --update_period_sec 600 --alias myhost.com]]
+
+!Автозапуск
+Можно настрить автозапуск через cron, я просто добавил в гном-автозагрузку "Система-Параметры-Запускаемые приложения" (т.к. у меня сейчас происходит автозалогинивание в ос)
+
+::html
+Все действия проводились для Ubuntu 9.10<br />
+<h3>Установка</h3><br />
+<div class="codebox"><pre><code>sudo aptitude install inadyn</code></pre></div><br />
+<br />
+<h3>Запуск</h3><br />
+Создать скрипт "start_inadyn.sh" с командой:<br />
+<div class="codebox"><pre><code>inadyn --username __user__ --password __pasw__ --update_period_sec 600 --alias myhost.com</code></pre></div><br />
+<h3>Автозапуск</h3><br />
+Можно настрить автозапуск через cron, я просто добавил в гном-автозагрузку "Система-Параметры-Запускаемые приложения" (т.к. у меня сейчас происходит автозалогинивание в ос)<br />

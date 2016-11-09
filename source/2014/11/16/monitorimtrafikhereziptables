@@ -1,0 +1,29 @@
+::id 5468e8f03ad2ff5ac5082672
+::date 2014-11-16
+::title Мониторим трафик через iptables
+::tags iptables
+::body
+Добавить правило для логирования:
+[[iptables -A INPUT -j LOG --log-prefix "iptables: "]] либо с фильтром:
+[[iptables -A INPUT -i eth1 -s 10.0.0.0/8 -j LOG --log-prefix "iptables: "
+iptables -A INPUT -s 192.168.0.0/16 -m tcp -p tcp --dport 25 -j LOG --log-prefix "iptables: "]]
+После этого вся информация повалится в syslog (// /var/log/syslog//), будьте осторожны - место на диске может быстро закончиться.
+
+Удалить правило по номеру:[[iptables -L INPUT --line-numbers
+iptables -D INPUT номер]]
+
+::html
+Добавить правило для логирования:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">j</span> <span class="n">LOG</span> <span class="o">--</span><span class="n">log</span><span class="o">-</span><span class="n">prefix</span> <span class="s">&quot;iptables: &quot;</span>
+</pre></div>
+</div> либо с фильтром:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">i</span> <span class="n">eth1</span> <span class="o">-</span><span class="n">s</span> <span class="mf">10.0</span><span class="o">.</span><span class="mf">0.0</span><span class="o">/</span><span class="mi">8</span> <span class="o">-</span><span class="n">j</span> <span class="n">LOG</span> <span class="o">--</span><span class="n">log</span><span class="o">-</span><span class="n">prefix</span> <span class="s">&quot;iptables: &quot;</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">s</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">0.0</span><span class="o">/</span><span class="mi">16</span> <span class="o">-</span><span class="n">m</span> <span class="n">tcp</span> <span class="o">-</span><span class="n">p</span> <span class="n">tcp</span> <span class="o">--</span><span class="n">dport</span> <span class="mi">25</span> <span class="o">-</span><span class="n">j</span> <span class="n">LOG</span> <span class="o">--</span><span class="n">log</span><span class="o">-</span><span class="n">prefix</span> <span class="s">&quot;iptables: &quot;</span>
+</pre></div>
+</div><br />
+После этого вся информация повалится в syslog (<i> /var/log/syslog</i>), будьте осторожны - место на диске может быстро закончиться.<br />
+<br />
+Удалить правило по номеру:<div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">L</span> <span class="n">INPUT</span> <span class="o">--</span><span class="n">line</span><span class="o">-</span><span class="n">numbers</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">D</span> <span class="n">INPUT</span> <span class="err">номер</span>
+</pre></div>
+</div><br />

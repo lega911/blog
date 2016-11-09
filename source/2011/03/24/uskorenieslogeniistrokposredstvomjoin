@@ -1,0 +1,122 @@
+::id 4d8b22b91d41c81f65000002
+::date 2011-03-24
+::title Ускорение сложения строк посредством join
+::tags python, performance
+::body
+При генерации большого количества текстовой (например генерации web страницы) информации желательно не делать частое сложение в одну строку т.к. при увеличении большой строки происходит создание ещё большей строки и копирование туда данных. В данной статье приведен сравнительный тест сложения с помощью **массива и join**.
+
+[[# coding: utf8
+
+from timeit import Timer
+
+word = u'0123456789abcdef'
+count = 10
+
+def test():
+    s = u''
+    for i in xrange(count):
+        s += word
+
+def test_join():
+    s = []
+    for i in xrange(count):
+        s.append(word)
+    s = u''.join(s)
+
+for i in xrange(4):
+    count *= 10
+    print '---'
+    print 'count:', count
+    s = Timer("test()", "from __main__ import test").timeit(number=1)
+    j = Timer("test_join()", "from __main__ import test_join").timeit(number=1)
+    print 'str    %.4f' % s
+    print 'join   %.4f' % j
+    print 'diff   %.4f' % (s/j)
+]]
+**Результат**
+**count** - кол-во сложений
+**str** - продолжительность сложений строки (секунд)
+**join** - продолжительность сложений через массив и join (секунд)
+**diff** - разница между str и join
+[[count: 100
+str    0.0000
+join   0.0000
+diff   1.9300
+---
+count: 1000
+str    0.0026
+join   0.0002
+diff   16.7831
+---
+count: 10000
+str    1.0272
+join   0.0017
+diff   592.7783
+---
+count: 100000
+str    226.2851
+join   0.0179
+diff   12633.2215]]
+
+В итоге на больших данных, сложение через массив с join-ом выполняется быстрее сложений строк в тысячи раз.
+
+::html
+При генерации большого количества текстовой (например генерации web страницы) информации желательно не делать частое сложение в одну строку т.к. при увеличении большой строки происходит создание ещё большей строки и копирование туда данных. В данной статье приведен сравнительный тест сложения с помощью <b>массива и join</b>.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">Timer</span>
+
+<span class="n">word</span> <span class="o">=</span> <span class="s">u&#39;0123456789abcdef&#39;</span>
+<span class="n">count</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s">u&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">count</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">word</span>
+
+<span class="k">def</span> <span class="nf">test_join</span><span class="p">():</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">count</span><span class="p">):</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s">u&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">count</span> <span class="o">*=</span> <span class="mi">10</span>
+    <span class="k">print</span> <span class="s">&#39;---&#39;</span>
+    <span class="k">print</span> <span class="s">&#39;count:&#39;</span><span class="p">,</span> <span class="n">count</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">(</span><span class="s">&quot;test()&quot;</span><span class="p">,</span> <span class="s">&quot;from __main__ import test&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">(</span><span class="s">&quot;test_join()&quot;</span><span class="p">,</span> <span class="s">&quot;from __main__ import test_join&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&#39;str    </span><span class="si">%.4f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">s</span>
+    <span class="k">print</span> <span class="s">&#39;join   </span><span class="si">%.4f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">j</span>
+    <span class="k">print</span> <span class="s">&#39;diff   </span><span class="si">%.4f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">s</span><span class="o">/</span><span class="n">j</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<b>Результат</b><br />
+<b>count</b> - кол-во сложений<br />
+<b>str</b> - продолжительность сложений строки (секунд)<br />
+<b>join</b> - продолжительность сложений через массив и join (секунд)<br />
+<b>diff</b> - разница между str и join<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">count</span><span class="p">:</span> <span class="mi">100</span>
+<span class="nb">str</span>    <span class="mf">0.0000</span>
+<span class="n">join</span>   <span class="mf">0.0000</span>
+<span class="n">diff</span>   <span class="mf">1.9300</span>
+<span class="o">---</span>
+<span class="n">count</span><span class="p">:</span> <span class="mi">1000</span>
+<span class="nb">str</span>    <span class="mf">0.0026</span>
+<span class="n">join</span>   <span class="mf">0.0002</span>
+<span class="n">diff</span>   <span class="mf">16.7831</span>
+<span class="o">---</span>
+<span class="n">count</span><span class="p">:</span> <span class="mi">10000</span>
+<span class="nb">str</span>    <span class="mf">1.0272</span>
+<span class="n">join</span>   <span class="mf">0.0017</span>
+<span class="n">diff</span>   <span class="mf">592.7783</span>
+<span class="o">---</span>
+<span class="n">count</span><span class="p">:</span> <span class="mi">100000</span>
+<span class="nb">str</span>    <span class="mf">226.2851</span>
+<span class="n">join</span>   <span class="mf">0.0179</span>
+<span class="n">diff</span>   <span class="mf">12633.2215</span>
+</pre></div>
+</div><br />
+<br />
+В итоге на больших данных, сложение через массив с join-ом выполняется быстрее сложений строк в тысячи раз.<br />

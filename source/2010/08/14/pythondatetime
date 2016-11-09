@@ -1,0 +1,164 @@
+::id 4c65b4a01d41c85ded000001
+::date 2010-08-14
+::title Python datetime
+::tags python, datetime, datetime, time
+::body
+Пример работы с **datetime**
+
+[[# coding:utf8
+
+import time
+from datetime import datetime, timedelta, date, time as dt_time
+
+'Получить текущее время и дату'
+print datetime.now()
+#> 2010-08-14 02:58:15.057495
+
+d = datetime.today()
+print d
+#> 2010-08-14 02:58:15.057538
+
+'Форматированный вывод'
+print d.strftime('%y-%m-%d %H:%M:%S')
+#> 10-08-14 02:58:15
+
+'Сдвинуть время'
+print d + timedelta(days=1, hours=1)
+#> 2010-08-15 03:58:15.057538
+
+'Конвертировать время POSIX в datetime'
+print datetime.fromtimestamp(time.time())
+#> 2010-08-14 02:58:15.057613
+
+'Изменить атрибут'
+print d.replace(year=2011,hour=11)
+#> 2011-08-14 11:58:15.057538
+#replace(year, month, day, hour, minute, second, microsecond, tzinfo)
+
+'Получить кортеж'
+print d.timetuple()
+#> time.struct_time(tm_year=2010, tm_mon=8, tm_mday=14, tm_hour=2,
+#> tm_min=58, tm_sec=15, tm_wday=5, tm_yday=226, tm_isdst=-1)
+
+'Получиь день недели, 0 - Пн, 6 - Вс'
+print d.weekday()
+#> 5
+
+'Получить дату'
+print d.date()
+#> 2010-08-14
+
+'Получить время'
+print d.timetz()
+#> 02:58:15.057538
+
+'Сложить дату и время'
+print d.combine(d.date(), d.timetz())
+#> 2010-08-14 02:58:15.057538
+
+'Конвертировать datetime -> posix time'
+d = datetime.now()
+print time.mktime(d.timetuple())
+#> 1367824592.0
+
+'Конвертировать date -> datetime'
+d = date.today()
+print datetime.combine(d, dt_time.min)
+#> 2013-05-06 00:00:00
+]]
+Классы **date** и **time** содержат часть аналогичных методов, но работают только с датой и временем соответственно.
+**timedelta** - является периодом и не привязан к конкретному времени, он являеться результатом вычитания 2- дат: //timedelta = datetime1 - datetime2//
+
+
+**Перевод timestamp в datetime и обратно, UTC**
+[[
+# timestamp -> datetime
+datetime.utcfromtimestamp(d)
+
+# datetime -> timestamp
+calendar.timegm(d.utctimetuple())
+
+# Текущее время в UTC
+datetime.utcnow()
+]]
+
+::html
+Пример работы с <b>datetime</b><br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding:utf8</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">time</span> <span class="k">as</span> <span class="n">dt_time</span>
+
+<span class="s">&#39;Получить текущее время и дату&#39;</span>
+<span class="k">print</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="c">#&gt; 2010-08-14 02:58:15.057495</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">d</span>
+<span class="c">#&gt; 2010-08-14 02:58:15.057538</span>
+
+<span class="s">&#39;Форматированный вывод&#39;</span>
+<span class="k">print</span> <span class="n">d</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;%y-%m-</span><span class="si">%d</span><span class="s"> %H:%M:%S&#39;</span><span class="p">)</span>
+<span class="c">#&gt; 10-08-14 02:58:15</span>
+
+<span class="s">&#39;Сдвинуть время&#39;</span>
+<span class="k">print</span> <span class="n">d</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c">#&gt; 2010-08-15 03:58:15.057538</span>
+
+<span class="s">&#39;Конвертировать время POSIX в datetime&#39;</span>
+<span class="k">print</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+<span class="c">#&gt; 2010-08-14 02:58:15.057613</span>
+
+<span class="s">&#39;Изменить атрибут&#39;</span>
+<span class="k">print</span> <span class="n">d</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="mi">2011</span><span class="p">,</span><span class="n">hour</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="c">#&gt; 2011-08-14 11:58:15.057538</span>
+<span class="c">#replace(year, month, day, hour, minute, second, microsecond, tzinfo)</span>
+
+<span class="s">&#39;Получить кортеж&#39;</span>
+<span class="k">print</span> <span class="n">d</span><span class="o">.</span><span class="n">timetuple</span><span class="p">()</span>
+<span class="c">#&gt; time.struct_time(tm_year=2010, tm_mon=8, tm_mday=14, tm_hour=2,</span>
+<span class="c">#&gt; tm_min=58, tm_sec=15, tm_wday=5, tm_yday=226, tm_isdst=-1)</span>
+
+<span class="s">&#39;Получиь день недели, 0 - Пн, 6 - Вс&#39;</span>
+<span class="k">print</span> <span class="n">d</span><span class="o">.</span><span class="n">weekday</span><span class="p">()</span>
+<span class="c">#&gt; 5</span>
+
+<span class="s">&#39;Получить дату&#39;</span>
+<span class="k">print</span> <span class="n">d</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+<span class="c">#&gt; 2010-08-14</span>
+
+<span class="s">&#39;Получить время&#39;</span>
+<span class="k">print</span> <span class="n">d</span><span class="o">.</span><span class="n">timetz</span><span class="p">()</span>
+<span class="c">#&gt; 02:58:15.057538</span>
+
+<span class="s">&#39;Сложить дату и время&#39;</span>
+<span class="k">print</span> <span class="n">d</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span> <span class="n">d</span><span class="o">.</span><span class="n">timetz</span><span class="p">())</span>
+<span class="c">#&gt; 2010-08-14 02:58:15.057538</span>
+
+<span class="s">&#39;Конвертировать datetime -&gt; posix time&#39;</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">time</span><span class="o">.</span><span class="n">mktime</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">timetuple</span><span class="p">())</span>
+<span class="c">#&gt; 1367824592.0</span>
+
+<span class="s">&#39;Конвертировать date -&gt; datetime&#39;</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">dt_time</span><span class="o">.</span><span class="n">min</span><span class="p">)</span>
+<span class="c">#&gt; 2013-05-06 00:00:00</span>
+</pre></div>
+</div><br />
+Классы <b>date</b> и <b>time</b> содержат часть аналогичных методов, но работают только с датой и временем соответственно.<br />
+<b>timedelta</b> - является периодом и не привязан к конкретному времени, он являеться результатом вычитания 2- дат: <i>timedelta = datetime1 - datetime2</i><br />
+<br />
+<br />
+<b>Перевод timestamp в datetime и обратно, UTC</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># timestamp -&gt; datetime</span>
+<span class="n">datetime</span><span class="o">.</span><span class="n">utcfromtimestamp</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+<span class="c"># datetime -&gt; timestamp</span>
+<span class="n">calendar</span><span class="o">.</span><span class="n">timegm</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">utctimetuple</span><span class="p">())</span>
+
+<span class="c"># Текущее время в UTC</span>
+<span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+</pre></div>
+</div><br />

@@ -1,0 +1,73 @@
+::id 4bfb3c691d41c846bc000061
+::date 2010-02-18
+::title Запуск программ из Python
+::tags python, subprocess
+::body
+!Запуск программы и получение возвращаемого текста
+
+Получение текста по мере его появления:
+[[cmd = 'ping google.com -c 3'
+import subprocess
+PIPE = subprocess.PIPE
+p = subprocess.Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE,
+        stderr=subprocess.STDOUT, close_fds=True)
+while True:
+    s = p.stdout.readline()
+    if not s: break
+    print s,]]
+Получение всего результата после завершения программы:
+[[cmd = 'pwd'
+import subprocess
+PIPE = subprocess.PIPE
+p = subprocess.Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE,
+        stderr=subprocess.STDOUT, close_fds=True, cwd='/home/')
+print p.stdout.read()]]
+Параметр **cwd** задает текущую папку для нового процесса.
+Если вы запускаете приложение при __подключенных сокетах__ и не хотите что-б они передавались в дочерний процесс то нужно указать флаг **close_fds = True**
+!Запуск программы без ожидания её завершения
+[[import subprocess
+cmd = 'ping google.com'
+subprocess.Popen(cmd, shell = True)]]
+!Полезные методы работы с процессом
+[[p = subprocess.Popen(cmd, shell = True)
+p.poll() # проверяет завершился ли процесс, если процесс ещё работает, то poll() == None, иначе вернет код завершения
+p.wait() # ожидает завершения процесса ( блокирующая функция )
+]]
+
+см. [4bfb3c691d41c846bc00007e Убить дерево процессов]
+
+::html
+<h3>Запуск программы и получение возвращаемого текста</h3><br />
+Получение текста по мере его появления:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">cmd</span> <span class="o">=</span> <span class="s">&#39;ping google.com -c 3&#39;</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="n">PIPE</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">close_fds</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="p">:</span> <span class="k">break</span>
+    <span class="k">print</span> <span class="n">s</span><span class="p">,</span>
+</pre></div>
+</div><br />
+Получение всего результата после завершения программы:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">cmd</span> <span class="o">=</span> <span class="s">&#39;pwd&#39;</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="n">PIPE</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">close_fds</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="s">&#39;/home/&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">p</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</pre></div>
+</div><br />
+Параметр <b>cwd</b> задает текущую папку для нового процесса.<br />
+Если вы запускаете приложение при <u>подключенных сокетах</u> и не хотите что-б они передавались в дочерний процесс то нужно указать флаг <b>close_fds = True</b><h3>Запуск программы без ожидания её завершения</h3><div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s">&#39;ping google.com&#39;</span>
+<span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div><h3>Полезные методы работы с процессом</h3><div class="codebox"><div class="highlight"><pre><span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span> <span class="c"># проверяет завершился ли процесс, если процесс ещё работает, то poll() == None, иначе вернет код завершения</span>
+<span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span> <span class="c"># ожидает завершения процесса ( блокирующая функция )</span>
+</pre></div>
+</div><br />
+<br />
+см. <a href="4bfb3c691d41c846bc00007e">Убить дерево процессов</a><br />

@@ -1,0 +1,78 @@
+::id 4c7f5b631d41c83bec000000
+::date 2010-09-02
+::title jquery + json на bottle
+::tags jquery, web, bottle
+::body
+Данный пример отправляет POST запрос и получает json ответ.
+
+[[# coding:utf8
+
+from bottle import route, run, request
+
+@route('/')
+def main():
+    return """
+    <html>
+    <script type="text/javascript"
+        src="http://code.jquery.com/jquery-1.4.2.min.js" />
+    <script type="text/javascript" language="javascript">
+        function sendjs() {
+            $.post('/json', 
+                { a:5, b:'test' }, 
+                function(data) {
+                    alert('a=' + data.a + ', b=' + data.b);
+                },
+                'json'
+            );
+        };
+    </script>
+    <body>
+    <input OnClick="sendjs()" type="submit" >
+    </body></html>
+    """
+
+@route('/json', method = "POST")
+def myGetJson():
+    a = request.POST['a']
+    b = request.POST['b']
+    return {'a':b, 'b':a }
+
+run(host = '', port = 8090, reloader = True)]]
+::html
+Данный пример отправляет POST запрос и получает json ответ.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding:utf8</span>
+
+<span class="kn">from</span> <span class="nn">bottle</span> <span class="kn">import</span> <span class="n">route</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">request</span>
+
+<span class="nd">@route</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">    &lt;html&gt;</span>
+<span class="s">    &lt;script type=&quot;text/javascript&quot;</span>
+<span class="s">        src=&quot;http://code.jquery.com/jquery-1.4.2.min.js&quot; /&gt;</span>
+<span class="s">    &lt;script type=&quot;text/javascript&quot; language=&quot;javascript&quot;&gt;</span>
+<span class="s">        function sendjs() {</span>
+<span class="s">            $.post(&#39;/json&#39;, </span>
+<span class="s">                { a:5, b:&#39;test&#39; }, </span>
+<span class="s">                function(data) {</span>
+<span class="s">                    alert(&#39;a=&#39; + data.a + &#39;, b=&#39; + data.b);</span>
+<span class="s">                },</span>
+<span class="s">                &#39;json&#39;</span>
+<span class="s">            );</span>
+<span class="s">        };</span>
+<span class="s">    &lt;/script&gt;</span>
+<span class="s">    &lt;body&gt;</span>
+<span class="s">    &lt;input OnClick=&quot;sendjs()&quot; type=&quot;submit&quot; &gt;</span>
+<span class="s">    &lt;/body&gt;&lt;/html&gt;</span>
+<span class="s">    &quot;&quot;&quot;</span>
+
+<span class="nd">@route</span><span class="p">(</span><span class="s">&#39;/json&#39;</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s">&quot;POST&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">myGetJson</span><span class="p">():</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">]</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;b&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">:</span><span class="n">b</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span><span class="n">a</span> <span class="p">}</span>
+
+<span class="n">run</span><span class="p">(</span><span class="n">host</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">port</span> <span class="o">=</span> <span class="mi">8090</span><span class="p">,</span> <span class="n">reloader</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>

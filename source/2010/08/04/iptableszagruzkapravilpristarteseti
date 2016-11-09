@@ -1,0 +1,31 @@
+::id 4c5975411d41c80ff9000006
+::date 2010-08-04
+::title iptables, загрузка правил при старте сети
+::tags iptables
+::body
+Что-б при каждом запуске сетевых интерфейсов подгружались правила, сохраним текущие правила, (//запускаем от root//)
+[[
+iptables-save > /etc/iptables.conf
+]]
+А в файл **/etc/network/interfaces**, добавляем строку загрузки
+[[
+post-up /sbin/iptables-restore < /etc/iptables.conf
+]]после нужного интерфейса, например после [[auto eth0
+iface eth0 inet manual]]
+
+Другой вариант: можно поместить запускаемый файл **/etc/network/if-pre-up.d/filename**, он будет запускаться перед стартом сети (имя запускаемого файла желательно без разрешения //.sh//).
+
+::html
+Что-б при каждом запуске сетевых интерфейсов подгружались правила, сохраним текущие правила, (<i>запускаем от root</i>)<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">iptables</span><span class="o">-</span><span class="n">save</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">iptables</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div><br />
+А в файл <b>/etc/network/interfaces</b>, добавляем строку загрузки<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">post</span><span class="o">-</span><span class="n">up</span> <span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">iptables</span><span class="o">-</span><span class="n">restore</span> <span class="o">&lt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">iptables</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>после нужного интерфейса, например после <div class="codebox"><div class="highlight"><pre><span class="n">auto</span> <span class="n">eth0</span>
+<span class="n">iface</span> <span class="n">eth0</span> <span class="n">inet</span> <span class="n">manual</span>
+</pre></div>
+</div><br />
+<br />
+Другой вариант: можно поместить запускаемый файл <b>/etc/network/if-pre-up.d/filename</b>, он будет запускаться перед стартом сети (имя запускаемого файла желательно без разрешения <i>.sh</i>).<br />

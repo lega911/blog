@@ -1,0 +1,30 @@
+::id 4bfb3c6a1d41c846bc0000b0
+::date 2010-04-03
+::title VirtualBox команды
+::tags virtualbox
+::body
+**Сменить uuid диска**[[VBoxManage internalcommands sethduuid disk.vdi]]
+
+#|
+||VBoxManage list vms|Выдать список виртуальных машин
+||VBoxManage list runningvms|Список запущенных машин
+|#
+
+**Выключить машину**[[VBoxManage controlvm <name or uuid> acpipowerbutton]]
+
+
+//статья будет пополняться//
+
+::html
+<b>Сменить uuid диска</b><div class="codebox"><div class="highlight"><pre><span class="n">VBoxManage</span> <span class="n">internalcommands</span> <span class="n">sethduuid</span> <span class="n">disk</span><span class="o">.</span><span class="n">vdi</span>
+</pre></div>
+</div><br />
+<br />
+<table class="pymark_table"><tr><td></td></tr><tr><td>VBoxManage list vms</td><td>Выдать список виртуальных машин</td></tr><tr><td>VBoxManage list runningvms</td><td>Список запущенных машин</td></tr></table><br />
+<br />
+<b>Выключить машину</b><div class="codebox"><div class="highlight"><pre><span class="n">VBoxManage</span> <span class="n">controlvm</span> <span class="o">&lt;</span><span class="n">name</span> <span class="ow">or</span> <span class="n">uuid</span><span class="o">&gt;</span> <span class="n">acpipowerbutton</span>
+</pre></div>
+</div><br />
+<br />
+<br />
+<i>статья будет пополняться</i><br />

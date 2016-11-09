@@ -1,0 +1,61 @@
+::id 4e0d67091d41c81104000003
+::date 2011-07-01
+::title Получение списка писем, subject, gmail, pop
+::tags python, mail, pop, gmail
+::body
+Пример получает список писем и выводит их заголовок.
+
+[[# coding: utf8
+
+import poplib
+import email
+
+user='user@gmail.com'
+pasw = 'paswword'
+mailbox=poplib.POP3_SSL('pop.gmail.com',995)
+mailbox.user(user)
+mailbox.pass_(pasw)
+mcount=len(mailbox.list()[1])
+print 'Count', mcount
+for i in xrange(mcount):
+    msg=mailbox.retr(i+1)
+    raw_mail='\n'.join(msg[1])
+    mail=email.message_from_string(raw_mail)
+    
+    # subject
+    subject = mail.get('Subject')
+    h = email.Header.decode_header(subject)
+    msg = h[0][0].decode(h[0][1]) if h[0][1] else h[0][0]
+    print msg
+    
+mailbox.quit()]]
+
+::html
+Пример получает список писем и выводит их заголовок.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">import</span> <span class="nn">poplib</span>
+<span class="kn">import</span> <span class="nn">email</span>
+
+<span class="n">user</span><span class="o">=</span><span class="s">&#39;user@gmail.com&#39;</span>
+<span class="n">pasw</span> <span class="o">=</span> <span class="s">&#39;paswword&#39;</span>
+<span class="n">mailbox</span><span class="o">=</span><span class="n">poplib</span><span class="o">.</span><span class="n">POP3_SSL</span><span class="p">(</span><span class="s">&#39;pop.gmail.com&#39;</span><span class="p">,</span><span class="mi">995</span><span class="p">)</span>
+<span class="n">mailbox</span><span class="o">.</span><span class="n">user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+<span class="n">mailbox</span><span class="o">.</span><span class="n">pass_</span><span class="p">(</span><span class="n">pasw</span><span class="p">)</span>
+<span class="n">mcount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">mailbox</span><span class="o">.</span><span class="n">list</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+<span class="k">print</span> <span class="s">&#39;Count&#39;</span><span class="p">,</span> <span class="n">mcount</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">mcount</span><span class="p">):</span>
+    <span class="n">msg</span><span class="o">=</span><span class="n">mailbox</span><span class="o">.</span><span class="n">retr</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">raw_mail</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">mail</span><span class="o">=</span><span class="n">email</span><span class="o">.</span><span class="n">message_from_string</span><span class="p">(</span><span class="n">raw_mail</span><span class="p">)</span>
+    
+    <span class="c"># subject</span>
+    <span class="n">subject</span> <span class="o">=</span> <span class="n">mail</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;Subject&#39;</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">email</span><span class="o">.</span><span class="n">Header</span><span class="o">.</span><span class="n">decode_header</span><span class="p">(</span><span class="n">subject</span><span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">print</span> <span class="n">msg</span>
+    
+<span class="n">mailbox</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div><br />

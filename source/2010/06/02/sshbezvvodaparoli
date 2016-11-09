@@ -1,0 +1,49 @@
+::id 4c063a5f1d41c867ae000000
+::date 2010-06-02
+::title ssh без ввода пароля
+::tags ssh, auth
+::body
+Настройка авторизации ssh через rsa ключ
+
+Нам нужно с хоста А ходить на хост В без пароля, сгенерируем на хосте А rsa-ключ
+[[ssh-keygen -t rsa]]по умолчанию на ubuntu 10.04 ключ будет записан в файле **~/.ssh/id_rsa.pub**
+Этот файл нужно скопировать в папку **~/.ssh/** на хост В и переименовать в **authorized_keys**
+
+На хосте B, файлы должны принадлежать только пользователю:
+[[chmod 700 ~/.ssh 
+chmod 600 ~/.ssh/authorized_keys]]
+Готово.
+
+!Доп. возможности:
+**Выполнить команду через ssh**
+[[ssh -t host "some command"]]
+
+!Запрет авторизации по паролю
+Нужно в файле **/etc/ssh/sshd_config**, исправить строку:
+[[PasswordAuthentication no]]После чего перезапустить ssh сервер[[sudo service ssh restart]]
+
+::html
+Настройка авторизации ssh через rsa ключ<br />
+<br />
+Нам нужно с хоста А ходить на хост В без пароля, сгенерируем на хосте А rsa-ключ<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">ssh</span><span class="o">-</span><span class="n">keygen</span> <span class="o">-</span><span class="n">t</span> <span class="n">rsa</span>
+</pre></div>
+</div>по умолчанию на ubuntu 10.04 ключ будет записан в файле <b>~/.ssh/id_rsa.pub</b><br />
+Этот файл нужно скопировать в папку <b>~/.ssh/</b> на хост В и переименовать в <b>authorized_keys</b><br />
+<br />
+На хосте B, файлы должны принадлежать только пользователю:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">chmod</span> <span class="mi">700</span> <span class="o">~/.</span><span class="n">ssh</span> 
+<span class="n">chmod</span> <span class="mi">600</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">authorized_keys</span>
+</pre></div>
+</div><br />
+Готово.<br />
+<h3>Доп. возможности:</h3><b>Выполнить команду через ssh</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">ssh</span> <span class="o">-</span><span class="n">t</span> <span class="n">host</span> <span class="s">&quot;some command&quot;</span>
+</pre></div>
+</div><br />
+<h3>Запрет авторизации по паролю</h3>Нужно в файле <b>/etc/ssh/sshd_config</b>, исправить строку:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">PasswordAuthentication</span> <span class="n">no</span>
+</pre></div>
+</div>После чего перезапустить ssh сервер<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">service</span> <span class="n">ssh</span> <span class="n">restart</span>
+</pre></div>
+</div><br />

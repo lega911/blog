@@ -1,0 +1,66 @@
+::id 4bfe7be71d41c86b60000000
+::date 2010-05-27
+::title MongoDB group
+::tags mongodb
+::body
+Пример группировки
+
+[[# coding: utf8
+
+from pymongo import Connection
+from pymongo.code import Code
+
+con = Connection()
+con.drop_database('test')
+db = con.test
+
+db.posts.insert({ 'name':'linux', 'col':3, 'active':1 })
+db.posts.insert({ 'name':'mac',   'col':2, 'active':0 })
+db.posts.insert({ 'name':'linux', 'col':3, 'active':1 })
+db.posts.insert({ 'name':'win',   'col':4, 'active':0 })
+db.posts.insert({ 'name':'unix',  'col':5, 'active':1 })
+db.posts.insert({ 'name':'linux', 'col':6, 'active':1 })
+db.posts.insert({ 'name':'unix',  'col':7, 'active':1 })
+db.posts.insert({ 'name':'mac',   'col':8, 'active':1 })
+
+res = db.posts.group(
+            key = { 'name':True },
+            condition = { 'active':1 },
+            reduce = 'function(obj,prev) { prev.sum += obj.col; prev.count++; }',
+            initial = { 'sum':0, 'count':0 },
+            finalize = 'function(out) { out.avg = out.sum / out.count; }'
+            );
+for i in res:
+    print i ]]
+::html
+Пример группировки<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">Connection</span>
+<span class="kn">from</span> <span class="nn">pymongo.code</span> <span class="kn">import</span> <span class="n">Code</span>
+
+<span class="n">con</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">()</span>
+<span class="n">con</span><span class="o">.</span><span class="n">drop_database</span><span class="p">(</span><span class="s">&#39;test&#39;</span><span class="p">)</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">test</span>
+
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;name&#39;</span><span class="p">:</span><span class="s">&#39;linux&#39;</span><span class="p">,</span> <span class="s">&#39;col&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">:</span><span class="mi">1</span> <span class="p">})</span>
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;name&#39;</span><span class="p">:</span><span class="s">&#39;mac&#39;</span><span class="p">,</span>   <span class="s">&#39;col&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">:</span><span class="mi">0</span> <span class="p">})</span>
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;name&#39;</span><span class="p">:</span><span class="s">&#39;linux&#39;</span><span class="p">,</span> <span class="s">&#39;col&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">:</span><span class="mi">1</span> <span class="p">})</span>
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;name&#39;</span><span class="p">:</span><span class="s">&#39;win&#39;</span><span class="p">,</span>   <span class="s">&#39;col&#39;</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">:</span><span class="mi">0</span> <span class="p">})</span>
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;name&#39;</span><span class="p">:</span><span class="s">&#39;unix&#39;</span><span class="p">,</span>  <span class="s">&#39;col&#39;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">:</span><span class="mi">1</span> <span class="p">})</span>
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;name&#39;</span><span class="p">:</span><span class="s">&#39;linux&#39;</span><span class="p">,</span> <span class="s">&#39;col&#39;</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">:</span><span class="mi">1</span> <span class="p">})</span>
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;name&#39;</span><span class="p">:</span><span class="s">&#39;unix&#39;</span><span class="p">,</span>  <span class="s">&#39;col&#39;</span><span class="p">:</span><span class="mi">7</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">:</span><span class="mi">1</span> <span class="p">})</span>
+<span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span> <span class="s">&#39;name&#39;</span><span class="p">:</span><span class="s">&#39;mac&#39;</span><span class="p">,</span>   <span class="s">&#39;col&#39;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">:</span><span class="mi">1</span> <span class="p">})</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">group</span><span class="p">(</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#39;name&#39;</span><span class="p">:</span><span class="bp">True</span> <span class="p">},</span>
+            <span class="n">condition</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#39;active&#39;</span><span class="p">:</span><span class="mi">1</span> <span class="p">},</span>
+            <span class="nb">reduce</span> <span class="o">=</span> <span class="s">&#39;function(obj,prev) { prev.sum += obj.col; prev.count++; }&#39;</span><span class="p">,</span>
+            <span class="n">initial</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#39;sum&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s">&#39;count&#39;</span><span class="p">:</span><span class="mi">0</span> <span class="p">},</span>
+            <span class="n">finalize</span> <span class="o">=</span> <span class="s">&#39;function(out) { out.avg = out.sum / out.count; }&#39;</span>
+            <span class="p">);</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">i</span> 
+</pre></div>
+</div>

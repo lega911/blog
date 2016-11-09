@@ -1,0 +1,53 @@
+::id 54d31e833ad2ff5ac5082678
+::date 2015-02-05
+::title Supervisor для запуска програм
+::tags linux, supervisor, deamon
+::body
+**Установка**
+[[sudo pip install supervisor]]
+**Сохраняем настройку в supervisor.conf**
+[[
+[supervisord]
+nodaemon=true
+ 
+[program:ping]
+command=/bin/bash -c "ping $IP -c 5"
+directory=/tmp
+environment=IP="8.8.8.8"
+exitcodes=
+stdout_logfile=ping.log
+stdout_logfile_maxbytes=50MB
+stdout_logfile_backups=3
+redirect_stderr=true
+]]
+**Запуск**
+[[supervisord -c supervisor.conf]]
+
+В итоге циклический будет запущен ping, скелет файла настройки можно посмотреть [https://github.com/Supervisor/supervisor/blob/master/supervisor/skel/sample.conf тут], + [http://supervisord.org/configuration.html документация]
+
+::html
+<b>Установка</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">supervisor</span>
+</pre></div>
+</div><br />
+<b>Сохраняем настройку в supervisor.conf</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="p">[</span><span class="n">supervisord</span><span class="p">]</span>
+<span class="n">nodaemon</span><span class="o">=</span><span class="n">true</span>
+ 
+<span class="p">[</span><span class="n">program</span><span class="p">:</span><span class="n">ping</span><span class="p">]</span>
+<span class="n">command</span><span class="o">=/</span><span class="nb">bin</span><span class="o">/</span><span class="n">bash</span> <span class="o">-</span><span class="n">c</span> <span class="s">&quot;ping $IP -c 5&quot;</span>
+<span class="n">directory</span><span class="o">=/</span><span class="n">tmp</span>
+<span class="n">environment</span><span class="o">=</span><span class="n">IP</span><span class="o">=</span><span class="s">&quot;8.8.8.8&quot;</span>
+<span class="n">exitcodes</span><span class="o">=</span>
+<span class="n">stdout_logfile</span><span class="o">=</span><span class="n">ping</span><span class="o">.</span><span class="n">log</span>
+<span class="n">stdout_logfile_maxbytes</span><span class="o">=</span><span class="mi">50</span><span class="n">MB</span>
+<span class="n">stdout_logfile_backups</span><span class="o">=</span><span class="mi">3</span>
+<span class="n">redirect_stderr</span><span class="o">=</span><span class="n">true</span>
+</pre></div>
+</div><br />
+<b>Запуск</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">supervisord</span> <span class="o">-</span><span class="n">c</span> <span class="n">supervisor</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div><br />
+<br />
+В итоге циклический будет запущен ping, скелет файла настройки можно посмотреть <a target=_blank href="https://github.com/Supervisor/supervisor/blob/master/supervisor/skel/sample.conf">тут</a>, + <a target=_blank href="http://supervisord.org/configuration.html">документация</a><br />

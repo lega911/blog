@@ -1,0 +1,21 @@
+::id 4c0f5e791d41c80f34000003
+::date 2010-06-09
+::title csv в python
+::tags python, csv
+::body
+Пример чтения csv файла
+[[    import csv
+    reader = csv.reader(open('file.csv'), delimiter=',', quotechar='"')
+    for row in reader:
+        print ', '.join(row)]]
+**delimiter** - символ для разделения колонок
+**quotechar** - символ ограничивающий строки
+
+::html
+Пример чтения csv файла<br />
+<div class="codebox"><pre><code>    import csv
+    reader = csv.reader(open('file.csv'), delimiter=',', quotechar='"')
+    for row in reader:
+        print ', '.join(row)</code></pre></div><br />
+<b>delimiter</b> - символ для разделения колонок<br />
+<b>quotechar</b> - символ ограничивающий строки<br />

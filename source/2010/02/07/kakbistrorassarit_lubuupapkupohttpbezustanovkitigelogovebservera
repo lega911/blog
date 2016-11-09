@@ -1,0 +1,64 @@
+::id 4bfb3c691d41c846bc00004c
+::date 2010-02-07
+::title Как быстро расшарить любую папку по http без установки тяжелого веб сервера
+::tags python, bottle
+::body
+Напишем веб-сервер с использованием bottle (20 строк кода)
+
+Для использования нужен пакет bottle:
+[[easy_install bottle]]
+Исходник:
+[[# coding: utf-8
+
+from bottle import run, route, send_file
+import os
+
+# список текущих файлов
+@route('/')
+def main():
+    msg = ''
+    for file in os.listdir('.'):
+        if os.path.isfile(file): msg += '<a href="%s">%s</a><br/>\n' % (file,file)
+    return '<html><body>%s</body></html>' % (msg,)
+
+# отправка файла
+@route(':filename')
+def sendfile(filename):
+    send_file(filename, './')
+
+# запуск сервера
+run(host='', port=8080)]]
+запускаем скрипт - файлы доступны: [http://localhost:8080/ http://localhost:8080/]
+
+
+**Продолжение:** [58 Простая авторизация в web]
+::html
+Напишем веб-сервер с использованием bottle (20 строк кода)<br />
+<br />
+Для использования нужен пакет bottle:<br />
+<div class="codebox"><pre><code>easy_install bottle</code></pre></div><br />
+Исходник:<br />
+<div class="codebox"><pre><code># coding: utf-8
+
+from bottle import run, route, send_file
+import os
+
+# список текущих файлов
+@route('/')
+def main():
+    msg = ''
+    for file in os.listdir('.'):
+        if os.path.isfile(file): msg += '&lt;a href="%s"&gt;%s&lt;/a&gt;&lt;br/&gt;\n' % (file,file)
+    return '&lt;html&gt;&lt;body&gt;%s&lt;/body&gt;&lt;/html&gt;' % (msg,)
+
+# отправка файла
+@route(':filename')
+def sendfile(filename):
+    send_file(filename, './')
+
+# запуск сервера
+run(host='', port=8080)</code></pre></div><br />
+запускаем скрипт - файлы доступны: <a target=_blank href="http://localhost:8080/">http://localhost:8080/</a><br />
+<br />
+<br />
+<b>Продолжение:</b> <a href="58">Простая авторизация в web</a>

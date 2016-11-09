@@ -1,0 +1,66 @@
+::id 4e0d6c881d41c81104000007
+::date 2011-07-01
+::title Получение списка писем, subject, gmail, imap
+::tags python, mail, imap, gmail
+::body
+Пример получает список писем и выводит их заголовок с помощью imap и ssl.
+
+[[# coding: utf8
+
+import email
+import imaplib
+
+user='mail@gmail.com'
+pasw = 'password'
+
+M = imaplib.IMAP4_SSL('imap.gmail.com')
+M.login(user, pasw)
+M.select()
+typ, data = M.search(None, 'ALL')
+id_list = data[0].split()
+for num in id_list[::-1]:
+    typ, data = M.fetch(num, '(RFC822)')
+    raw_mail = data[0][1]
+    
+    mail=email.message_from_string(raw_mail)
+    
+    # subject
+    subject = mail.get('Subject')
+    h = email.Header.decode_header(subject)
+    msg = h[0][0].decode(h[0][1]) if h[0][1] else h[0][0]
+    print msg
+    
+M.close()
+M.logout()]]
+::html
+Пример получает список писем и выводит их заголовок с помощью imap и ssl.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">import</span> <span class="nn">email</span>
+<span class="kn">import</span> <span class="nn">imaplib</span>
+
+<span class="n">user</span><span class="o">=</span><span class="s">&#39;mail@gmail.com&#39;</span>
+<span class="n">pasw</span> <span class="o">=</span> <span class="s">&#39;password&#39;</span>
+
+<span class="n">M</span> <span class="o">=</span> <span class="n">imaplib</span><span class="o">.</span><span class="n">IMAP4_SSL</span><span class="p">(</span><span class="s">&#39;imap.gmail.com&#39;</span><span class="p">)</span>
+<span class="n">M</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">pasw</span><span class="p">)</span>
+<span class="n">M</span><span class="o">.</span><span class="n">select</span><span class="p">()</span>
+<span class="n">typ</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="s">&#39;ALL&#39;</span><span class="p">)</span>
+<span class="n">id_list</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">id_list</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+    <span class="n">typ</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="s">&#39;(RFC822)&#39;</span><span class="p">)</span>
+    <span class="n">raw_mail</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="n">mail</span><span class="o">=</span><span class="n">email</span><span class="o">.</span><span class="n">message_from_string</span><span class="p">(</span><span class="n">raw_mail</span><span class="p">)</span>
+    
+    <span class="c"># subject</span>
+    <span class="n">subject</span> <span class="o">=</span> <span class="n">mail</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;Subject&#39;</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">email</span><span class="o">.</span><span class="n">Header</span><span class="o">.</span><span class="n">decode_header</span><span class="p">(</span><span class="n">subject</span><span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">print</span> <span class="n">msg</span>
+    
+<span class="n">M</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">M</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
+</pre></div>
+</div>

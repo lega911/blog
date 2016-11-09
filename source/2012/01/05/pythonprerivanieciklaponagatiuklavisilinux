@@ -1,0 +1,65 @@
+::id 4f04a541bbddbd0836000000
+::date 2012-01-05
+::title python, прерывание цикла по нажатию клавиши (linux)
+::tags python, linux
+::body
+Пример прерывания цикла по нажатию клавиши, проверено на python 2.7 + linux.
+
+[[# coding: utf8
+
+import sys, select, termios
+
+def kbhit():
+    r = select.select([sys.stdin], [], [], 0)
+    return bool(r[0])
+
+if __name__ == '__main__':
+    fd = sys.stdin.fileno()
+    old_term = termios.tcgetattr(fd)
+    new_term = termios.tcgetattr(fd)
+    new_term[3] = (new_term[3] & ~termios.ICANON & ~termios.ECHO)
+
+    try:
+        termios.tcsetattr(fd, termios.TCSAFLUSH, new_term)
+        
+        while 1:
+            if kbhit():
+                ch = sys.stdin.read(1)
+                break
+            sys.stdout.write('.')
+    
+        print 'done'
+    finally:
+        termios.tcsetattr(fd, termios.TCSAFLUSH, old_term)
+]]
+::html
+Пример прерывания цикла по нажатию клавиши, проверено на python 2.7 + linux.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">select</span><span class="o">,</span> <span class="nn">termios</span>
+
+<span class="k">def</span> <span class="nf">kbhit</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">select</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">fd</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span>
+    <span class="n">old_term</span> <span class="o">=</span> <span class="n">termios</span><span class="o">.</span><span class="n">tcgetattr</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
+    <span class="n">new_term</span> <span class="o">=</span> <span class="n">termios</span><span class="o">.</span><span class="n">tcgetattr</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
+    <span class="n">new_term</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">new_term</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">termios</span><span class="o">.</span><span class="n">ICANON</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">termios</span><span class="o">.</span><span class="n">ECHO</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">termios</span><span class="o">.</span><span class="n">tcsetattr</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">termios</span><span class="o">.</span><span class="n">TCSAFLUSH</span><span class="p">,</span> <span class="n">new_term</span><span class="p">)</span>
+        
+        <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">kbhit</span><span class="p">():</span>
+                <span class="n">ch</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)</span>
+    
+        <span class="k">print</span> <span class="s">&#39;done&#39;</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">termios</span><span class="o">.</span><span class="n">tcsetattr</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">termios</span><span class="o">.</span><span class="n">TCSAFLUSH</span><span class="p">,</span> <span class="n">old_term</span><span class="p">)</span>
+</pre></div>
+</div>

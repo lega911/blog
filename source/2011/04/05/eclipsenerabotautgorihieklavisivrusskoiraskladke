@@ -1,0 +1,17 @@
+::id 4d9ae1fd1d41c87536000001
+::date 2011-04-05
+::title Eclipse не работают горячие клавиши в русской раскладке
+::tags eclipse
+::body
+В Eclipse открываем **Window - Preferences - General - Keys**, копируем события и привязываем их к нужным клавишам:
+#|
+||Copy|Ctrl+С
+||Paste|Ctrl+М
+||Undo|Ctrl+Я
+||Find|Ctrl+А
+||Select all|Ctrl+Ф
+|#
+
+::html
+В Eclipse открываем <b>Window - Preferences - General - Keys</b>, копируем события и привязываем их к нужным клавишам:<br />
+<table class="pymark_table"><tr><td></td></tr><tr><td>Copy</td><td>Ctrl+С</td></tr><tr><td>Paste</td><td>Ctrl+М</td></tr><tr><td>Undo</td><td>Ctrl+Я</td></tr><tr><td>Find</td><td>Ctrl+А</td></tr><tr><td>Select all</td><td>Ctrl+Ф</td></tr></table><br />

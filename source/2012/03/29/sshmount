@@ -1,0 +1,41 @@
+::id 4f73fb75bbddbd6a6f000000
+::date 2012-03-29
+::title ssh mount
+::tags ssh, sshfs, mount
+::body
+Монтирование удаленной папки через ssh
+//Проверено на ubuntu 11.10//
+
+Установка
+[[
+sudo apt-get install sshfs
+sudo adduser <Пользователь> fuse
+mkdir /tmp/folder
+sudo modprobe fuse
+]]
+Нужно выйти и зайти в терминал заново чтоб права активировались.
+Подключаем папку:
+[[sshfs user@remote_host:/some_folder /tmp/folder]]
+Отключить папку:
+[[fusermount -u /tmp/folder]]
+
+::html
+Монтирование удаленной папки через ssh<br />
+<i>Проверено на ubuntu 11.10</i><br />
+<br />
+Установка<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">sshfs</span>
+<span class="n">sudo</span> <span class="n">adduser</span> <span class="o">&lt;</span><span class="err">Пользователь</span><span class="o">&gt;</span> <span class="n">fuse</span>
+<span class="n">mkdir</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">folder</span>
+<span class="n">sudo</span> <span class="n">modprobe</span> <span class="n">fuse</span>
+</pre></div>
+</div><br />
+Нужно выйти и зайти в терминал заново чтоб права активировались.<br />
+Подключаем папку:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sshfs</span> <span class="n">user</span><span class="nd">@remote_host</span><span class="p">:</span><span class="o">/</span><span class="n">some_folder</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">folder</span>
+</pre></div>
+</div><br />
+Отключить папку:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">fusermount</span> <span class="o">-</span><span class="n">u</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">folder</span>
+</pre></div>
+</div><br />

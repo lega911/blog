@@ -1,0 +1,79 @@
+::id 50f3bd147114485143000004
+::date 2013-01-14
+::title Knockout.js, биндинг "html" с привязываем внутри.
+::tags javascript, knockoutjs
+::body
+Иногда шаблоны для клиентских приложений хранятся на сервере и передаются клиенту в момент когда **knockout.js** уже работает (после вызова //ko.applyBindings//), при этом биндинг "html" выведет шаблон как есть, что-бы привязывание сработало внутри шаблона можно использовать биндинг [https://bitbucket.org/lega911/knockout-htmlbind htmlbind].
+
+Сам биндинг с комметариями:
+[[javascript#
+// Размещаем новый биндинг
+ko.bindingHandlers['htmlbind'] = {
+	// При инициализации
+	'init': function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+		// Управление внудренними привязками самостоятельно
+		return { 'controlsDescendantBindings': true };
+	},
+	// При изменении значения переменой
+	'update': function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+		// Получаем значение переменной
+		var dataValue = ko.utils.unwrapObservable(valueAccessor());
+		if(dataValue) {
+			// Переводим HTML строку в DOM элементы
+			var dom = document.createElement('div');
+			dom.innerHTML = dataValue;
+			var nodes = ko.utils.arrayMap(dom.childNodes, function(d){ return d })
+			// Устанавливаем DOM в документ
+			ko.virtualElements.setDomNodeChildren(element, nodes);
+			// Передаем контекст, модель, переменные
+			ko.applyBindingsToDescendants(bindingContext, element);
+		} else {
+			// Очищаем DOM когда переменная пустая
+			ko.virtualElements.emptyNode(element);
+		}
+	}
+};
+ko.expressionRewriting.bindingRewriteValidators['htmlbind'] = false;
+// Возможность использовать как виртуальный элемент
+ko.virtualElements.allowedBindings['htmlbind'] = true;
+]]
+Используется так же как обычный биндинг "html",  [http://jsfiddle.net/lega911/D45aX/ пример использования].
+Взять последнюю версию можно тут [https://bitbucket.org/lega911/knockout-htmlbind https://bitbucket.org/lega911/knockout-htmlbind]
+
+::html
+Иногда шаблоны для клиентских приложений хранятся на сервере и передаются клиенту в момент когда <b>knockout.js</b> уже работает (после вызова <i>ko.applyBindings</i>), при этом биндинг "html" выведет шаблон как есть, что-бы привязывание сработало внутри шаблона можно использовать биндинг <a target=_blank href="https://bitbucket.org/lega911/knockout-htmlbind">htmlbind</a>.<br />
+<br />
+Сам биндинг с комметариями:<br />
+<div class="codebox"><div class="highlight"><pre><span class="c1">// Размещаем новый биндинг</span>
+<span class="nx">ko</span><span class="p">.</span><span class="nx">bindingHandlers</span><span class="p">[</span><span class="s1">&#39;htmlbind&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="c1">// При инициализации</span>
+	<span class="s1">&#39;init&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">valueAccessor</span><span class="p">,</span> <span class="nx">allBindingsAccessor</span><span class="p">,</span> <span class="nx">viewModel</span><span class="p">,</span> <span class="nx">bindingContext</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c1">// Управление внудренними привязками самостоятельно</span>
+		<span class="k">return</span> <span class="p">{</span> <span class="s1">&#39;controlsDescendantBindings&#39;</span><span class="o">:</span> <span class="kc">true</span> <span class="p">};</span>
+	<span class="p">},</span>
+	<span class="c1">// При изменении значения переменой</span>
+	<span class="s1">&#39;update&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">valueAccessor</span><span class="p">,</span> <span class="nx">allBindingsAccessor</span><span class="p">,</span> <span class="nx">viewModel</span><span class="p">,</span> <span class="nx">bindingContext</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c1">// Получаем значение переменной</span>
+		<span class="kd">var</span> <span class="nx">dataValue</span> <span class="o">=</span> <span class="nx">ko</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">unwrapObservable</span><span class="p">(</span><span class="nx">valueAccessor</span><span class="p">());</span>
+		<span class="k">if</span><span class="p">(</span><span class="nx">dataValue</span><span class="p">)</span> <span class="p">{</span>
+			<span class="c1">// Переводим HTML строку в DOM элементы</span>
+			<span class="kd">var</span> <span class="nx">dom</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">);</span>
+			<span class="nx">dom</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="nx">dataValue</span><span class="p">;</span>
+			<span class="kd">var</span> <span class="nx">nodes</span> <span class="o">=</span> <span class="nx">ko</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">arrayMap</span><span class="p">(</span><span class="nx">dom</span><span class="p">.</span><span class="nx">childNodes</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">){</span> <span class="k">return</span> <span class="nx">d</span> <span class="p">})</span>
+			<span class="c1">// Устанавливаем DOM в документ</span>
+			<span class="nx">ko</span><span class="p">.</span><span class="nx">virtualElements</span><span class="p">.</span><span class="nx">setDomNodeChildren</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">nodes</span><span class="p">);</span>
+			<span class="c1">// Передаем контекст, модель, переменные</span>
+			<span class="nx">ko</span><span class="p">.</span><span class="nx">applyBindingsToDescendants</span><span class="p">(</span><span class="nx">bindingContext</span><span class="p">,</span> <span class="nx">element</span><span class="p">);</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="c1">// Очищаем DOM когда переменная пустая</span>
+			<span class="nx">ko</span><span class="p">.</span><span class="nx">virtualElements</span><span class="p">.</span><span class="nx">emptyNode</span><span class="p">(</span><span class="nx">element</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+<span class="nx">ko</span><span class="p">.</span><span class="nx">expressionRewriting</span><span class="p">.</span><span class="nx">bindingRewriteValidators</span><span class="p">[</span><span class="s1">&#39;htmlbind&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+<span class="c1">// Возможность использовать как виртуальный элемент</span>
+<span class="nx">ko</span><span class="p">.</span><span class="nx">virtualElements</span><span class="p">.</span><span class="nx">allowedBindings</span><span class="p">[</span><span class="s1">&#39;htmlbind&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</pre></div>
+</div><br />
+Используется так же как обычный биндинг "html",  <a target=_blank href="http://jsfiddle.net/lega911/D45aX/">пример использования</a>.<br />
+Взять последнюю версию можно тут <a target=_blank href="https://bitbucket.org/lega911/knockout-htmlbind">https://bitbucket.org/lega911/knockout-htmlbind</a><br />

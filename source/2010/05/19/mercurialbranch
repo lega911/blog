@@ -1,0 +1,41 @@
+::id 4bfb3c6b1d41c846bc0000d9
+::date 2010-05-19
+::title Mercurial branch
+::tags mercurial
+::body
+Пример использования бранчей в Mircurial
+
+[[# Изначально бранч = default
+# Узнать текущий бранч
+hg branch
+
+# Список имеющихся бранчей
+hg branches
+
+# Пометить текущий репозитарий бранчем,
+# все последующие комиты будут в выбранный бранч
+hg branch mybranch
+
+# Переключиться на бранч
+hg up mybranch
+hg up default
+]]
+::html
+Пример использования бранчей в Mircurial<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># Изначально бранч = default</span>
+<span class="c"># Узнать текущий бранч</span>
+<span class="n">hg</span> <span class="n">branch</span>
+
+<span class="c"># Список имеющихся бранчей</span>
+<span class="n">hg</span> <span class="n">branches</span>
+
+<span class="c"># Пометить текущий репозитарий бранчем,</span>
+<span class="c"># все последующие комиты будут в выбранный бранч</span>
+<span class="n">hg</span> <span class="n">branch</span> <span class="n">mybranch</span>
+
+<span class="c"># Переключиться на бранч</span>
+<span class="n">hg</span> <span class="n">up</span> <span class="n">mybranch</span>
+<span class="n">hg</span> <span class="n">up</span> <span class="n">default</span>
+</pre></div>
+</div>

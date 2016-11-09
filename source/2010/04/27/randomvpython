@@ -1,0 +1,79 @@
+::id 4bfb3c6a1d41c846bc0000c9
+::date 2010-04-27
+::title random в python
+::tags python, random
+::body
+Основные функции модуля random
+
+[[import random
+
+# Целое число из указанного диапазона
+print random.randint(0,10)
+# 2
+
+# Число из диапазона с указанием шага
+print random.randrange(10,20,2)
+# 14
+
+# Дробное число из диапазона 0.0 - 1.0
+print random.random()
+# 0.537843941827
+
+# Выбирает один элемент из списка
+print random.choice('abcdef')
+# b
+
+# Перемешивает элементы
+r = range(10)
+random.shuffle(r)
+print r
+# [0, 4, 1, 6, 8, 3, 2, 5, 9, 7]
+
+# Выбирает указанное кол-во элементов из списка
+print random.sample(range(50),10)
+# [22, 29, 30, 14, 16, 17, 32, 48, 2, 19] ]]
+
+Ещё есть **os.urandom(n)**, возвращает **n** случайных байт в виде строки:
+[[>>> from os import urandom
+>>> urandom(8)
+'z\x7f\xd6\xd3%\xc1O\xb3']]
+
+::html
+Основные функции модуля random<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">random</span>
+
+<span class="c"># Целое число из указанного диапазона</span>
+<span class="k">print</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="c"># 2</span>
+
+<span class="c"># Число из диапазона с указанием шага</span>
+<span class="k">print</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="c"># 14</span>
+
+<span class="c"># Дробное число из диапазона 0.0 - 1.0</span>
+<span class="k">print</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+<span class="c"># 0.537843941827</span>
+
+<span class="c"># Выбирает один элемент из списка</span>
+<span class="k">print</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s">&#39;abcdef&#39;</span><span class="p">)</span>
+<span class="c"># b</span>
+
+<span class="c"># Перемешивает элементы</span>
+<span class="n">r</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">r</span>
+<span class="c"># [0, 4, 1, 6, 8, 3, 2, 5, 9, 7]</span>
+
+<span class="c"># Выбирает указанное кол-во элементов из списка</span>
+<span class="k">print</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span><span class="mi">10</span><span class="p">)</span>
+<span class="c"># [22, 29, 30, 14, 16, 17, 32, 48, 2, 19] </span>
+</pre></div>
+</div><br />
+<br />
+Ещё есть <b>os.urandom(n)</b>, возвращает <b>n</b> случайных байт в виде строки:<br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">urandom</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">urandom</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="s">&#39;z</span><span class="se">\x7f\xd6\xd3</span><span class="s">%</span><span class="se">\xc1</span><span class="s">O</span><span class="se">\xb3</span><span class="s">&#39;</span>
+</pre></div>
+</div><br />

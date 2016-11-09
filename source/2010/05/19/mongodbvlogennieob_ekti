@@ -1,0 +1,84 @@
+::id 4bfb3c6b1d41c846bc0000d8
+::date 2010-05-19
+::title MongoDB вложенные объекты
+::tags python, mongodb
+::body
+Пример работы с вложенными объектами
+
+[[# coding: utf8
+
+from pymongo.connection import Connection
+from pymongo.son_manipulator import AutoReference, NamespaceInjector
+
+# Подключаемся к монго
+try:
+    connection = Connection("localhost")
+except ConnectionFailure:
+    print "couldn't connect to Mongo"
+    sys.exit(1)
+
+# Создаем пустую базу, (удаляем - создаем)
+connection.drop_database("pymongo_examples")
+db = connection["pymongo_examples"]
+
+# Добавляем манипуляторы
+db.add_son_manipulator(NamespaceInjector())
+db.add_son_manipulator(AutoReference(db))
+
+# Сохранияем сообщение
+message = {"content": "none"}
+db.messages.save(message)
+
+# Сохранием документ с вложенным сообщением
+user = {"name": "user", "message": message}
+db.users.save(user)
+
+# Изменяем сообщение
+m = db.messages.find_one()
+m["content"] = "mail"
+db.messages.save(m)
+
+# Получаем пользователя и его сообщение
+u = db.users.find_one()
+print "%s %s" % (u["name"], u["message"]["content"]) ]]
+::html
+Пример работы с вложенными объектами<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">from</span> <span class="nn">pymongo.connection</span> <span class="kn">import</span> <span class="n">Connection</span>
+<span class="kn">from</span> <span class="nn">pymongo.son_manipulator</span> <span class="kn">import</span> <span class="n">AutoReference</span><span class="p">,</span> <span class="n">NamespaceInjector</span>
+
+<span class="c"># Подключаемся к монго</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">(</span><span class="s">&quot;localhost&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">ConnectionFailure</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;couldn&#39;t connect to Mongo&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c"># Создаем пустую базу, (удаляем - создаем)</span>
+<span class="n">connection</span><span class="o">.</span><span class="n">drop_database</span><span class="p">(</span><span class="s">&quot;pymongo_examples&quot;</span><span class="p">)</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">connection</span><span class="p">[</span><span class="s">&quot;pymongo_examples&quot;</span><span class="p">]</span>
+
+<span class="c"># Добавляем манипуляторы</span>
+<span class="n">db</span><span class="o">.</span><span class="n">add_son_manipulator</span><span class="p">(</span><span class="n">NamespaceInjector</span><span class="p">())</span>
+<span class="n">db</span><span class="o">.</span><span class="n">add_son_manipulator</span><span class="p">(</span><span class="n">AutoReference</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
+
+<span class="c"># Сохранияем сообщение</span>
+<span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;content&quot;</span><span class="p">:</span> <span class="s">&quot;none&quot;</span><span class="p">}</span>
+<span class="n">db</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+<span class="c"># Сохранием документ с вложенным сообщением</span>
+<span class="n">user</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;user&quot;</span><span class="p">,</span> <span class="s">&quot;message&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">}</span>
+<span class="n">db</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+<span class="c"># Изменяем сообщение</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">find_one</span><span class="p">()</span>
+<span class="n">m</span><span class="p">[</span><span class="s">&quot;content&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;mail&quot;</span>
+<span class="n">db</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+
+<span class="c"># Получаем пользователя и его сообщение</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">find_one</span><span class="p">()</span>
+<span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">],</span> <span class="n">u</span><span class="p">[</span><span class="s">&quot;message&quot;</span><span class="p">][</span><span class="s">&quot;content&quot;</span><span class="p">])</span> 
+</pre></div>
+</div>

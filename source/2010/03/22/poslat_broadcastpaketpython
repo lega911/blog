@@ -1,0 +1,47 @@
+::id 4bfb3c6a1d41c846bc00008a
+::date 2010-03-22
+::title послать BROADCAST пакет, python
+::tags python, socket
+::body
+**Отправка**
+
+[[PORT = 50000
+
+from socket import *
+s = socket(AF_INET, SOCK_DGRAM)
+s.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+s.sendto('hello', ('192.168.0.255', PORT))
+]]
+
+**Прием**
+[[PORT = 50000
+
+from socket import *
+s = socket(AF_INET, SOCK_DGRAM)
+s.bind(('', PORT))
+s.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+print s.recv(100)
+]]
+
+::html
+<b>Отправка</b><br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">PORT</span> <span class="o">=</span> <span class="mi">50000</span>
+
+<span class="kn">from</span> <span class="nn">socket</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">SOCK_DGRAM</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">setsockopt</span><span class="p">(</span><span class="n">SOL_SOCKET</span><span class="p">,</span> <span class="n">SO_BROADCAST</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">sendto</span><span class="p">(</span><span class="s">&#39;hello&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;192.168.0.255&#39;</span><span class="p">,</span> <span class="n">PORT</span><span class="p">))</span>
+</pre></div>
+</div><br />
+<br />
+<b>Прием</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">PORT</span> <span class="o">=</span> <span class="mi">50000</span>
+
+<span class="kn">from</span> <span class="nn">socket</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">SOCK_DGRAM</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">PORT</span><span class="p">))</span>
+<span class="n">s</span><span class="o">.</span><span class="n">setsockopt</span><span class="p">(</span><span class="n">SOL_SOCKET</span><span class="p">,</span> <span class="n">SO_BROADCAST</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">s</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div><br />

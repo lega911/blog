@@ -1,0 +1,15 @@
+::id 4d9f0f501d41c814c5000000
+::date 2011-04-08
+::title Логи входов по ssh
+::tags ssh, logs
+::body
+Для ubuntu:
+[[grep Accept /var/log/auth.log*
+zcat /var/log/auth.log.?.gz | grep Accept]]
+
+::html
+Для ubuntu:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">grep</span> <span class="n">Accept</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">auth</span><span class="o">.</span><span class="n">log</span><span class="o">*</span>
+<span class="n">zcat</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">auth</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="err">?</span><span class="o">.</span><span class="n">gz</span> <span class="o">|</span> <span class="n">grep</span> <span class="n">Accept</span>
+</pre></div>
+</div><br />

@@ -1,0 +1,85 @@
+::id 4bfb3c6a1d41c846bc000097
+::date 2010-03-25
+::title jinja2 in bottle, основы
+::tags python, jinja, bottle
+::body
+**jinja2** - Популярная и многофункциональная система темплейтов, [http://jinja.pocoo.org/2/documentation/ оф. документация]
+
+!Установка
+[[easy_install jinja2]]
+
+!Примеры использования
+[[# coding: utf-8
+
+from bottle import jinja2_template as template
+
+# Вывод параметров
+print template('hello {{name}}', name = 'world')
+# hello world
+
+# Словари
+print template("hello {{dim['name']}}, age = {{dim['age']}}", dim = {'name':'User', 'age': 20})
+# hello User, age = 20
+
+# Классы
+class User:
+    name = 'noname'
+    age = 20
+user = User()
+print template('hello {{user.name}}, age = {{user.age}}', user = user)
+# hello noname, age = 20
+
+# Циклы
+print template('System: {% for sys in dim %}{{sys}}, {% endfor %}', dim = ['linux','windows','mac'])
+# System: linux, windows, mac, 
+
+# Уловия
+print template('this if: {% if name: %}name exsist, this {{name}}{% endif %}', name = 'world')
+# this if: name exsist, this world
+]]
+
+Вместо шаблона в ф-ию **template** можно вставлять имя файла: //template('index')//
+При этом файл должен будет находиться в текущей папке или в ./views с расширением файла *.tpl: //index.tpl// либо //./views/index.tpl//
+
+
+//продолжение следует...//
+::html
+<b>jinja2</b> - Популярная и многофункциональная система темплейтов, <a target=_blank href="http://jinja.pocoo.org/2/documentation/">оф. документация</a><br />
+<h3>Установка</h3><div class="codebox"><div class="highlight"><pre><span class="n">easy_install</span> <span class="n">jinja2</span>
+</pre></div>
+</div><br />
+<h3>Примеры использования</h3><div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf-8</span>
+
+<span class="kn">from</span> <span class="nn">bottle</span> <span class="kn">import</span> <span class="n">jinja2_template</span> <span class="k">as</span> <span class="n">template</span>
+
+<span class="c"># Вывод параметров</span>
+<span class="k">print</span> <span class="n">template</span><span class="p">(</span><span class="s">&#39;hello {{name}}&#39;</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;world&#39;</span><span class="p">)</span>
+<span class="c"># hello world</span>
+
+<span class="c"># Словари</span>
+<span class="k">print</span> <span class="n">template</span><span class="p">(</span><span class="s">&quot;hello {{dim[&#39;name&#39;]}}, age = {{dim[&#39;age&#39;]}}&quot;</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span><span class="s">&#39;User&#39;</span><span class="p">,</span> <span class="s">&#39;age&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">})</span>
+<span class="c"># hello User, age = 20</span>
+
+<span class="c"># Классы</span>
+<span class="k">class</span> <span class="nc">User</span><span class="p">:</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;noname&#39;</span>
+    <span class="n">age</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">template</span><span class="p">(</span><span class="s">&#39;hello {{user.name}}, age = {{user.age}}&#39;</span><span class="p">,</span> <span class="n">user</span> <span class="o">=</span> <span class="n">user</span><span class="p">)</span>
+<span class="c"># hello noname, age = 20</span>
+
+<span class="c"># Циклы</span>
+<span class="k">print</span> <span class="n">template</span><span class="p">(</span><span class="s">&#39;System: {</span><span class="si">% f</span><span class="s">or sys in dim %}{{sys}}, {</span><span class="si">% e</span><span class="s">ndfor %}&#39;</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;linux&#39;</span><span class="p">,</span><span class="s">&#39;windows&#39;</span><span class="p">,</span><span class="s">&#39;mac&#39;</span><span class="p">])</span>
+<span class="c"># System: linux, windows, mac, </span>
+
+<span class="c"># Уловия</span>
+<span class="k">print</span> <span class="n">template</span><span class="p">(</span><span class="s">&#39;this if: {</span><span class="si">% i</span><span class="s">f name: %}name exsist, this {{name}}{</span><span class="si">% e</span><span class="s">ndif %}&#39;</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;world&#39;</span><span class="p">)</span>
+<span class="c"># this if: name exsist, this world</span>
+</pre></div>
+</div><br />
+<br />
+Вместо шаблона в ф-ию <b>template</b> можно вставлять имя файла: <i>template('index')</i><br />
+При этом файл должен будет находиться в текущей папке или в ./views с расширением файла *.tpl: <i>index.tpl</i> либо <i>./views/index.tpl</i><br />
+<br />
+<br />
+<i>продолжение следует...</i>

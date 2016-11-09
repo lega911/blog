@@ -1,0 +1,125 @@
+::id 4bfb3c691d41c846bc000042
+::date 2010-02-04
+::title captcha на python
+::tags python, captcha
+::body
+!Используемые компоненты
+Image, ImageDraw, ImageFonts
+
+
+!1) Генерируем кодовое слово
+[[ key = ''.join([choice('QWERTYUIOPLKJHGFDSAZXCVBNM1234567890') for i in xrange(5)] ) ]]
+!2) Создаем картинку с фоном
+[[    img = Image.new('RGB', (100,30), 0xffffff )
+    draw = ImageDraw.Draw(img)
+    for i in xrange(40):
+        draw.line( [(randint(0,100),randint(0,30)),
+            (randint(0,100),randint(0,30))] ,
+             randint(0, 0xffffff), 1)
+]]здесь мы рисуем 40 разных линий на белом фоне
+!3) Выводим текст
+[[    font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMono.ttf', 32)
+    draw.text( (0,0), key, 0, font)
+]]файл шрифтов у вас должен быть
+!4) Получить картинку формата jpeg в виде строки для передачи клиенту (не сохраняя на сервере)
+[[    f = StringIO.StringIO()
+    img.save(f, "JPEG")
+    raw = f.getvalue()
+]]
+!Функция целиком
+[[# coding: utf-8
+
+def captcha():
+    import StringIO
+    import Image, ImageDraw, ImageFont
+    from random import randint, choice
+
+    key = ''.join( [choice('QWERTYUIOPLKJHGFDSAZXCVBNM1234567890') for i in xrange(5)] )
+    
+    img = Image.new('RGB', (100,30), 0xffffff )
+    draw = ImageDraw.Draw(img)
+    
+    for i in xrange(40):
+        draw.line( [(randint(0,100),randint(0,30)),(randint(0,100),randint(0,30))] ,  randint(0, 0xffffff), 1)
+    
+    font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMono.ttf', 32)
+    draw.text( (0,0), key, 0, font)
+    
+    f = StringIO.StringIO()
+    img.save(f, "JPEG")
+    raw = f.getvalue()
+    
+    return key,raw]]Пример капчи:[image:%id%/captcha.jpg]
+
+!Один из вариантов использования
+На нашу веб страницу вешаем эту капчу[[html#
+<img src="/capcha" />]]
+Когда клиент подключается к // /capcha//, мы отдаем ему данные из **raw** переменной, при этом нужно у клиента установить куку - хеш от **key** (например md5) и записать в БД/файл этот ключ.[[@get('/captcha')
+def retcapcha():
+    key, raw = captcha()
+    response.set_cookie('capcha_hash', hash(key))
+    db.save(key)
+    response.headers['Content-Type'] = 'image/jpeg'
+    return key
+]]
+Когда от клиента придут данные где он ввел капчу (key) + хеш в куках, проверяем произведен ли этот хеш от присланного ключа, далее ищем ключ в БД/файле, если нашли, то капча была введена правильно, при этом ключ нужно удалить из БД/файла, что-б нельзя было повторно использовать.
+//Данный метод не позволяет открывать страницы с капчей параллельно у одного клиента, т.к. кука будет перетераться. Что-б это обойти, хеш можно передавать в html страницу где будет капча и при отправке клиентом капчи к нам летит и хеш.//
+
+::html
+<h3>Используемые компоненты</h3>Image, ImageDraw, ImageFonts<br />
+<br />
+<h3>1) Генерируем кодовое слово</h3><div class="codebox"><div class="highlight"><pre> <span class="n">key</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">choice</span><span class="p">(</span><span class="s">&#39;QWERTYUIOPLKJHGFDSAZXCVBNM1234567890&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span> <span class="p">)</span> 
+</pre></div>
+</div><h3>2) Создаем картинку с фоном</h3><div class="codebox"><div class="highlight"><pre>    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s">&#39;RGB&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">30</span><span class="p">),</span> <span class="mh">0xffffff</span> <span class="p">)</span>
+    <span class="n">draw</span> <span class="o">=</span> <span class="n">ImageDraw</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">40</span><span class="p">):</span>
+        <span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span> <span class="p">[(</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">)),</span>
+            <span class="p">(</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">))]</span> <span class="p">,</span>
+             <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mh">0xffffff</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>здесь мы рисуем 40 разных линий на белом фоне<h3>3) Выводим текст</h3><div class="codebox"><div class="highlight"><pre>    <span class="n">font</span> <span class="o">=</span> <span class="n">ImageFont</span><span class="o">.</span><span class="n">truetype</span><span class="p">(</span><span class="s">&#39;/usr/share/fonts/truetype/freefont/FreeMono.ttf&#39;</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+    <span class="n">draw</span><span class="o">.</span><span class="n">text</span><span class="p">(</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">key</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">font</span><span class="p">)</span>
+</pre></div>
+</div>файл шрифтов у вас должен быть<h3>4) Получить картинку формата jpeg в виде строки для передачи клиенту (не сохраняя на сервере)</h3><div class="codebox"><div class="highlight"><pre>    <span class="n">f</span> <span class="o">=</span> <span class="n">StringIO</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">&quot;JPEG&quot;</span><span class="p">)</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+</pre></div>
+</div><h3>Функция целиком</h3><div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf-8</span>
+
+<span class="k">def</span> <span class="nf">captcha</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">StringIO</span>
+    <span class="kn">import</span> <span class="nn">Image</span><span class="o">,</span> <span class="nn">ImageDraw</span><span class="o">,</span> <span class="nn">ImageFont</span>
+    <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span><span class="p">,</span> <span class="n">choice</span>
+
+    <span class="n">key</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="p">[</span><span class="n">choice</span><span class="p">(</span><span class="s">&#39;QWERTYUIOPLKJHGFDSAZXCVBNM1234567890&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span> <span class="p">)</span>
+    
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s">&#39;RGB&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">30</span><span class="p">),</span> <span class="mh">0xffffff</span> <span class="p">)</span>
+    <span class="n">draw</span> <span class="o">=</span> <span class="n">ImageDraw</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">40</span><span class="p">):</span>
+        <span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span> <span class="p">[(</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">)),(</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">))]</span> <span class="p">,</span>  <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mh">0xffffff</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="n">font</span> <span class="o">=</span> <span class="n">ImageFont</span><span class="o">.</span><span class="n">truetype</span><span class="p">(</span><span class="s">&#39;/usr/share/fonts/truetype/freefont/FreeMono.ttf&#39;</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+    <span class="n">draw</span><span class="o">.</span><span class="n">text</span><span class="p">(</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">key</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">font</span><span class="p">)</span>
+    
+    <span class="n">f</span> <span class="o">=</span> <span class="n">StringIO</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">&quot;JPEG&quot;</span><span class="p">)</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">key</span><span class="p">,</span><span class="n">raw</span>
+</pre></div>
+</div>Пример капчи:<img src="/uploads/4bfb3c691d41c846bc000042/captcha.jpg" /><br />
+<h3>Один из вариантов использования</h3>На нашу веб страницу вешаем эту капчу<div class="codebox"><div class="highlight"><pre><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;/capcha&quot;</span> <span class="nt">/&gt;</span>
+</pre></div>
+</div><br />
+Когда клиент подключается к <i> /capcha</i>, мы отдаем ему данные из <b>raw</b> переменной, при этом нужно у клиента установить куку - хеш от <b>key</b> (например md5) и записать в БД/файл этот ключ.<div class="codebox"><div class="highlight"><pre><span class="nd">@get</span><span class="p">(</span><span class="s">&#39;/captcha&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">retcapcha</span><span class="p">():</span>
+    <span class="n">key</span><span class="p">,</span> <span class="n">raw</span> <span class="o">=</span> <span class="n">captcha</span><span class="p">()</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">set_cookie</span><span class="p">(</span><span class="s">&#39;capcha_hash&#39;</span><span class="p">,</span> <span class="nb">hash</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&#39;Content-Type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;image/jpeg&#39;</span>
+    <span class="k">return</span> <span class="n">key</span>
+</pre></div>
+</div><br />
+Когда от клиента придут данные где он ввел капчу (key) + хеш в куках, проверяем произведен ли этот хеш от присланного ключа, далее ищем ключ в БД/файле, если нашли, то капча была введена правильно, при этом ключ нужно удалить из БД/файла, что-б нельзя было повторно использовать.<br />
+<i>Данный метод не позволяет открывать страницы с капчей параллельно у одного клиента, т.к. кука будет перетераться. Что-б это обойти, хеш можно передавать в html страницу где будет капча и при отправке клиентом капчи к нам летит и хеш.</i><br />

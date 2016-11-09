@@ -1,0 +1,91 @@
+::id 4da9d2b11d41c81c6a000000
+::date 2011-04-16
+::title MongoDB array, операции с массивами
+::tags mongodb, python, array
+::body
+**Обновление атрибута в массиве**
+[[t.save({'title':'ABC', 'comments':[ {'user':'jon', 'votes':1}, \
+    {'user':'bil', 'votes':3} ]})
+t.update({'comments.user':'jon' }, {'$inc':{'comments.$.votes':1}}, False, True)
+print t.find_one()
+]]**Результат**
+[[ {u'_id': ObjectId('4da9d1069f1fdf1702000000'), u'comments':[
+{u'votes': 2, u'user': u'jon'}, {u'votes': 3, u'user': u'bil'}
+], u'title': u'ABC'} ]]
+
+**Добавить/убрать из множества (set)**
+[[t.save({ 'tags':['linux','mac'] })
+t.update({},{ '$addToSet':{ 'tags':'windows' } })
+print t.find_one()
+t.update({},{ '$pull':{ 'tags':'windows' } })
+print t.find_one()
+]]**Результат**
+[[{u'_id': ObjectId('4da9d6b99f1fdf1941000001'), u'tags': [u'linux', u'mac', u'windows']}
+{u'_id': ObjectId('4da9d6b99f1fdf1941000001'), u'tags': [u'linux', u'mac']}]]
+
+**Добавить/убрать из массива**
+[[t.save({ 'dim':[1,2] })
+t.update({},{ '$push':{ 'dim':3 } })
+print 'push',t.find_one()
+t.update({},{ '$pushAll':{ 'dim':[4,5] } })
+print 'pushAll',t.find_one()
+t.update({},{ '$pull':{ 'dim':3 } })
+print 'pull',t.find_one()
+t.update({},{ '$pop':{ 'dim':1 } })
+print 'pop',t.find_one()
+t.update({},{ '$pop':{ 'dim':-1 } })
+print 'pop',t.find_one()]]**Результат**
+[[push {u'dim': [1, 2, 3], u'_id': ObjectId('4da9d95a9f1fdf1ab1000002')}
+pushAll {u'dim': [1, 2, 3, 4, 5], u'_id': ObjectId('4da9d95a9f1fdf1ab1000002')}
+pull {u'dim': [1, 2, 4, 5], u'_id': ObjectId('4da9d95a9f1fdf1ab1000002')}
+pop {u'dim': [1, 2, 4], u'_id': ObjectId('4da9d95a9f1fdf1ab1000002')}
+pop {u'dim': [2, 4], u'_id': ObjectId('4da9d95a9f1fdf1ab1000002')}]]
+
+::html
+<b>Обновление атрибута в массиве</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">t</span><span class="o">.</span><span class="n">save</span><span class="p">({</span><span class="s">&#39;title&#39;</span><span class="p">:</span><span class="s">&#39;ABC&#39;</span><span class="p">,</span> <span class="s">&#39;comments&#39;</span><span class="p">:[</span> <span class="p">{</span><span class="s">&#39;user&#39;</span><span class="p">:</span><span class="s">&#39;jon&#39;</span><span class="p">,</span> <span class="s">&#39;votes&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">},</span> \
+    <span class="p">{</span><span class="s">&#39;user&#39;</span><span class="p">:</span><span class="s">&#39;bil&#39;</span><span class="p">,</span> <span class="s">&#39;votes&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">}</span> <span class="p">]})</span>
+<span class="n">t</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&#39;comments.user&#39;</span><span class="p">:</span><span class="s">&#39;jon&#39;</span> <span class="p">},</span> <span class="p">{</span><span class="s">&#39;$inc&#39;</span><span class="p">:{</span><span class="s">&#39;comments.$.votes&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">}},</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">find_one</span><span class="p">()</span>
+</pre></div>
+</div><b>Результат</b><br />
+<div class="codebox"><div class="highlight"><pre> <span class="p">{</span><span class="s">u&#39;_id&#39;</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s">&#39;4da9d1069f1fdf1702000000&#39;</span><span class="p">),</span> <span class="s">u&#39;comments&#39;</span><span class="p">:[</span>
+<span class="p">{</span><span class="s">u&#39;votes&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">u&#39;user&#39;</span><span class="p">:</span> <span class="s">u&#39;jon&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s">u&#39;votes&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">u&#39;user&#39;</span><span class="p">:</span> <span class="s">u&#39;bil&#39;</span><span class="p">}</span>
+<span class="p">],</span> <span class="s">u&#39;title&#39;</span><span class="p">:</span> <span class="s">u&#39;ABC&#39;</span><span class="p">}</span> 
+</pre></div>
+</div><br />
+<br />
+<b>Добавить/убрать из множества (set)</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">t</span><span class="o">.</span><span class="n">save</span><span class="p">({</span> <span class="s">&#39;tags&#39;</span><span class="p">:[</span><span class="s">&#39;linux&#39;</span><span class="p">,</span><span class="s">&#39;mac&#39;</span><span class="p">]</span> <span class="p">})</span>
+<span class="n">t</span><span class="o">.</span><span class="n">update</span><span class="p">({},{</span> <span class="s">&#39;$addToSet&#39;</span><span class="p">:{</span> <span class="s">&#39;tags&#39;</span><span class="p">:</span><span class="s">&#39;windows&#39;</span> <span class="p">}</span> <span class="p">})</span>
+<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">find_one</span><span class="p">()</span>
+<span class="n">t</span><span class="o">.</span><span class="n">update</span><span class="p">({},{</span> <span class="s">&#39;$pull&#39;</span><span class="p">:{</span> <span class="s">&#39;tags&#39;</span><span class="p">:</span><span class="s">&#39;windows&#39;</span> <span class="p">}</span> <span class="p">})</span>
+<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">find_one</span><span class="p">()</span>
+</pre></div>
+</div><b>Результат</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="p">{</span><span class="s">u&#39;_id&#39;</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s">&#39;4da9d6b99f1fdf1941000001&#39;</span><span class="p">),</span> <span class="s">u&#39;tags&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">u&#39;linux&#39;</span><span class="p">,</span> <span class="s">u&#39;mac&#39;</span><span class="p">,</span> <span class="s">u&#39;windows&#39;</span><span class="p">]}</span>
+<span class="p">{</span><span class="s">u&#39;_id&#39;</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s">&#39;4da9d6b99f1fdf1941000001&#39;</span><span class="p">),</span> <span class="s">u&#39;tags&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">u&#39;linux&#39;</span><span class="p">,</span> <span class="s">u&#39;mac&#39;</span><span class="p">]}</span>
+</pre></div>
+</div><br />
+<br />
+<b>Добавить/убрать из массива</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">t</span><span class="o">.</span><span class="n">save</span><span class="p">({</span> <span class="s">&#39;dim&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="p">})</span>
+<span class="n">t</span><span class="o">.</span><span class="n">update</span><span class="p">({},{</span> <span class="s">&#39;$push&#39;</span><span class="p">:{</span> <span class="s">&#39;dim&#39;</span><span class="p">:</span><span class="mi">3</span> <span class="p">}</span> <span class="p">})</span>
+<span class="k">print</span> <span class="s">&#39;push&#39;</span><span class="p">,</span><span class="n">t</span><span class="o">.</span><span class="n">find_one</span><span class="p">()</span>
+<span class="n">t</span><span class="o">.</span><span class="n">update</span><span class="p">({},{</span> <span class="s">&#39;$pushAll&#39;</span><span class="p">:{</span> <span class="s">&#39;dim&#39;</span><span class="p">:[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span> <span class="p">}</span> <span class="p">})</span>
+<span class="k">print</span> <span class="s">&#39;pushAll&#39;</span><span class="p">,</span><span class="n">t</span><span class="o">.</span><span class="n">find_one</span><span class="p">()</span>
+<span class="n">t</span><span class="o">.</span><span class="n">update</span><span class="p">({},{</span> <span class="s">&#39;$pull&#39;</span><span class="p">:{</span> <span class="s">&#39;dim&#39;</span><span class="p">:</span><span class="mi">3</span> <span class="p">}</span> <span class="p">})</span>
+<span class="k">print</span> <span class="s">&#39;pull&#39;</span><span class="p">,</span><span class="n">t</span><span class="o">.</span><span class="n">find_one</span><span class="p">()</span>
+<span class="n">t</span><span class="o">.</span><span class="n">update</span><span class="p">({},{</span> <span class="s">&#39;$pop&#39;</span><span class="p">:{</span> <span class="s">&#39;dim&#39;</span><span class="p">:</span><span class="mi">1</span> <span class="p">}</span> <span class="p">})</span>
+<span class="k">print</span> <span class="s">&#39;pop&#39;</span><span class="p">,</span><span class="n">t</span><span class="o">.</span><span class="n">find_one</span><span class="p">()</span>
+<span class="n">t</span><span class="o">.</span><span class="n">update</span><span class="p">({},{</span> <span class="s">&#39;$pop&#39;</span><span class="p">:{</span> <span class="s">&#39;dim&#39;</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span> <span class="p">}</span> <span class="p">})</span>
+<span class="k">print</span> <span class="s">&#39;pop&#39;</span><span class="p">,</span><span class="n">t</span><span class="o">.</span><span class="n">find_one</span><span class="p">()</span>
+</pre></div>
+</div><b>Результат</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">push</span> <span class="p">{</span><span class="s">u&#39;dim&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s">u&#39;_id&#39;</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s">&#39;4da9d95a9f1fdf1ab1000002&#39;</span><span class="p">)}</span>
+<span class="n">pushAll</span> <span class="p">{</span><span class="s">u&#39;dim&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="s">u&#39;_id&#39;</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s">&#39;4da9d95a9f1fdf1ab1000002&#39;</span><span class="p">)}</span>
+<span class="n">pull</span> <span class="p">{</span><span class="s">u&#39;dim&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="s">u&#39;_id&#39;</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s">&#39;4da9d95a9f1fdf1ab1000002&#39;</span><span class="p">)}</span>
+<span class="n">pop</span> <span class="p">{</span><span class="s">u&#39;dim&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="s">u&#39;_id&#39;</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s">&#39;4da9d95a9f1fdf1ab1000002&#39;</span><span class="p">)}</span>
+<span class="n">pop</span> <span class="p">{</span><span class="s">u&#39;dim&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="s">u&#39;_id&#39;</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s">&#39;4da9d95a9f1fdf1ab1000002&#39;</span><span class="p">)}</span>
+</pre></div>
+</div><br />

@@ -1,0 +1,54 @@
+::id 4bfb3c691d41c846bc00002e
+::date 2010-01-31
+::title Информация об ОС, платформе. python
+::tags python, os
+::body
+Получение информации об ОС, платформе на python
+
+[[# coding: utf-8
+
+import platform 
+profile = [ 
+platform.architecture(), 
+platform.dist(), 
+platform.libc_ver(), 
+platform.mac_ver(), 
+platform.machine(), 
+platform.node(), 
+platform.platform(), 
+platform.processor(), 
+platform.python_build(), 
+platform.python_compiler(), 
+platform.python_version(), 
+platform.system(), 
+platform.uname(), 
+platform.version(), 
+] 
+for item in profile: 
+    print item
+]]
+::html
+Получение информации об ОС, платформе на python<br />
+<br />
+<div class="codebox"><pre><code># coding: utf-8
+
+import platform 
+profile = [ 
+platform.architecture(), 
+platform.dist(), 
+platform.libc_ver(), 
+platform.mac_ver(), 
+platform.machine(), 
+platform.node(), 
+platform.platform(), 
+platform.processor(), 
+platform.python_build(), 
+platform.python_compiler(), 
+platform.python_version(), 
+platform.system(), 
+platform.uname(), 
+platform.version(), 
+] 
+for item in profile: 
+    print item
+</code></pre></div>

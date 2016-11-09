@@ -1,0 +1,114 @@
+::id 4bfb3c6a1d41c846bc0000c6
+::date 2010-04-23
+::title pymark, вики разметка
+::tags python, wiki, pymark, bottle
+::body
+Берем свежую версию pymark
+[[hg clone http://bitbucket.org/lega911/pymark]]
+Делаем веб-приложение в текущей папке
+[[from bottle import run, debug, route, request
+from pymark import mark1
+
+def getpg(a='',b=''):
+    return '''<html><head>
+        <style type="text/css"> 
+        div.codebox {
+        BORDER-STYLE: solid;
+        BORDER-WIDTH: 1px;
+        WIDTH: 100%%; OVERFLOW: auto;
+        color: #001020;
+        } </style>
+        </head><body>
+        %s<hr />
+        <form action='/' method='post'>
+            <textarea name=text cols=100 rows=20>%s</textarea>
+            <br /><input type=submit />
+        </form>
+        </body></html>''' % (a,b)
+
+@route('/')
+def main():
+    return getpg()
+
+@route('/', method='post')
+def main_post():
+    a = request.POST.get('text','')
+    b = mark1(a)
+    return getpg(b,a)
+
+run(host='', port=8080, reloader=True)]]
+Готово.
+
+Можно попробовать, запускаем скрипт, переходим по адресу [http://localhost:8080/ http://localhost:8080/], и вводим туда текст например такой[[!Заголовок
+ * Отступ 1
+  * Отступ 2
+
+**жинрным**, //курсив//, ##моноширинный##,
+__подчеркивание__, --зачеркивается--
+
+[!^{ html блок <a href="#">#</a> }!^]
+
+[!^[@route('/')
+def main():
+    return getpg()]!^]
+
+[http://google.com Ссылка на гугл]
+[google.com внутренняя ссылка]
+
+[file:123 файл]
+[image:13] тут картинка]]
+::html
+Берем свежую версию pymark<br />
+<div class="codebox"><pre><code>hg clone http://bitbucket.org/lega911/pymark</code></pre></div><br />
+Делаем веб-приложение в текущей папке<br />
+<div class="codebox"><pre><code>from bottle import run, debug, route, request
+from pymark import mark1
+
+def getpg(a='',b=''):
+    return '''&lt;html&gt;&lt;head&gt;
+        &lt;style type="text/css"&gt; 
+        div.codebox {
+        BORDER-STYLE: solid;
+        BORDER-WIDTH: 1px;
+        WIDTH: 100%%; OVERFLOW: auto;
+        color: #001020;
+        } &lt;/style&gt;
+        &lt;/head&gt;&lt;body&gt;
+        %s&lt;hr /&gt;
+        &lt;form action='/' method='post'&gt;
+            &lt;textarea name=text cols=100 rows=20&gt;%s&lt;/textarea&gt;
+            &lt;br /&gt;&lt;input type=submit /&gt;
+        &lt;/form&gt;
+        &lt;/body&gt;&lt;/html&gt;''' % (a,b)
+
+@route('/')
+def main():
+    return getpg()
+
+@route('/', method='post')
+def main_post():
+    a = request.POST.get('text','')
+    b = mark1(a)
+    return getpg(b,a)
+
+run(host='', port=8080, reloader=True)</code></pre></div><br />
+Готово.<br />
+<br />
+Можно попробовать, запускаем скрипт, переходим по адресу <a target=_blank href="http://localhost:8080/">http://localhost:8080/</a>, и вводим туда текст например такой<div class="codebox"><pre><code>!Заголовок
+ * Отступ 1
+  * Отступ 2
+
+**жинрным**, //курсив//, ##моноширинный##,
+__подчеркивание__, --зачеркивается--
+
+[{ html блок &lt;a href="#"&gt;#&lt;/a&gt; }]
+
+[[@route('/')
+def main():
+    return getpg()]]
+
+[http://google.com Ссылка на гугл]
+[google.com внутренняя ссылка]
+
+[file:123 файл]
+[image:13] тут картинка</code></pre></div>

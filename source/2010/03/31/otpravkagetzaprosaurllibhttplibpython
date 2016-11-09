@@ -1,0 +1,55 @@
+::id 4bfb3c6a1d41c846bc0000a3
+::date 2010-03-31
+::title Отправка GET запроса (urllib, httplib, python)
+::tags python, httplib, urllib
+::body
+Пример берет перевод с translate.google
+
+[[# coding: utf8
+
+import re
+import urllib
+import urllib2
+
+def translate(text, sl, tl):
+    params = { 'ie': 'UTF-8', 'text': text, 'sl': sl, 'tl': tl }
+    url = 'http://translate.google.com/translate_t?'
+    req = urllib2.Request(url + urllib.urlencode(params), headers={ 'User-Agent': 'Mozilla/5.0', 'Accept-Charset': 'utf-8' })
+    page = urllib2.urlopen(req).read()
+    
+    return re.findall(r'<textarea name=utrans[^<>]*">([^<>]*)</textarea>', page)[0].replace('&lt;br&gt;','\n')
+
+print translate('Проверка перевода\nЕсть', 'ru', 'en')
+print translate('Hello world', 'en', 'ru')]]
+Результат[[Checking the translation
+There is
+Привет мир]]
+
+
+::html
+Пример берет перевод с translate.google<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">urllib2</span>
+
+<span class="k">def</span> <span class="nf">translate</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">tl</span><span class="p">):</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#39;ie&#39;</span><span class="p">:</span> <span class="s">&#39;UTF-8&#39;</span><span class="p">,</span> <span class="s">&#39;text&#39;</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span> <span class="s">&#39;sl&#39;</span><span class="p">:</span> <span class="n">sl</span><span class="p">,</span> <span class="s">&#39;tl&#39;</span><span class="p">:</span> <span class="n">tl</span> <span class="p">}</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s">&#39;http://translate.google.com/translate_t?&#39;</span>
+    <span class="n">req</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">url</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">),</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span> <span class="s">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s">&#39;Mozilla/5.0&#39;</span><span class="p">,</span> <span class="s">&#39;Accept-Charset&#39;</span><span class="p">:</span> <span class="s">&#39;utf-8&#39;</span> <span class="p">})</span>
+    <span class="n">page</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">r&#39;&lt;textarea name=utrans[^&lt;&gt;]*&quot;&gt;([^&lt;&gt;]*)&lt;/textarea&gt;&#39;</span><span class="p">,</span> <span class="n">page</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;&amp;lt;br&amp;gt;&#39;</span><span class="p">,</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="n">translate</span><span class="p">(</span><span class="s">&#39;Проверка перевода</span><span class="se">\n</span><span class="s">Есть&#39;</span><span class="p">,</span> <span class="s">&#39;ru&#39;</span><span class="p">,</span> <span class="s">&#39;en&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">translate</span><span class="p">(</span><span class="s">&#39;Hello world&#39;</span><span class="p">,</span> <span class="s">&#39;en&#39;</span><span class="p">,</span> <span class="s">&#39;ru&#39;</span><span class="p">)</span>
+</pre></div>
+</div><br />
+Результат<div class="codebox"><div class="highlight"><pre><span class="n">Checking</span> <span class="n">the</span> <span class="n">translation</span>
+<span class="n">There</span> <span class="ow">is</span>
+<span class="err">Привет</span> <span class="err">мир</span>
+</pre></div>
+</div><br />
+<br />

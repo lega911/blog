@@ -1,0 +1,57 @@
+::id 4c4008f91d41c82d48000005
+::date 2010-07-16
+::title Изменение GET параметров в url на JavaScript
+::tags web, javascript
+::body
+Данная функция изменяет get параметр в адресной строке, при этом на серверной стороне не нужно делать построение/суммирование get параметров и т.п. Её удобно использовать когда на странице есть несколько изменяемых параметров.
+
+[[function setAttr(prmName,val){
+    var res = '';
+	var d = location.href.split("#")[0].split("?");  
+	var base = d[0];
+	var query = d[1];
+	if(query) {
+		var params = query.split("&");  
+		for(var i = 0; i < params.length; i++) {  
+			var keyval = params[i].split("=");  
+			if(keyval[0] != prmName) {  
+				res += params[i] + '&';
+			}
+		}
+	}
+	res += prmName + '=' + val;
+	window.location.href = base + '?' + res;
+	return false;
+} ]]
+**Использование**
+[[
+<a href="#" onclick="return setAttr('sort','name')">Сортировка по Имени</a>
+]]
+
+::html
+Данная функция изменяет get параметр в адресной строке, при этом на серверной стороне не нужно делать построение/суммирование get параметров и т.п. Её удобно использовать когда на странице есть несколько изменяемых параметров.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">function</span> <span class="n">setAttr</span><span class="p">(</span><span class="n">prmName</span><span class="p">,</span><span class="n">val</span><span class="p">){</span>
+    <span class="n">var</span> <span class="n">res</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="p">;</span>
+	<span class="n">var</span> <span class="n">d</span> <span class="o">=</span> <span class="n">location</span><span class="o">.</span><span class="n">href</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;#&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;?&quot;</span><span class="p">);</span>  
+	<span class="n">var</span> <span class="n">base</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+	<span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">query</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">var</span> <span class="n">params</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;&amp;&quot;</span><span class="p">);</span>  
+		<span class="k">for</span><span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">params</span><span class="o">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>  
+			<span class="n">var</span> <span class="n">keyval</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;=&quot;</span><span class="p">);</span>  
+			<span class="k">if</span><span class="p">(</span><span class="n">keyval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">prmName</span><span class="p">)</span> <span class="p">{</span>  
+				<span class="n">res</span> <span class="o">+=</span> <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;&amp;&#39;</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="n">res</span> <span class="o">+=</span> <span class="n">prmName</span> <span class="o">+</span> <span class="s">&#39;=&#39;</span> <span class="o">+</span> <span class="n">val</span><span class="p">;</span>
+	<span class="n">window</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">href</span> <span class="o">=</span> <span class="n">base</span> <span class="o">+</span> <span class="s">&#39;?&#39;</span> <span class="o">+</span> <span class="n">res</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">false</span><span class="p">;</span>
+<span class="p">}</span> 
+</pre></div>
+</div><br />
+<b>Использование</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;#&quot;</span> <span class="n">onclick</span><span class="o">=</span><span class="s">&quot;return setAttr(&#39;sort&#39;,&#39;name&#39;)&quot;</span><span class="o">&gt;</span><span class="err">Сортировка</span> <span class="err">по</span> <span class="err">Имени</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+</pre></div>
+</div><br />

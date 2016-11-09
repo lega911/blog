@@ -1,0 +1,130 @@
+::id 4c46b8c21d41c80eb4000000
+::date 2010-07-21
+::title iptables базовые ф-ии 
+::tags iptables, linux
+::body
+Вывести список правил [[iptables -L]]
+Удалить все правила [[iptables -F # Удалить правила
+iptables -t nat -F
+iptables -t mangle -F 
+iptables -X # Удалить цепочки
+iptables -t nat -X 
+iptables -t mangle -X]]
+Сохранить/восстановить правила
+[[iptables-save # Сохранить правила
+iptables-restore # Восстановить правила ]]
+Установить действие по умолчанию для таблицы[[iptables -P INPUT DROP # Блокируем входящий трафик
+iptables -P FORWARD REJECT # Транзитный трафик, сообщаем об отказе
+iptables -P OUTPUT ACCEPT # Исходящий трафик разрешаем
+]]
+
+!Правила
+Разрешить входящие пакеты с подсети 192.168.1.0/24 на порты с 500 по 60000[[iptables -A INPUT -p tcp -s 192.168.1.0/24 --dport 500:60000 -j ACCEPT]]
+Разрешить все установленные соединения[[iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT]]
+Установить фиксированный ttl на все исходящие пакеты[[iptables -t mangle -I POSTROUTING -o eth0 -j TTL --ttl-set 64]]
+Создать цепочку и сделать её вызов[[iptables -N my_check # Создаем цепочку
+iptables -A my_check -s 10.10.10.10 -j RETURN # "Хорошй" хост, выходим
+iptables -A my_check -j DROP # Всех остальных игнорируем
+
+# При совпадении условия вызываем нашу цепочку
+iptables -A INPUT -s 10.10.0.0/16 -j my_check]]
+
+!Необходимые правила для INPUT
+Если вы решили блокировать пакеты в таблице INPUT, то правила ниже нужно использовать для правильного функционирования локальной системы.
+[[iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A INPUT -p icmp --icmp-type destination-unreachable -j ACCEPT
+iptables -A INPUT -p icmp --icmp-type time-exceeded -j ACCEPT
+iptables -A INPUT -p icmp --icmp-type parameter-problem -j ACCEPT
+iptables -A INPUT -p icmp --icmp-type 8 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT  # ping
+]]
+
+!Разрешить любой трафик + удалить все правила и цепочки
+[[iptables -P INPUT ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -F
+iptables -X]]
+
+!Запретить все кроме ssh
+[[iptables -P INPUT ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -F
+iptables -X
+iptables -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+iptables -P INPUT DROP
+iptables -A OUTPUT -p tcp -m tcp --sport 22 -j ACCEPT
+iptables -P OUTPUT DROP]]
+
+
+//постепенно будет пополняться//
+::html
+Вывести список правил <div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">L</span>
+</pre></div>
+</div><br />
+Удалить все правила <div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">F</span> <span class="c"># Удалить правила</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">t</span> <span class="n">nat</span> <span class="o">-</span><span class="n">F</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">t</span> <span class="n">mangle</span> <span class="o">-</span><span class="n">F</span> 
+<span class="n">iptables</span> <span class="o">-</span><span class="n">X</span> <span class="c"># Удалить цепочки</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">t</span> <span class="n">nat</span> <span class="o">-</span><span class="n">X</span> 
+<span class="n">iptables</span> <span class="o">-</span><span class="n">t</span> <span class="n">mangle</span> <span class="o">-</span><span class="n">X</span>
+</pre></div>
+</div><br />
+Сохранить/восстановить правила<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">iptables</span><span class="o">-</span><span class="n">save</span> <span class="c"># Сохранить правила</span>
+<span class="n">iptables</span><span class="o">-</span><span class="n">restore</span> <span class="c"># Восстановить правила </span>
+</pre></div>
+</div><br />
+Установить действие по умолчанию для таблицы<div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">P</span> <span class="n">INPUT</span> <span class="n">DROP</span> <span class="c"># Блокируем входящий трафик</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">P</span> <span class="n">FORWARD</span> <span class="n">REJECT</span> <span class="c"># Транзитный трафик, сообщаем об отказе</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">P</span> <span class="n">OUTPUT</span> <span class="n">ACCEPT</span> <span class="c"># Исходящий трафик разрешаем</span>
+</pre></div>
+</div><br />
+<h3>Правила</h3>Разрешить входящие пакеты с подсети 192.168.1.0/24 на порты с 500 по 60000<div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">p</span> <span class="n">tcp</span> <span class="o">-</span><span class="n">s</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">1.0</span><span class="o">/</span><span class="mi">24</span> <span class="o">--</span><span class="n">dport</span> <span class="mi">500</span><span class="p">:</span><span class="mi">60000</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>
+</pre></div>
+</div><br />
+Разрешить все установленные соединения<div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">m</span> <span class="n">conntrack</span> <span class="o">--</span><span class="n">ctstate</span> <span class="n">ESTABLISHED</span><span class="p">,</span><span class="n">RELATED</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>
+</pre></div>
+</div><br />
+Установить фиксированный ttl на все исходящие пакеты<div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">t</span> <span class="n">mangle</span> <span class="o">-</span><span class="n">I</span> <span class="n">POSTROUTING</span> <span class="o">-</span><span class="n">o</span> <span class="n">eth0</span> <span class="o">-</span><span class="n">j</span> <span class="n">TTL</span> <span class="o">--</span><span class="n">ttl</span><span class="o">-</span><span class="nb">set</span> <span class="mi">64</span>
+</pre></div>
+</div><br />
+Создать цепочку и сделать её вызов<div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">N</span> <span class="n">my_check</span> <span class="c"># Создаем цепочку</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">my_check</span> <span class="o">-</span><span class="n">s</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">10.10</span> <span class="o">-</span><span class="n">j</span> <span class="n">RETURN</span> <span class="c"># &quot;Хорошй&quot; хост, выходим</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">my_check</span> <span class="o">-</span><span class="n">j</span> <span class="n">DROP</span> <span class="c"># Всех остальных игнорируем</span>
+
+<span class="c"># При совпадении условия вызываем нашу цепочку</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">s</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">0.0</span><span class="o">/</span><span class="mi">16</span> <span class="o">-</span><span class="n">j</span> <span class="n">my_check</span>
+</pre></div>
+</div><br />
+<h3>Необходимые правила для INPUT</h3>Если вы решили блокировать пакеты в таблице INPUT, то правила ниже нужно использовать для правильного функционирования локальной системы.<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">m</span> <span class="n">conntrack</span> <span class="o">--</span><span class="n">ctstate</span> <span class="n">ESTABLISHED</span><span class="p">,</span><span class="n">RELATED</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">i</span> <span class="n">lo</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">p</span> <span class="n">icmp</span> <span class="o">--</span><span class="n">icmp</span><span class="o">-</span><span class="nb">type</span> <span class="n">destination</span><span class="o">-</span><span class="n">unreachable</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">p</span> <span class="n">icmp</span> <span class="o">--</span><span class="n">icmp</span><span class="o">-</span><span class="nb">type</span> <span class="n">time</span><span class="o">-</span><span class="n">exceeded</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">p</span> <span class="n">icmp</span> <span class="o">--</span><span class="n">icmp</span><span class="o">-</span><span class="nb">type</span> <span class="n">parameter</span><span class="o">-</span><span class="n">problem</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">p</span> <span class="n">icmp</span> <span class="o">--</span><span class="n">icmp</span><span class="o">-</span><span class="nb">type</span> <span class="mi">8</span> <span class="o">-</span><span class="n">m</span> <span class="n">state</span> <span class="o">--</span><span class="n">state</span> <span class="n">NEW</span><span class="p">,</span><span class="n">ESTABLISHED</span><span class="p">,</span><span class="n">RELATED</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>  <span class="c"># ping</span>
+</pre></div>
+</div><br />
+<h3>Разрешить любой трафик + удалить все правила и цепочки</h3><div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">P</span> <span class="n">INPUT</span> <span class="n">ACCEPT</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">P</span> <span class="n">OUTPUT</span> <span class="n">ACCEPT</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">P</span> <span class="n">FORWARD</span> <span class="n">ACCEPT</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">F</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">X</span>
+</pre></div>
+</div><br />
+<h3>Запретить все кроме ssh</h3><div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">P</span> <span class="n">INPUT</span> <span class="n">ACCEPT</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">P</span> <span class="n">OUTPUT</span> <span class="n">ACCEPT</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">P</span> <span class="n">FORWARD</span> <span class="n">ACCEPT</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">F</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">X</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">p</span> <span class="n">tcp</span> <span class="o">-</span><span class="n">m</span> <span class="n">tcp</span> <span class="o">--</span><span class="n">dport</span> <span class="mi">22</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">P</span> <span class="n">INPUT</span> <span class="n">DROP</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="n">OUTPUT</span> <span class="o">-</span><span class="n">p</span> <span class="n">tcp</span> <span class="o">-</span><span class="n">m</span> <span class="n">tcp</span> <span class="o">--</span><span class="n">sport</span> <span class="mi">22</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">P</span> <span class="n">OUTPUT</span> <span class="n">DROP</span>
+</pre></div>
+</div><br />
+<br />
+<br />
+<i>постепенно будет пополняться</i>

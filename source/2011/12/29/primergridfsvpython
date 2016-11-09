@@ -1,0 +1,57 @@
+::id 4efc2f30bbddbd3e9e000000
+::date 2011-12-29
+::title Пример GridFS в Python
+::tags python, mongodb, gridfs
+::body
+Пример использования GridFS (mongodb) в Python
+
+[[from pymongo import Connection
+import gridfs
+
+# Подключение к GridFS
+db = Connection().test
+fs = gridfs.GridFS(db)
+
+# Запись, чтение
+file_id = fs.put('hello world')
+print fs.get(file_id).read()
+
+# Записать объект-файл
+file_id = fs.put(open('img.jpg'), content_type="image/jpeg", filename="image.jpg")
+print fs.get(file_id).content_type
+
+# Получить последнюю версию по имени файла
+file_id = fs.put('hello 1', filename = 'test_history')
+file_id = fs.put('hello 2', filename = 'test_history')
+
+print fs.get_last_version('test_history').read()
+fs.delete(file_id)
+print fs.get_last_version('test_history').read()]]
+
+::html
+Пример использования GridFS (mongodb) в Python<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">Connection</span>
+<span class="kn">import</span> <span class="nn">gridfs</span>
+
+<span class="c"># Подключение к GridFS</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">()</span><span class="o">.</span><span class="n">test</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="n">gridfs</span><span class="o">.</span><span class="n">GridFS</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
+
+<span class="c"># Запись, чтение</span>
+<span class="n">file_id</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">&#39;hello world&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">fs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">file_id</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="c"># Записать объект-файл</span>
+<span class="n">file_id</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;img.jpg&#39;</span><span class="p">),</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&quot;image/jpeg&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s">&quot;image.jpg&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">fs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">file_id</span><span class="p">)</span><span class="o">.</span><span class="n">content_type</span>
+
+<span class="c"># Получить последнюю версию по имени файла</span>
+<span class="n">file_id</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">&#39;hello 1&#39;</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="s">&#39;test_history&#39;</span><span class="p">)</span>
+<span class="n">file_id</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">&#39;hello 2&#39;</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="s">&#39;test_history&#39;</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="n">fs</span><span class="o">.</span><span class="n">get_last_version</span><span class="p">(</span><span class="s">&#39;test_history&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">file_id</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">fs</span><span class="o">.</span><span class="n">get_last_version</span><span class="p">(</span><span class="s">&#39;test_history&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</pre></div>
+</div><br />

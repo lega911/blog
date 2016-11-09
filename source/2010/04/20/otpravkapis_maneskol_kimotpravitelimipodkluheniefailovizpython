@@ -1,0 +1,93 @@
+::id 4bfb3c6a1d41c846bc0000c2
+::date 2010-04-20
+::title Отправка письма нескольким отправителям и подключение файлов из Python
+::tags python, mail, smtp
+::body
+Отправка письма нескольким отправителям и подключение файлов
+
+[[# coding: utf8
+
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+toaddr = ['<user@mail.ru>', '<user2@mail.ru>', '<user3@mail.ru>']
+me = 'From: My Name <user@gmail.com>'
+you = 'To: ' + ', '.join(toaddr)
+
+server = 'smtp.gmail.com' # Сервер отпраитель
+port = 25 # возможные порты: 587, 465
+user_name = 'user@gmail.com' # Адрес отправителя
+user_passwd = 'password' # Пароль отправителя
+
+# Формируем заголовок письма
+msg = MIMEMultipart('mixed')
+msg['Subject'] = 'Заголовок письма'
+msg['From'] = me
+msg['To'] = ', '.join(toaddr[0:2]) # отправка 2-м адресаиам
+msg['cc'] = ', '.join([ toaddr[2] ]) # отправка копии 1-му адресату
+
+# Формируем письмо
+part1 = MIMEText('Содержимое письма', 'plain')
+part2 = MIMEText('Содержимое приложенного файла', 'text/html;name="tasks.htm"', 'utf-8')
+msg.attach(part1)
+msg.attach(part2)
+
+# Подключение
+s = smtplib.SMTP(server, port)
+s.ehlo()
+s.starttls()
+s.ehlo()
+# Авторизация
+s.login(user_name, user_passwd)
+# Отправка пиьма
+s.sendmail(me, toaddr, msg.as_string())
+s.quit() ]]
+
+подобное [/page/29 Отправка писем из python]
+
+::html
+Отправка письма нескольким отправителям и подключение файлов<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">import</span> <span class="nn">smtplib</span>
+<span class="kn">from</span> <span class="nn">email.mime.text</span> <span class="kn">import</span> <span class="n">MIMEText</span>
+<span class="kn">from</span> <span class="nn">email.mime.multipart</span> <span class="kn">import</span> <span class="n">MIMEMultipart</span>
+
+<span class="n">toaddr</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;&lt;user@mail.ru&gt;&#39;</span><span class="p">,</span> <span class="s">&#39;&lt;user2@mail.ru&gt;&#39;</span><span class="p">,</span> <span class="s">&#39;&lt;user3@mail.ru&gt;&#39;</span><span class="p">]</span>
+<span class="n">me</span> <span class="o">=</span> <span class="s">&#39;From: My Name &lt;user@gmail.com&gt;&#39;</span>
+<span class="n">you</span> <span class="o">=</span> <span class="s">&#39;To: &#39;</span> <span class="o">+</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">toaddr</span><span class="p">)</span>
+
+<span class="n">server</span> <span class="o">=</span> <span class="s">&#39;smtp.gmail.com&#39;</span> <span class="c"># Сервер отпраитель</span>
+<span class="n">port</span> <span class="o">=</span> <span class="mi">25</span> <span class="c"># возможные порты: 587, 465</span>
+<span class="n">user_name</span> <span class="o">=</span> <span class="s">&#39;user@gmail.com&#39;</span> <span class="c"># Адрес отправителя</span>
+<span class="n">user_passwd</span> <span class="o">=</span> <span class="s">&#39;password&#39;</span> <span class="c"># Пароль отправителя</span>
+
+<span class="c"># Формируем заголовок письма</span>
+<span class="n">msg</span> <span class="o">=</span> <span class="n">MIMEMultipart</span><span class="p">(</span><span class="s">&#39;mixed&#39;</span><span class="p">)</span>
+<span class="n">msg</span><span class="p">[</span><span class="s">&#39;Subject&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;Заголовок письма&#39;</span>
+<span class="n">msg</span><span class="p">[</span><span class="s">&#39;From&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">me</span>
+<span class="n">msg</span><span class="p">[</span><span class="s">&#39;To&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">toaddr</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span> <span class="c"># отправка 2-м адресаиам</span>
+<span class="n">msg</span><span class="p">[</span><span class="s">&#39;cc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span> <span class="n">toaddr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">])</span> <span class="c"># отправка копии 1-му адресату</span>
+
+<span class="c"># Формируем письмо</span>
+<span class="n">part1</span> <span class="o">=</span> <span class="n">MIMEText</span><span class="p">(</span><span class="s">&#39;Содержимое письма&#39;</span><span class="p">,</span> <span class="s">&#39;plain&#39;</span><span class="p">)</span>
+<span class="n">part2</span> <span class="o">=</span> <span class="n">MIMEText</span><span class="p">(</span><span class="s">&#39;Содержимое приложенного файла&#39;</span><span class="p">,</span> <span class="s">&#39;text/html;name=&quot;tasks.htm&quot;&#39;</span><span class="p">,</span> <span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="n">msg</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">part1</span><span class="p">)</span>
+<span class="n">msg</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">part2</span><span class="p">)</span>
+
+<span class="c"># Подключение</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">smtplib</span><span class="o">.</span><span class="n">SMTP</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">ehlo</span><span class="p">()</span>
+<span class="n">s</span><span class="o">.</span><span class="n">starttls</span><span class="p">()</span>
+<span class="n">s</span><span class="o">.</span><span class="n">ehlo</span><span class="p">()</span>
+<span class="c"># Авторизация</span>
+<span class="n">s</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">user_name</span><span class="p">,</span> <span class="n">user_passwd</span><span class="p">)</span>
+<span class="c"># Отправка пиьма</span>
+<span class="n">s</span><span class="o">.</span><span class="n">sendmail</span><span class="p">(</span><span class="n">me</span><span class="p">,</span> <span class="n">toaddr</span><span class="p">,</span> <span class="n">msg</span><span class="o">.</span><span class="n">as_string</span><span class="p">())</span>
+<span class="n">s</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span> 
+</pre></div>
+</div><br />
+<br />
+подобное <a href="/page/29">Отправка писем из python</a><br />

@@ -1,0 +1,13 @@
+::id 4f31f4e7bbddbd6b8e000000
+::date 2012-02-08
+::title ubuntu, узнать адрес dhcp который выдал ip
+::tags linux, ubuntu, dhcp, network
+::body
+[[$ cat /var/lib/dhcp/dhclient.leases | grep dhcp-server-identifier
+  option dhcp-server-identifier 192.168.0.252;
+]]
+::html
+<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">cat</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">dhcp</span><span class="o">/</span><span class="n">dhclient</span><span class="o">.</span><span class="n">leases</span> <span class="o">|</span> <span class="n">grep</span> <span class="n">dhcp</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="n">identifier</span>
+  <span class="n">option</span> <span class="n">dhcp</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="n">identifier</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">0.252</span><span class="p">;</span>
+</pre></div>
+</div>

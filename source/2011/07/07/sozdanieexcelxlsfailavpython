@@ -1,0 +1,81 @@
+::id 4e15588e1d41c81105000003
+::date 2011-07-07
+::title Создание excel (xls) файла в python
+::tags python, excel, xlwt
+::body
+Пример создания excel документа на python с помощью модуля [http://www.python-excel.org/ xlwt].
+Установка модуля[[easy_install xlwt]]
+
+[[# coding: utf8
+
+import xlwt
+
+# Создаем книку
+book = xlwt.Workbook('utf8')
+
+# Создаем шрифт
+font = xlwt.easyxf('font: height 240,name Arial,colour_index black, bold off,\
+    italic off; align: wrap on, vert top, horiz left;\
+    pattern: pattern solid, fore_colour red;')
+
+# Добавляем лист
+sheet = book.add_sheet('sheetname')
+
+# Заполняем ящейку (Строка, Колонка, Текст, Шрифт)
+sheet.write(0,0,'text',font)
+
+# Высота строки
+sheet.row(1).height = 2500
+
+# Ширина колонки
+sheet.col(0).width = 20000
+
+# Лист в положении "альбом"
+sheet.portrait = False
+
+# Масштабирование при печати
+sheet.set_print_scaling(85)
+
+# Сохраняем в файл
+book.save('filename.xls')
+]]
+::html
+Пример создания excel документа на python с помощью модуля <a target=_blank href="http://www.python-excel.org/">xlwt</a>.<br />
+Установка модуля<div class="codebox"><div class="highlight"><pre><span class="n">easy_install</span> <span class="n">xlwt</span>
+</pre></div>
+</div><br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">import</span> <span class="nn">xlwt</span>
+
+<span class="c"># Создаем книку</span>
+<span class="n">book</span> <span class="o">=</span> <span class="n">xlwt</span><span class="o">.</span><span class="n">Workbook</span><span class="p">(</span><span class="s">&#39;utf8&#39;</span><span class="p">)</span>
+
+<span class="c"># Создаем шрифт</span>
+<span class="n">font</span> <span class="o">=</span> <span class="n">xlwt</span><span class="o">.</span><span class="n">easyxf</span><span class="p">(</span><span class="s">&#39;font: height 240,name Arial,colour_index black, bold off,</span><span class="se">\</span>
+<span class="s">    italic off; align: wrap on, vert top, horiz left;</span><span class="se">\</span>
+<span class="s">    pattern: pattern solid, fore_colour red;&#39;</span><span class="p">)</span>
+
+<span class="c"># Добавляем лист</span>
+<span class="n">sheet</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="n">add_sheet</span><span class="p">(</span><span class="s">&#39;sheetname&#39;</span><span class="p">)</span>
+
+<span class="c"># Заполняем ящейку (Строка, Колонка, Текст, Шрифт)</span>
+<span class="n">sheet</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="s">&#39;text&#39;</span><span class="p">,</span><span class="n">font</span><span class="p">)</span>
+
+<span class="c"># Высота строки</span>
+<span class="n">sheet</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">2500</span>
+
+<span class="c"># Ширина колонки</span>
+<span class="n">sheet</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">20000</span>
+
+<span class="c"># Лист в положении &quot;альбом&quot;</span>
+<span class="n">sheet</span><span class="o">.</span><span class="n">portrait</span> <span class="o">=</span> <span class="bp">False</span>
+
+<span class="c"># Масштабирование при печати</span>
+<span class="n">sheet</span><span class="o">.</span><span class="n">set_print_scaling</span><span class="p">(</span><span class="mi">85</span><span class="p">)</span>
+
+<span class="c"># Сохраняем в файл</span>
+<span class="n">book</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s">&#39;filename.xls&#39;</span><span class="p">)</span>
+</pre></div>
+</div>

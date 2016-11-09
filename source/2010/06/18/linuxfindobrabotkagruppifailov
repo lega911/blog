@@ -1,0 +1,52 @@
+::id 4c1a8faa1d41c8445e000001
+::date 2010-06-18
+::title linux find, обработка группы файлов
+::tags find, chmod, linux
+::body
+С помощью команды **find** можно обрабатывать группы файлов по условиям.
+Общий вид команды:
+[[find <путь> <фильтр> <комманда>]]
+Например команда[[find ./ -type d -exec chmod 755 {} \;]]начиная с текущей папки, выберет все папки, и применит к ним команду **chmod 755 //folder//**
+
+!Описание фильтров
+#|**Выбирать папки**|find -type d
+||**Выбрать файлы**|find -type f
+||**Фильтр по regex выражению**|find -regex .*\.txt$
+//найдет все файлы с расширением txt//
+||**Именной фильтр**|find -name *.txt
+//метасимволы: *, ?, []//
+||**Фильтр по владельцу фалов**|find -user root
+||**Фильтр по имени группы**|find -group root
+||**Если есть право чтения**|find -readable
+||**Если есть право записи**|find -writable
+||**Если есть право запуска**|find -executable
+||**Фильтр по размеру**|find +size 100M
+//более 100Мб//
+find -size 10k
+//менее 10кб//
+||**Фильтр по времени**|find . -mtime +30
+//все файлы старше 30 дней//
+|#
+
+!Команды
+#|**Удалить**|find -delete
+||**Вывести как ls**|find -ls
+||**Выполнить команду**|find -exec //command// {} \;
+||**Записать имена файлов в файл**|find -fprint //file_name//
+|#
+
+::html
+С помощью команды <b>find</b> можно обрабатывать группы файлов по условиям.<br />
+Общий вид команды:<br />
+<div class="codebox"><pre><code>find &lt;путь&gt; &lt;фильтр&gt; &lt;комманда&gt;</code></pre></div><br />
+Например команда<div class="codebox"><pre><code>find ./ -type d -exec chmod 755 {} \;</code></pre></div>начиная с текущей папки, выберет все папки, и применит к ним команду <b>chmod 755 <i>folder</i></b><br />
+<h3>Описание фильтров</h3><br />
+<table class="pymark_table"><tr><td><b>Выбирать папки</b></td><td>find -type d</td></tr><tr><td><b>Выбрать файлы</b></td><td>find -type f</td></tr><tr><td><b>Фильтр по regex выражению</b></td><td>find -regex .*\.txt$<br />
+<i>найдет все файлы с расширением txt</i></td></tr><tr><td><b>Именной фильтр</b></td><td>find -name *.txt<br />
+<i>метасимволы: *, ?, []</i></td></tr><tr><td><b>Фильтр по владельцу фалов</b></td><td>find -user root</td></tr><tr><td><b>Фильтр по имени группы</b></td><td>find -group root</td></tr><tr><td><b>Если есть право чтения</b></td><td>find -readable</td></tr><tr><td><b>Если есть право записи</b></td><td>find -writable</td></tr><tr><td><b>Если есть право запуска</b></td><td>find -executable</td></tr><tr><td><b>Фильтр по размеру</b></td><td>find +size 100M<br />
+<i>более 100Мб</i><br />
+find -size 10k<br />
+<i>менее 10кб</i></td></tr><tr><td><b>Фильтр по времени</b></td><td>find . -mtime +30<br />
+<i>все файлы старше 30 дней</i></td></tr></table><br />
+<h3>Команды</h3><br />
+<table class="pymark_table"><tr><td><b>Удалить</b></td><td>find -delete</td></tr><tr><td><b>Вывести как ls</b></td><td>find -ls</td></tr><tr><td><b>Выполнить команду</b></td><td>find -exec <i>command</i> {} \;</td></tr><tr><td><b>Записать имена файлов в файл</b></td><td>find -fprint <i>file_name</i></td></tr></table><br />

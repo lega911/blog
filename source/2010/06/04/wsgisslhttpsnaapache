@@ -1,0 +1,107 @@
+::id 4c08ac431d41c81ce0000000
+::date 2010-06-04
+::title wsgi ssl (https) на apache
+::tags apache, ssl, wsgi, https
+::body
+Пример настройки wsgi приложения через **ssl**
+//Проверено на ubuntu 10.04//
+
+Включаем модуль **ssl**
+[[sudo a2enmod ssl]]
+
+Создаем конфигурацию виртуального хоста: **/etc/apache2/sites-available/mysite-ssl**
+[[<IfModule mod_ssl.c>
+<VirtualHost _default_:443>
+    ServerName localhost
+    ServerAdmin webmaster@localhost
+
+    WSGIDaemonProcess main user=www-data group=www-data processes=1 threads=5
+    WSGIScriptAlias / /var/www/main/index.wsgi
+
+    <Directory /var/www/main>
+        WSGIProcessGroup main
+        WSGIApplicationGroup %{GLOBAL}
+        Order deny,allow
+        Allow from all
+    </Directory>
+
+    ErrorLog /var/log/apache2/error.log
+    LogLevel warn
+    CustomLog /var/log/apache2/ssl_access.log combined
+
+    #   SSL Engine Switch:
+    SSLEngine on
+    SSLCertificateFile    /etc/ssl/certs/ssl-cert-snakeoil.pem
+    SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+
+    BrowserMatch "MSIE [2-6]" \
+	    nokeepalive ssl-unclean-shutdown \
+	    downgrade-1.0 force-response-1.0
+    # MSIE 7 and newer should be able to use keepalive
+    BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown
+</VirtualHost>
+</IfModule>]]
+
+Подключаем эту конфигурацию
+[[sudo a2ensite mysite-ssl]]
+
+Перезагружаем apache
+[[sudo /etc/init.d/apache2 restart]]
+
+В файл **/var/www/main/index.wsgi** пишем само wsgi приложение.
+
+::html
+Пример настройки wsgi приложения через <b>ssl</b><br />
+<i>Проверено на ubuntu 10.04</i><br />
+<br />
+Включаем модуль <b>ssl</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">a2enmod</span> <span class="n">ssl</span>
+</pre></div>
+</div><br />
+<br />
+Создаем конфигурацию виртуального хоста: <b>/etc/apache2/sites-available/mysite-ssl</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="o">&lt;</span><span class="n">IfModule</span> <span class="n">mod_ssl</span><span class="o">.</span><span class="n">c</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">VirtualHost</span> <span class="n">_default_</span><span class="p">:</span><span class="mi">443</span><span class="o">&gt;</span>
+    <span class="n">ServerName</span> <span class="n">localhost</span>
+    <span class="n">ServerAdmin</span> <span class="n">webmaster</span><span class="nd">@localhost</span>
+
+    <span class="n">WSGIDaemonProcess</span> <span class="n">main</span> <span class="n">user</span><span class="o">=</span><span class="n">www</span><span class="o">-</span><span class="n">data</span> <span class="n">group</span><span class="o">=</span><span class="n">www</span><span class="o">-</span><span class="n">data</span> <span class="n">processes</span><span class="o">=</span><span class="mi">1</span> <span class="n">threads</span><span class="o">=</span><span class="mi">5</span>
+    <span class="n">WSGIScriptAlias</span> <span class="o">/</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">wsgi</span>
+
+    <span class="o">&lt;</span><span class="n">Directory</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">main</span><span class="o">&gt;</span>
+        <span class="n">WSGIProcessGroup</span> <span class="n">main</span>
+        <span class="n">WSGIApplicationGroup</span> <span class="o">%</span><span class="p">{</span><span class="n">GLOBAL</span><span class="p">}</span>
+        <span class="n">Order</span> <span class="n">deny</span><span class="p">,</span><span class="n">allow</span>
+        <span class="n">Allow</span> <span class="kn">from</span> <span class="nn">all</span>
+    <span class="o">&lt;/</span><span class="n">Directory</span><span class="o">&gt;</span>
+
+    <span class="n">ErrorLog</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">apache2</span><span class="o">/</span><span class="n">error</span><span class="o">.</span><span class="n">log</span>
+    <span class="n">LogLevel</span> <span class="n">warn</span>
+    <span class="n">CustomLog</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">apache2</span><span class="o">/</span><span class="n">ssl_access</span><span class="o">.</span><span class="n">log</span> <span class="n">combined</span>
+
+    <span class="c">#   SSL Engine Switch:</span>
+    <span class="n">SSLEngine</span> <span class="n">on</span>
+    <span class="n">SSLCertificateFile</span>    <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssl</span><span class="o">/</span><span class="n">certs</span><span class="o">/</span><span class="n">ssl</span><span class="o">-</span><span class="n">cert</span><span class="o">-</span><span class="n">snakeoil</span><span class="o">.</span><span class="n">pem</span>
+    <span class="n">SSLCertificateKeyFile</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssl</span><span class="o">/</span><span class="n">private</span><span class="o">/</span><span class="n">ssl</span><span class="o">-</span><span class="n">cert</span><span class="o">-</span><span class="n">snakeoil</span><span class="o">.</span><span class="n">key</span>
+
+    <span class="n">BrowserMatch</span> <span class="s">&quot;MSIE [2-6]&quot;</span> \
+	    <span class="n">nokeepalive</span> <span class="n">ssl</span><span class="o">-</span><span class="n">unclean</span><span class="o">-</span><span class="n">shutdown</span> \
+	    <span class="n">downgrade</span><span class="o">-</span><span class="mf">1.0</span> <span class="n">force</span><span class="o">-</span><span class="n">response</span><span class="o">-</span><span class="mf">1.0</span>
+    <span class="c"># MSIE 7 and newer should be able to use keepalive</span>
+    <span class="n">BrowserMatch</span> <span class="s">&quot;MSIE [17-9]&quot;</span> <span class="n">ssl</span><span class="o">-</span><span class="n">unclean</span><span class="o">-</span><span class="n">shutdown</span>
+<span class="o">&lt;/</span><span class="n">VirtualHost</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">IfModule</span><span class="o">&gt;</span>
+</pre></div>
+</div><br />
+<br />
+Подключаем эту конфигурацию<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">a2ensite</span> <span class="n">mysite</span><span class="o">-</span><span class="n">ssl</span>
+</pre></div>
+</div><br />
+<br />
+Перезагружаем apache<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">apache2</span> <span class="n">restart</span>
+</pre></div>
+</div><br />
+<br />
+В файл <b>/var/www/main/index.wsgi</b> пишем само wsgi приложение.<br />

@@ -1,0 +1,18 @@
+::id 4e2e37c41d41c8451b000001
+::date 2011-07-26
+::title Отложенная загрузка js скриптов
+::tags javascript, jquery
+::body
+[[html#
+<script type="text/javascript"> 
+  var s = '<script type=\"text/javascript\" src=\"\/js\/plusone.js\"><\/script>';
+  $(function(){ $("body").append(s); });
+</script> ]]
+
+::html
+<div class="codebox"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span> 
+  <span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="s1">&#39;&lt;script type=\&quot;text/javascript\&quot; src=\&quot;\/js\/plusone.js\&quot;&gt;&lt;\/script&gt;&#39;</span><span class="p">;</span>
+  <span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">s</span><span class="p">);</span> <span class="p">});</span>
+<span class="nt">&lt;/script&gt;</span> 
+</pre></div>
+</div><br />

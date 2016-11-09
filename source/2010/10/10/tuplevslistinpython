@@ -1,0 +1,84 @@
+::id 4cb16f611d41c84ac8000000
+::date 2010-10-10
+::title tuple vs list in python
+::tags python, list, tuple
+::body
+!Кортеж может использоваться в качестве ключа к словарю
+[[t = (1, 2, 3)
+d = { t:'hello' }
+print d]]
+[[ {(1, 2, 3): 'hello'} ]]
+
+!При изменении кортежа, кортеж создается новый, а лист нет
+[[print '--- tuple ---'
+t = (1,2,3)
+print id(t)
+t += (4,)
+print id(t)
+
+print '--- list --- '
+l = [1,2,3]
+print id(l)
+l += [4,]
+print id(l) ]]
+[[--- tuple ---
+3078091556
+3078090796
+--- list --- 
+3077727884
+3077727884]]//идентификатор кортежа сменился//
+
+
+!tuple медленнее при добавлении элементов
+т.к. создается новый кортеж на каждое добавление
+[[from timeit import Timer
+print 'benchmark tuple:', Timer("t += (1,)", "t = ()").timeit(number=50000)
+print 'benchmark list:', Timer("l += [1,]", "l = []").timeit(number=50000)]]
+[[benchmark tuple: 7.17338490486
+benchmark list: 0.00926685333252]]
+
+В общем случае: лист нужен для изменения списков, а кортеж только для чтения, например его можно передавать в ф-ию и не бояться что его изменят.
+
+::html
+<h3>Кортеж может использоваться в качестве ключа к словарю</h3><div class="codebox"><div class="highlight"><pre><span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="p">{</span> <span class="n">t</span><span class="p">:</span><span class="s">&#39;hello&#39;</span> <span class="p">}</span>
+<span class="k">print</span> <span class="n">d</span>
+</pre></div>
+</div><br />
+<div class="codebox"><div class="highlight"><pre> <span class="p">{(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span> <span class="s">&#39;hello&#39;</span><span class="p">}</span> 
+</pre></div>
+</div><br />
+<h3>При изменении кортежа, кортеж создается новый, а лист нет</h3><div class="codebox"><div class="highlight"><pre><span class="k">print</span> <span class="s">&#39;--- tuple ---&#39;</span>
+<span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">print</span> <span class="nb">id</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,)</span>
+<span class="k">print</span> <span class="nb">id</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s">&#39;--- list --- &#39;</span>
+<span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="k">print</span> <span class="nb">id</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+<span class="n">l</span> <span class="o">+=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,]</span>
+<span class="k">print</span> <span class="nb">id</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> 
+</pre></div>
+</div><br />
+<div class="codebox"><div class="highlight"><pre><span class="o">---</span> <span class="nb">tuple</span> <span class="o">---</span>
+<span class="mi">3078091556</span>
+<span class="mi">3078090796</span>
+<span class="o">---</span> <span class="nb">list</span> <span class="o">---</span> 
+<span class="mi">3077727884</span>
+<span class="mi">3077727884</span>
+</pre></div>
+</div><i>идентификатор кортежа сменился</i><br />
+<br />
+<h3>tuple медленнее при добавлении элементов</h3>т.к. создается новый кортеж на каждое добавление<br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">Timer</span>
+<span class="k">print</span> <span class="s">&#39;benchmark tuple:&#39;</span><span class="p">,</span> <span class="n">Timer</span><span class="p">(</span><span class="s">&quot;t += (1,)&quot;</span><span class="p">,</span> <span class="s">&quot;t = ()&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="mi">50000</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&#39;benchmark list:&#39;</span><span class="p">,</span> <span class="n">Timer</span><span class="p">(</span><span class="s">&quot;l += [1,]&quot;</span><span class="p">,</span> <span class="s">&quot;l = []&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="mi">50000</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">benchmark</span> <span class="nb">tuple</span><span class="p">:</span> <span class="mf">7.17338490486</span>
+<span class="n">benchmark</span> <span class="nb">list</span><span class="p">:</span> <span class="mf">0.00926685333252</span>
+</pre></div>
+</div><br />
+<br />
+В общем случае: лист нужен для изменения списков, а кортеж только для чтения, например его можно передавать в ф-ию и не бояться что его изменят.<br />

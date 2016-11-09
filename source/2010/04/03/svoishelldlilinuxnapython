@@ -1,0 +1,39 @@
+::id 4bfb3c6a1d41c846bc0000af
+::date 2010-04-03
+::title Свой shell для linux на python
+::tags python, linux
+::body
+Пишем скрипт:
+
+[[#!/usr/bin/python
+
+print 'Hello user!'
+
+while 1:
+    s = raw_input(':')
+    if s == 'exit': break
+    print 'do',s]]сохраняем его в **/bin/myshell**
+
+
+даем права на запуск[[sudo chmod 755 /bin/myshell]]
+Наш шел готов :), теперь установим его для пользователя
+[[sudo usermod -s /bin/myshell myuser]]
+Все, теперь когда пользователь будет подключаться к linux через консоль или ssh, он будет работать в нашем shell.
+
+::html
+Пишем скрипт:<br />
+<br />
+<div class="codebox"><pre><code>#!/usr/bin/python
+
+print 'Hello user!'
+
+while 1:
+    s = raw_input(':')
+    if s == 'exit': break
+    print 'do',s</code></pre></div>сохраняем его в <b>/bin/myshell</b><br />
+<br />
+<br />
+даем права на запуск<div class="codebox"><pre><code>sudo chmod 755 /bin/myshell</code></pre></div><br />
+Наш шел готов :), теперь установим его для пользователя<br />
+<div class="codebox"><pre><code>sudo usermod -s /bin/myshell myuser</code></pre></div><br />
+Все, теперь когда пользователь будет подключаться к linux через консоль или ssh, он будет работать в нашем shell.<br />

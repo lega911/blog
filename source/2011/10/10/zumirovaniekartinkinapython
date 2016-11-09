@@ -1,0 +1,60 @@
+::id 4e92d0401d41c855db000000
+::date 2011-10-10
+::title Зумирование картинки на python
+::tags python, image, pil
+::body
+Пример зумирования картинки
+
+[[from PIL import Image
+file = 'image.jpg'
+im = Image.open(file)
+im.thumbnail( (64,64) , Image.ANTIALIAS)
+im.save(file + ".thumbnail", "JPEG", quality=85)]]
+
+Режимы для **thumbnail**: NEAREST, BILINEAR, BICUBIC, ANTIALIAS (лучшее качество).
+По умолчанию NEAREST.
+
+Сохранение в "переменную":
+[[import StringIO
+r = StringIO.StringIO()
+im.save(r, "JPEG", quality=85)
+buf = r.getvalue()]]
+
+**Старый метод**
+[[import Image
+file_name = 'image.png'
+ims = Image.open(file_name)
+if (ims.size[0]>64) or (ims.size[1]>64):
+    imd = ims.resize((64, 64), Image.ANTIALIAS)
+    imd.save(file_name)]]
+::html
+Пример зумирования картинки<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="nb">file</span> <span class="o">=</span> <span class="s">&#39;image.jpg&#39;</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+<span class="n">im</span><span class="o">.</span><span class="n">thumbnail</span><span class="p">(</span> <span class="p">(</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">)</span> <span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">ANTIALIAS</span><span class="p">)</span>
+<span class="n">im</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="nb">file</span> <span class="o">+</span> <span class="s">&quot;.thumbnail&quot;</span><span class="p">,</span> <span class="s">&quot;JPEG&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="mi">85</span><span class="p">)</span>
+</pre></div>
+</div><br />
+<br />
+Режимы для <b>thumbnail</b>: NEAREST, BILINEAR, BICUBIC, ANTIALIAS (лучшее качество).<br />
+По умолчанию NEAREST.<br />
+<br />
+Сохранение в "переменную":<br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">StringIO</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">StringIO</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+<span class="n">im</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s">&quot;JPEG&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="mi">85</span><span class="p">)</span>
+<span class="n">buf</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+</pre></div>
+</div><br />
+<br />
+<b>Старый метод</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">Image</span>
+<span class="n">file_name</span> <span class="o">=</span> <span class="s">&#39;image.png&#39;</span>
+<span class="n">ims</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">ims</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">64</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">ims</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">64</span><span class="p">):</span>
+    <span class="n">imd</span> <span class="o">=</span> <span class="n">ims</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span> <span class="n">Image</span><span class="o">.</span><span class="n">ANTIALIAS</span><span class="p">)</span>
+    <span class="n">imd</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+</pre></div>
+</div>

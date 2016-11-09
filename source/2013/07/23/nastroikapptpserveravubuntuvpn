@@ -1,0 +1,157 @@
+::id 51ee4fc194fa04127fd9ff58
+::date 2013-07-23
+::title Настройка pptp сервера в ubuntu (vpn)
+::tags pptp, vpn, ubuntu
+::body
+!1) Установка
+[[sudo apt-get install pptpd]]
+
+!2) Настраиваем
+
+Файл **/etc/ppp/pptpd-options**
+//Включаем PAP авторизацию// и отключаем шифрование (временно)
+[[require-pap
+#refuse-pap
+#require-mppe-128]]
+
+Файл **/etc/pptpd.conf**
+Дописываем, ip "виртуального шлюза" и диапазон ip адресов для клиентов
+[[localip 192.168.99.1
+remoteip 192.168.99.224-238]]
+
+!3) Добавляем пользователей
+Файл **/etc/ppp/chap-secrets**, указываем //username// и //password//
+[[username pptpd password *]]
+
+Далее перезапустим vpn-сервер:
+[[sudo /etc/init.d/pptpd restart]]
+
+!4) Пробрасываем интернет
+Выполнить от **root**:
+[[iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+echo 1 > /proc/sys/net/ipv4/ip_forward]]
+
+Что-бы работало после перезагрузки:
+В файл **/etc/rc.local** добавить
+[[iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE]]
+Файл **/etc/sysctl.conf**
+[[net.ipv4.ip_forward=1]]
+
+На клиенте можно указать этот шлюз по умолчанию
+[[sudo route add default gw 192.168.99.1 ppp0]]
+Как настроить подключение к pptp серверу из ubuntu [/post/4c9772a41d41c86466000000 тут]
+
+
+!5) Включаем шифрование
+Для этого на сервере нужно переключить авторизацию и выбрать вид шифрования, файл **/etc/ppp/pptpd-options**
+[[#require-pap
+refuse-pap
+require-mschap-v2
+require-mppe-128]]
+
+На клиенте указываем использование шифрования, файл из **/etc/ppp/peers/**
+[[require-mppe-128]]
+
+Итоговые файлы сервера:
+[[refuse-pap
+refuse-chap
+refuse-mschap
+require-mschap-v2
+require-mppe-128
+proxyarp
+nodefaultroute
+lock
+nobsdcomp]]
+и клиента[[remotename <name_of_connection>
+pty "pptp --loglevel 1 <address_of_server> --nolaunchpppd"
+name <username>
+noauth
+debug
+nodetach
+lock
+require-mppe-128]]
+::html
+<h3>1) Установка</h3><div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">pptpd</span>
+</pre></div>
+</div><br />
+<h3>2) Настраиваем</h3><br />
+Файл <b>/etc/ppp/pptpd-options</b><br />
+<i>Включаем PAP авторизацию</i> и отключаем шифрование (временно)<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">require</span><span class="o">-</span><span class="n">pap</span>
+<span class="c">#refuse-pap</span>
+<span class="c">#require-mppe-128</span>
+</pre></div>
+</div><br />
+<br />
+Файл <b>/etc/pptpd.conf</b><br />
+Дописываем, ip "виртуального шлюза" и диапазон ip адресов для клиентов<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">localip</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">99.1</span>
+<span class="n">remoteip</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">99.224</span><span class="o">-</span><span class="mi">238</span>
+</pre></div>
+</div><br />
+<h3>3) Добавляем пользователей</h3>Файл <b>/etc/ppp/chap-secrets</b>, указываем <i>username</i> и <i>password</i><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">username</span> <span class="n">pptpd</span> <span class="n">password</span> <span class="o">*</span>
+</pre></div>
+</div><br />
+<br />
+Далее перезапустим vpn-сервер:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">pptpd</span> <span class="n">restart</span>
+</pre></div>
+</div><br />
+<h3>4) Пробрасываем интернет</h3>Выполнить от <b>root</b>:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">t</span> <span class="n">nat</span> <span class="o">-</span><span class="n">A</span> <span class="n">POSTROUTING</span> <span class="o">-</span><span class="n">o</span> <span class="n">eth0</span> <span class="o">-</span><span class="n">j</span> <span class="n">MASQUERADE</span>
+<span class="n">echo</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">net</span><span class="o">/</span><span class="n">ipv4</span><span class="o">/</span><span class="n">ip_forward</span>
+</pre></div>
+</div><br />
+<br />
+Что-бы работало после перезагрузки:<br />
+В файл <b>/etc/rc.local</b> добавить<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">t</span> <span class="n">nat</span> <span class="o">-</span><span class="n">A</span> <span class="n">POSTROUTING</span> <span class="o">-</span><span class="n">o</span> <span class="n">eth0</span> <span class="o">-</span><span class="n">j</span> <span class="n">MASQUERADE</span>
+</pre></div>
+</div><br />
+Файл <b>/etc/sysctl.conf</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">net</span><span class="o">.</span><span class="n">ipv4</span><span class="o">.</span><span class="n">ip_forward</span><span class="o">=</span><span class="mi">1</span>
+</pre></div>
+</div><br />
+<br />
+На клиенте можно указать этот шлюз по умолчанию<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">route</span> <span class="n">add</span> <span class="n">default</span> <span class="n">gw</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">99.1</span> <span class="n">ppp0</span>
+</pre></div>
+</div><br />
+Как настроить подключение к pptp серверу из ubuntu <a href="/post/4c9772a41d41c86466000000">тут</a><br />
+<br />
+<h3>5) Включаем шифрование</h3>Для этого на сервере нужно переключить авторизацию и выбрать вид шифрования, файл <b>/etc/ppp/pptpd-options</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="c">#require-pap</span>
+<span class="n">refuse</span><span class="o">-</span><span class="n">pap</span>
+<span class="n">require</span><span class="o">-</span><span class="n">mschap</span><span class="o">-</span><span class="n">v2</span>
+<span class="n">require</span><span class="o">-</span><span class="n">mppe</span><span class="o">-</span><span class="mi">128</span>
+</pre></div>
+</div><br />
+<br />
+На клиенте указываем использование шифрования, файл из <b>/etc/ppp/peers/</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">require</span><span class="o">-</span><span class="n">mppe</span><span class="o">-</span><span class="mi">128</span>
+</pre></div>
+</div><br />
+<br />
+Итоговые файлы сервера:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">refuse</span><span class="o">-</span><span class="n">pap</span>
+<span class="n">refuse</span><span class="o">-</span><span class="n">chap</span>
+<span class="n">refuse</span><span class="o">-</span><span class="n">mschap</span>
+<span class="n">require</span><span class="o">-</span><span class="n">mschap</span><span class="o">-</span><span class="n">v2</span>
+<span class="n">require</span><span class="o">-</span><span class="n">mppe</span><span class="o">-</span><span class="mi">128</span>
+<span class="n">proxyarp</span>
+<span class="n">nodefaultroute</span>
+<span class="n">lock</span>
+<span class="n">nobsdcomp</span>
+</pre></div>
+</div><br />
+и клиента<div class="codebox"><div class="highlight"><pre><span class="n">remotename</span> <span class="o">&lt;</span><span class="n">name_of_connection</span><span class="o">&gt;</span>
+<span class="n">pty</span> <span class="s">&quot;pptp --loglevel 1 &lt;address_of_server&gt; --nolaunchpppd&quot;</span>
+<span class="n">name</span> <span class="o">&lt;</span><span class="n">username</span><span class="o">&gt;</span>
+<span class="n">noauth</span>
+<span class="n">debug</span>
+<span class="n">nodetach</span>
+<span class="n">lock</span>
+<span class="n">require</span><span class="o">-</span><span class="n">mppe</span><span class="o">-</span><span class="mi">128</span>
+</pre></div>
+</div>

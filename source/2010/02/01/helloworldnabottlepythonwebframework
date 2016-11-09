@@ -1,0 +1,61 @@
+::id 4bfb3c691d41c846bc000033
+::date 2010-02-01
+::title hello world на bottle, python web framework
+::tags python, web, bottle
+::body
+**Bottle** - микро веб фреймворк для python, предназначен для написания простых веб-приложений, не требует установки - достаточно файла bottle.py, есть возможность работы без веб-сервера, [http://bottle.paws.de/ оф.сайт bottle]
+
+!Установка
+[[easy_install bottle]]
+!Пример приложения
+[[from bottle import run, route
+
+@route('/')
+def main():
+    return "hello world!"
+
+run(port=8080)]]после запуска веб-приложение должно быть доступно на [http://localhost:8080 http://localhost:8080]
+!Пример post-запроса
+[[# coding: utf-8
+
+from bottle import request, response, run, route 
+
+@route('/') 
+def main(): 
+    return '<form method="POST"><input type="text" name="name"/><input type="submit"/></form>' 
+
+@route('/', method='POST') 
+def main_post(): 
+    return 'hello ' + request.POST['name']
+
+run(port=8080)]]
+
+
+::html
+<b>Bottle</b> - микро веб фреймворк для python, предназначен для написания простых веб-приложений, не требует установки - достаточно файла bottle.py, есть возможность работы без веб-сервера, <a target=_blank href="http://bottle.paws.de/">оф.сайт bottle</a><br />
+<br />
+<h3>Установка</h3><br />
+<div class="codebox"><pre><code>easy_install bottle</code></pre></div><br />
+<h3>Пример приложения</h3><br />
+<div class="codebox"><pre><code>from bottle import run, route
+
+@route('/')
+def main():
+    return "hello world!"
+
+run(port=8080)</code></pre></div>после запуска веб-приложение должно быть доступно на <a target=_blank href="http://localhost:8080">http://localhost:8080</a><br />
+<h3>Пример post-запроса</h3><br />
+<div class="codebox"><pre><code># coding: utf-8
+
+from bottle import request, response, run, route 
+
+@route('/') 
+def main(): 
+    return '&lt;form method="POST"&gt;&lt;input type="text" name="name"/&gt;&lt;input type="submit"/&gt;&lt;/form&gt;' 
+
+@route('/', method='POST') 
+def main_post(): 
+    return 'hello ' + request.POST['name']
+
+run(port=8080)</code></pre></div><br />
+<br />

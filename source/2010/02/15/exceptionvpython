@@ -1,0 +1,54 @@
+::id 4bfb3c691d41c846bc00005d
+::date 2010-02-15
+::title Exception в python
+::tags python, exception
+::body
+**raise Exception** (исключение) - метод для передачи управления в другое место/в родительские ф-ии ( jump, goto ), чаще всего используется при возникновении ошибок.
+
+Пример:
+[[def div(a,b):
+    if not a: raise Exception('a is zero')
+    try:
+        return a/b
+    except:
+        raise Exception('div by zero ?')
+
+try:
+    div(5,0)
+except Exception as e:
+    print e.args]]
+
+!assert
+Оператор который взывает exception если подставляемое условие ложно
+[[
+def main():
+    assert 0 > 1
+    print 'ok']]
+
+//Примечание: пример для python 2.6//
+
+::html
+<b>raise Exception</b> (исключение) - метод для передачи управления в другое место/в родительские ф-ии ( jump, goto ), чаще всего используется при возникновении ошибок.<br />
+<br />
+Пример:<br />
+<div class="codebox"><div class="highlight"><pre><span class="k">def</span> <span class="nf">div</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&#39;a is zero&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a</span><span class="o">/</span><span class="n">b</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&#39;div by zero ?&#39;</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">div</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">e</span><span class="o">.</span><span class="n">args</span>
+</pre></div>
+</div><br />
+<h3>assert</h3>Оператор который взывает exception если подставляемое условие ложно<br />
+<div class="codebox"><div class="highlight"><pre><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="mi">0</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="k">print</span> <span class="s">&#39;ok&#39;</span>
+</pre></div>
+</div><br />
+<br />
+<i>Примечание: пример для python 2.6</i><br />

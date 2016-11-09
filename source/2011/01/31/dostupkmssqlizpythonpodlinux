@@ -1,0 +1,61 @@
+::id 4d46a5fc1d41c81ad6000005
+::date 2011-01-31
+::title Доступ к MSSQL из Python под linux
+::tags linux, python, mssql, odbc, pyodbc
+::body
+//Более свежая статья тут: [/post/50fe762371144856ca000006 Настраиваем pyodbc в linux ubuntu]//
+ 
+Доступ через **pyodbc**, устанавливаем необходимые компоненты:
+[[sudo aptitude install unixodbc unixodbc-dev freetds-dev tdsodbc python-dev
+sudo easy_install pyodbc]]
+
+Правим **/etc/odbcinst.ini**
+[[
+[FreeTDS]
+Description = TDS driver (Sybase/MS SQL)
+Driver = /usr/lib/odbc/libtdsodbc.so
+Setup = /usr/lib/odbc/libtdsS.so
+CPTimeout =
+CPReuse =]]
+
+Готово, можно использовать:
+[[    import pyodbc 
+    conn = pyodbc.connect("DRIVER={FreeTDS};SERVER=__server_name__;\
+        UID=__username__;PWD=__password__;DATABASE=__database__")
+    crms = conn.cursor()
+    crms.execute('SELECT 1') 
+    for line in crms: 
+        print line
+    conn.close()
+]]Вместо //__server_name__, __username__, __password__, __database__// подставте свои значения: имя или адрес сервера, имя пользователя, пароль, имя базы данных.
+
+::html
+<i>Более свежая статья тут: <a href="/post/50fe762371144856ca000006">Настраиваем pyodbc в linux ubuntu</a></i><br />
+ <br />
+Доступ через <b>pyodbc</b>, устанавливаем необходимые компоненты:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">aptitude</span> <span class="n">install</span> <span class="n">unixodbc</span> <span class="n">unixodbc</span><span class="o">-</span><span class="n">dev</span> <span class="n">freetds</span><span class="o">-</span><span class="n">dev</span> <span class="n">tdsodbc</span> <span class="n">python</span><span class="o">-</span><span class="n">dev</span>
+<span class="n">sudo</span> <span class="n">easy_install</span> <span class="n">pyodbc</span>
+</pre></div>
+</div><br />
+<br />
+Правим <b>/etc/odbcinst.ini</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="p">[</span><span class="n">FreeTDS</span><span class="p">]</span>
+<span class="n">Description</span> <span class="o">=</span> <span class="n">TDS</span> <span class="n">driver</span> <span class="p">(</span><span class="n">Sybase</span><span class="o">/</span><span class="n">MS</span> <span class="n">SQL</span><span class="p">)</span>
+<span class="n">Driver</span> <span class="o">=</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">odbc</span><span class="o">/</span><span class="n">libtdsodbc</span><span class="o">.</span><span class="n">so</span>
+<span class="n">Setup</span> <span class="o">=</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">odbc</span><span class="o">/</span><span class="n">libtdsS</span><span class="o">.</span><span class="n">so</span>
+<span class="n">CPTimeout</span> <span class="o">=</span>
+<span class="n">CPReuse</span> <span class="o">=</span>
+</pre></div>
+</div><br />
+<br />
+Готово, можно использовать:<br />
+<div class="codebox"><div class="highlight"><pre>    <span class="kn">import</span> <span class="nn">pyodbc</span> 
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;DRIVER={FreeTDS};SERVER=__server_name__;</span><span class="se">\</span>
+<span class="s">        UID=__username__;PWD=__password__;DATABASE=__database__&quot;</span><span class="p">)</span>
+    <span class="n">crms</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">crms</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&#39;SELECT 1&#39;</span><span class="p">)</span> 
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">crms</span><span class="p">:</span> 
+        <span class="k">print</span> <span class="n">line</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>Вместо <i><u>server_name</u>, <u>username</u>, <u>password</u>, <u>database</u></i> подставте свои значения: имя или адрес сервера, имя пользователя, пароль, имя базы данных.<br />

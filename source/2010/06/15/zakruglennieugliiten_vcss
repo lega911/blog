@@ -1,0 +1,86 @@
+::id 4c176e171d41c8445e000000
+::date 2010-06-15
+::title Закругленные углы и тень в CSS
+::tags css
+::body
+Пример закругления **div**
+[{
+<style>
+div#sample {
+    width: 50px;
+    border: 1px solid #CCC;
+    border-radius: 8px;
+    box-shadow: 0 0 5px #999;
+    -webkit-border-radius: 8px;
+    -webkit-box-shadow: 0 0 5px #999;
+    -moz-border-radius: 8px;
+    -moz-box-shadow: 0 0 5px #999;
+    padding: 5px;
+}
+</style>
+<div id="sample">Привет</div>}]
+
+**Исходный код**[[<style>
+div#sample {
+    border-radius: 8px;
+    box-shadow: 0 0 5px #999;
+    -webkit-border-radius: 8px;
+    -webkit-box-shadow: 0 0 5px #999;
+    -moz-border-radius: 8px;
+    -moz-box-shadow: 0 0 5px #999;
+
+    width: 50px;
+    border: 1px solid #CCC;
+    padding: 5px; }
+</style>
+<div id="sample">Привет</div>]]
+
+!Закругление
+#|border-radius: |**R**px;
+||-webkit-border-radius: |**R**px;
+||-moz-border-radius: |**R**px;|#
+Задается 1 параметр - радиус закругления.
+
+!Тень
+#|box-shadow: |**X**px **Y**px **R**px **Color**;
+||-webkit-box-shadow: |**X**px **Y**px **R**px **Color**;
+||-moz-box-shadow: |**X**px **Y**px **R**px **Color**;|#
+Для тени указываются 4 параметра: смещение по оси X, смещение по оси Y, Размер размытости, цвет.
+
+::html
+Пример закругления <b>div</b><br />
+<a href="{"><style>
+div#sample {
+    width: 50px;
+    border: 1px solid #CCC;
+    border-radius: 8px;
+    box-shadow: 0 0 5px #999;
+    -webkit-border-radius: 8px;
+    -webkit-box-shadow: 0 0 5px #999;
+    -moz-border-radius: 8px;
+    -moz-box-shadow: 0 0 5px #999;
+    padding: 5px;
+}
+</style>
+<div id="sample">Привет</div>}</a><br />
+<br />
+<b>Исходный код</b><div class="codebox"><div class="highlight"><pre><span class="o">&lt;</span><span class="n">style</span><span class="o">&gt;</span>
+<span class="n">div</span><span class="c">#sample {</span>
+    <span class="n">border</span><span class="o">-</span><span class="n">radius</span><span class="p">:</span> <span class="mi">8</span><span class="n">px</span><span class="p">;</span>
+    <span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="p">:</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">5</span><span class="n">px</span> <span class="c">#999;</span>
+    <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="n">border</span><span class="o">-</span><span class="n">radius</span><span class="p">:</span> <span class="mi">8</span><span class="n">px</span><span class="p">;</span>
+    <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="p">:</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">5</span><span class="n">px</span> <span class="c">#999;</span>
+    <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">border</span><span class="o">-</span><span class="n">radius</span><span class="p">:</span> <span class="mi">8</span><span class="n">px</span><span class="p">;</span>
+    <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="p">:</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">5</span><span class="n">px</span> <span class="c">#999;</span>
+
+    <span class="n">width</span><span class="p">:</span> <span class="mi">50</span><span class="n">px</span><span class="p">;</span>
+    <span class="n">border</span><span class="p">:</span> <span class="mi">1</span><span class="n">px</span> <span class="n">solid</span> <span class="c">#CCC;</span>
+    <span class="n">padding</span><span class="p">:</span> <span class="mi">5</span><span class="n">px</span><span class="p">;</span> <span class="p">}</span>
+<span class="o">&lt;/</span><span class="n">style</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">div</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;sample&quot;</span><span class="o">&gt;</span><span class="err">Привет</span><span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</pre></div>
+</div><br />
+<h3>Закругление</h3><table class="pymark_table"><tr><td>border-radius: </td><td><b>R</b>px;</td></tr><tr><td>-webkit-border-radius: </td><td><b>R</b>px;</td></tr><tr><td>-moz-border-radius: </td><td><b>R</b>px;</td></tr></table><br />
+Задается 1 параметр - радиус закругления.<br />
+<h3>Тень</h3><table class="pymark_table"><tr><td>box-shadow: </td><td><b>X</b>px <b>Y</b>px <b>R</b>px <b>Color</b>;</td></tr><tr><td>-webkit-box-shadow: </td><td><b>X</b>px <b>Y</b>px <b>R</b>px <b>Color</b>;</td></tr><tr><td>-moz-box-shadow: </td><td><b>X</b>px <b>Y</b>px <b>R</b>px <b>Color</b>;</td></tr></table><br />
+Для тени указываются 4 параметра: смещение по оси X, смещение по оси Y, Размер размытости, цвет.<br />

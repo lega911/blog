@@ -1,0 +1,121 @@
+::id 4e6080b01d41c85bc4000000
+::date 2011-09-02
+::title Long-Polling with Tornado
+::tags web, tornado, long_polling, jquery
+::body
+Пример асинхронного вызова long-polling на сервер tornado.
+
+[[# coding:utf8
+
+import tornado.httpserver
+import tornado.ioloop
+import tornado.web
+import tornado.autoreload
+import time
+
+html = """<html>
+<head>
+    <script type="text/javascript" language="JavaScript"
+        src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
+    <script type='text/javascript' language='JavaScript'>
+        function test(){
+            $.post('/longPolling',{},function(data){
+                alert(data);
+            });
+        }
+    </script>
+</head>
+<body>
+    <input type="button" value="Test, wait 10 sec" onclick="test();"/>
+</body>
+</html>"""
+
+class MainHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.write(html)
+
+class LongHandler(tornado.web.RequestHandler):
+    @tornado.web.asynchronous
+    def post(self):
+        self.wait_for_smth(callback=self.async_callback(self.on_finish))
+
+    def wait_for_smth(self, callback, t=10):
+        if t:
+            tornado.ioloop.IOLoop.instance().add_timeout(time.time() + 1,
+                lambda: self.wait_for_smth(callback, t-1))
+        else:
+            callback()
+    
+    def on_finish(self):
+        self.write("Long-Polling OK")
+        self.finish()
+
+if __name__ == "__main__":
+    application = tornado.web.Application([
+        (r"/", MainHandler),
+        (r"/longPolling", LongHandler)
+        ])
+    tornado.autoreload.start()
+    http_server = tornado.httpserver.HTTPServer(application)
+    http_server.listen(8888)
+    tornado.ioloop.IOLoop.instance().start()
+]]
+::html
+Пример асинхронного вызова long-polling на сервер tornado.<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding:utf8</span>
+
+<span class="kn">import</span> <span class="nn">tornado.httpserver</span>
+<span class="kn">import</span> <span class="nn">tornado.ioloop</span>
+<span class="kn">import</span> <span class="nn">tornado.web</span>
+<span class="kn">import</span> <span class="nn">tornado.autoreload</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">html</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;&lt;html&gt;</span>
+<span class="s">&lt;head&gt;</span>
+<span class="s">    &lt;script type=&quot;text/javascript&quot; language=&quot;JavaScript&quot;</span>
+<span class="s">        src=&quot;http://code.jquery.com/jquery-1.5.2.min.js&quot;&gt;&lt;/script&gt;</span>
+<span class="s">    &lt;script type=&#39;text/javascript&#39; language=&#39;JavaScript&#39;&gt;</span>
+<span class="s">        function test(){</span>
+<span class="s">            $.post(&#39;/longPolling&#39;,{},function(data){</span>
+<span class="s">                alert(data);</span>
+<span class="s">            });</span>
+<span class="s">        }</span>
+<span class="s">    &lt;/script&gt;</span>
+<span class="s">&lt;/head&gt;</span>
+<span class="s">&lt;body&gt;</span>
+<span class="s">    &lt;input type=&quot;button&quot; value=&quot;Test, wait 10 sec&quot; onclick=&quot;test();&quot;/&gt;</span>
+<span class="s">&lt;/body&gt;</span>
+<span class="s">&lt;/html&gt;&quot;&quot;&quot;</span>
+
+<span class="k">class</span> <span class="nc">MainHandler</span><span class="p">(</span><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">LongHandler</span><span class="p">(</span><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    <span class="nd">@tornado.web.asynchronous</span>
+    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_smth</span><span class="p">(</span><span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">async_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">on_finish</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">wait_for_smth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">t</span><span class="p">:</span>
+            <span class="n">tornado</span><span class="o">.</span><span class="n">ioloop</span><span class="o">.</span><span class="n">IOLoop</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">add_timeout</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_smth</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">t</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">callback</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">on_finish</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;Long-Polling OK&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">application</span> <span class="o">=</span> <span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">Application</span><span class="p">([</span>
+        <span class="p">(</span><span class="s">r&quot;/&quot;</span><span class="p">,</span> <span class="n">MainHandler</span><span class="p">),</span>
+        <span class="p">(</span><span class="s">r&quot;/longPolling&quot;</span><span class="p">,</span> <span class="n">LongHandler</span><span class="p">)</span>
+        <span class="p">])</span>
+    <span class="n">tornado</span><span class="o">.</span><span class="n">autoreload</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">http_server</span> <span class="o">=</span> <span class="n">tornado</span><span class="o">.</span><span class="n">httpserver</span><span class="o">.</span><span class="n">HTTPServer</span><span class="p">(</span><span class="n">application</span><span class="p">)</span>
+    <span class="n">http_server</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">8888</span><span class="p">)</span>
+    <span class="n">tornado</span><span class="o">.</span><span class="n">ioloop</span><span class="o">.</span><span class="n">IOLoop</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>

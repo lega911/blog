@@ -1,0 +1,27 @@
+::id 4c57df921d41c80ff9000003
+::date 2010-08-03
+::title bottle, regexp in route (url)
+::tags regexp, bottle
+::body
+Пример использования regexp в route.
+[[
+@route('/:name#.*$#')
+def get(name)
+    return name
+ 
+@route('/:id#\d+#', method='POST')
+def get(id)
+    return id
+]]
+
+::html
+Пример использования regexp в route.<br />
+<div class="codebox"><div class="highlight"><pre><span class="nd">@route</span><span class="p">(</span><span class="s">&#39;/:name#.*$#&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">name</span>
+ 
+<span class="nd">@route</span><span class="p">(</span><span class="s">&#39;/:id#\d+#&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;POST&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">id</span>
+</pre></div>
+</div><br />

@@ -1,0 +1,23 @@
+::id 4cf78ee31d41c8731c000000
+::date 2010-12-02
+::title apache запрет просмотра папки/файлов (авто индекс)
+::tags apache
+::body
+Что-б отключить мод авто-индекса можно использовать опцию:[[
+Options -Indexes]]
+А для включения:[[
+Options +Indexes]]
+Эту опцию можно поместить в:
+ * конфиг сервера http.conf
+ * конфиг виртуального хоста // /etc/apache/site-avaible/mysite//, если нужно отключить по целому вирт. хосту
+ * в **.htaccess**, если нужно закрыть папку
+
+::html
+Что-б отключить мод авто-индекса можно использовать опцию:<div class="codebox"><pre><code>
+Options -Indexes</code></pre></div><br />
+А для включения:<div class="codebox"><pre><code>
+Options +Indexes</code></pre></div><br />
+Эту опцию можно поместить в:
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;конфиг сервера http.conf
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;конфиг виртуального хоста <i> /etc/apache/site-avaible/mysite</i>, если нужно отключить по целому вирт. хосту
+<br /><span style="margin-left:5px;">&#8226;</span>&nbsp;в <b>.htaccess</b>, если нужно закрыть папку<br />

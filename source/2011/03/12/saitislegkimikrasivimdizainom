@@ -1,0 +1,49 @@
+::id 4d7b93ac1d41c8645a000003
+::date 2011-03-12
+::title Сайты с легким и красивым дизайном
+::tags site, style, design
+::body
+[http://2045.ru/ 2045.ru]
+[http://www.django-cms.org/ www.django-cms.org]
+[http://wodstack.com/community/videos wodstack] [http://wodstack.com/community N2]
+[http://html5app.com/blog/ html5app.com blog]
+[http://livedemo00.template-help.com/wt_33772/index.html template]
+[http://www.apple.com/support/ apple]
+[https://chrome.google.com/webstore?category=ext%2F11-web-development&hl=en-US chrome web store]
+[http://www.rodrigogalindez.com/themes/modernist/about/ modernist]
+[http://www.bounceapp.com/ bounceapp]
+[http://pen.io/ pen.io]
+[http://library.gnome.org/ gnome]
+[http://www.liferay.com/products/liferay-portal/overview liferay.com]
+[http://tyumen.tutumba.ru/ tutumba]
+[http://support.mozilla.com/ mozilla]
+[http://www.celeryproject.org/ celery]
+[http://ubuntual.com/ ubuntual.com]
+[http://branegy.com/ branegy.com]
+[http://8tracks.com/ 8tracks.com]
+[http://www.intalio.com/customers intalio.com]
+
+//список буду пополнять по мере нахождения//
+
+::html
+<a target=_blank href="http://2045.ru/">2045.ru</a><br />
+<a target=_blank href="http://www.django-cms.org/">www.django-cms.org</a><br />
+<a target=_blank href="http://wodstack.com/community/videos">wodstack</a> <a target=_blank href="http://wodstack.com/community">N2</a><br />
+<a target=_blank href="http://html5app.com/blog/">html5app.com blog</a><br />
+<a target=_blank href="http://livedemo00.template-help.com/wt_33772/index.html">template</a><br />
+<a target=_blank href="http://www.apple.com/support/">apple</a><br />
+<a target=_blank href="https://chrome.google.com/webstore?category=ext%2F11-web-development&hl=en-US">chrome web store</a><br />
+<a target=_blank href="http://www.rodrigogalindez.com/themes/modernist/about/">modernist</a><br />
+<a target=_blank href="http://www.bounceapp.com/">bounceapp</a><br />
+<a target=_blank href="http://pen.io/">pen.io</a><br />
+<a target=_blank href="http://library.gnome.org/">gnome</a><br />
+<a target=_blank href="http://www.liferay.com/products/liferay-portal/overview">liferay.com</a><br />
+<a target=_blank href="http://tyumen.tutumba.ru/">tutumba</a><br />
+<a target=_blank href="http://support.mozilla.com/">mozilla</a><br />
+<a target=_blank href="http://www.celeryproject.org/">celery</a><br />
+<a target=_blank href="http://ubuntual.com/">ubuntual.com</a><br />
+<a target=_blank href="http://branegy.com/">branegy.com</a><br />
+<a target=_blank href="http://8tracks.com/">8tracks.com</a><br />
+<a target=_blank href="http://www.intalio.com/customers">intalio.com</a><br />
+<br />
+<i>список буду пополнять по мере нахождения</i><br />

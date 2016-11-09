@@ -1,0 +1,43 @@
+::id 4bfb3c691d41c846bc000039
+::date 2010-02-01
+::title flash ролики в html
+::tags flash, video, html
+::body
+Идем на [http://www.longtailvideo.com longtailvideo.com] где можно скачать бесплатный видео-флеш плеер, скачиваем архив **JW Player: Flash Video Player**, из него нам нужен только один файл: **player-viral.swf**, закидываем его себе на сайт, добавляем код на страницу:
+[[<object id="player" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" name="player" width="400" height="315">
+  <param name="movie" value="player-viral.swf" />
+  <param name="allowfullscreen" value="true" />
+  <param name="allowscriptaccess" value="always" />
+  <param name="flashvars" value="file=video.flv&=preview.jpg" />
+  <embed type="application/x-shockwave-flash"
+    id="player2"
+    name="player2"
+    src="player-viral.swf" 
+    width="400" 
+    height="315"
+    allowscriptaccess="always" 
+    allowfullscreen="true"
+    flashvars="file=video.flv&=preview.jpg" />
+</object>
+]] в поля **flashvars** подставляем имя нашего flv-ролика, "file=video.flv".
+Все, смотрим ролик.
+
+::html
+Идем на <a target=_blank href="http://www.longtailvideo.com">longtailvideo.com</a> где можно скачать бесплатный видео-флеш плеер, скачиваем архив <b>JW Player: Flash Video Player</b>, из него нам нужен только один файл: <b>player-viral.swf</b>, закидываем его себе на сайт, добавляем код на страницу:<br />
+<div class="codebox"><pre><code>&lt;object id="player" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" name="player" width="400" height="315"&gt;
+  &lt;param name="movie" value="player-viral.swf" /&gt;
+  &lt;param name="allowfullscreen" value="true" /&gt;
+  &lt;param name="allowscriptaccess" value="always" /&gt;
+  &lt;param name="flashvars" value="file=video.flv&amp;=preview.jpg" /&gt;
+  &lt;embed type="application/x-shockwave-flash"
+    id="player2"
+    name="player2"
+    src="player-viral.swf" 
+    width="400" 
+    height="315"
+    allowscriptaccess="always" 
+    allowfullscreen="true"
+    flashvars="file=video.flv&amp;=preview.jpg" /&gt;
+&lt;/object&gt;
+</code></pre></div> в поля <b>flashvars</b> подставляем имя нашего flv-ролика, "file=video.flv".<br />
+Все, смотрим ролик.<br />

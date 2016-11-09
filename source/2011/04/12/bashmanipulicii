@@ -1,0 +1,69 @@
+::id 4da3f1351d41c87185000008
+::date 2011-04-12
+::title Bash, манипуляции
+::tags bash, linux
+::body
+Работа с историей команд
+#|
+||**history**|Вывести команды в пронумерованном виде
+||**!!**|Выполнить последнюю команду
+||**!7**|7-ая команда
+||**!-5**|5-ая команда с конца
+||**!hi**|Последняя команда начинающаяся с //hi//
+||**!$**|Использовать последний аргумент предыдущей строки
+||**Ctrl+R**|Поиск в истории команд
+||**Ctrl+C**|Отмена команды
+||**Ctrl+L**|Очистка экрана
+||**Esc+.**|Параметр предыдущей команды
+|#
+
+Замена символов в последней строке **^что_меняем^на_что_меняем**
+[[lega@lega-asus:/tmp$ echo test
+test
+lega@lega-asus:/tmp$ ^te^re
+echo rest
+rest]]
+
+Хождение по папкам
+#|
+||cd|Перейти в папку пользователя
+||cd -|Вернуться в предыдущую папку
+|#
+Стек путей, **pushd**, **popd**
+[[:~$ pushd /tmp/
+/tmp ~
+:/tmp$ pushd /home/
+/home /tmp ~
+:/home$ popd 
+/tmp ~
+:/tmp$ popd 
+~
+:~$]]
+
+::html
+Работа с историей команд<br />
+<table class="pymark_table"><tr><td></td></tr><tr><td><b>history</b></td><td>Вывести команды в пронумерованном виде</td></tr><tr><td><b>!!</b></td><td>Выполнить последнюю команду</td></tr><tr><td><b>!7</b></td><td>7-ая команда</td></tr><tr><td><b>!-5</b></td><td>5-ая команда с конца</td></tr><tr><td><b>!hi</b></td><td>Последняя команда начинающаяся с <i>hi</i></td></tr><tr><td><b>!$</b></td><td>Использовать последний аргумент предыдущей строки</td></tr><tr><td><b>Ctrl+R</b></td><td>Поиск в истории команд</td></tr><tr><td><b>Ctrl+C</b></td><td>Отмена команды</td></tr><tr><td><b>Ctrl+L</b></td><td>Очистка экрана</td></tr><tr><td><b>Esc+.</b></td><td>Параметр предыдущей команды</td></tr></table><br />
+<br />
+Замена символов в последней строке <b>^что_меняем^на_что_меняем</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">lega</span><span class="nd">@lega</span><span class="o">-</span><span class="n">asus</span><span class="p">:</span><span class="o">/</span><span class="n">tmp</span><span class="err">$</span> <span class="n">echo</span> <span class="n">test</span>
+<span class="n">test</span>
+<span class="n">lega</span><span class="nd">@lega</span><span class="o">-</span><span class="n">asus</span><span class="p">:</span><span class="o">/</span><span class="n">tmp</span><span class="err">$</span> <span class="o">^</span><span class="n">te</span><span class="o">^</span><span class="n">re</span>
+<span class="n">echo</span> <span class="n">rest</span>
+<span class="n">rest</span>
+</pre></div>
+</div><br />
+<br />
+Хождение по папкам<br />
+<table class="pymark_table"><tr><td></td></tr><tr><td>cd</td><td>Перейти в папку пользователя</td></tr><tr><td>cd -</td><td>Вернуться в предыдущую папку</td></tr></table><br />
+Стек путей, <b>pushd</b>, <b>popd</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="p">:</span><span class="o">~</span><span class="err">$</span> <span class="n">pushd</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span>
+<span class="o">/</span><span class="n">tmp</span> <span class="o">~</span>
+<span class="p">:</span><span class="o">/</span><span class="n">tmp</span><span class="err">$</span> <span class="n">pushd</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span>
+<span class="o">/</span><span class="n">home</span> <span class="o">/</span><span class="n">tmp</span> <span class="o">~</span>
+<span class="p">:</span><span class="o">/</span><span class="n">home</span><span class="err">$</span> <span class="n">popd</span> 
+<span class="o">/</span><span class="n">tmp</span> <span class="o">~</span>
+<span class="p">:</span><span class="o">/</span><span class="n">tmp</span><span class="err">$</span> <span class="n">popd</span> 
+<span class="o">~</span>
+<span class="p">:</span><span class="o">~</span><span class="err">$</span>
+</pre></div>
+</div><br />

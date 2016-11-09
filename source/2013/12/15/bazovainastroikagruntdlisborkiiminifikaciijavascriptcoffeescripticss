@@ -1,0 +1,41 @@
+::id 52ada05194fa041285d9ff63
+::date 2013-12-15
+::title Базовая настройка Grunt для сборки и минификации JavaScript, CoffeeScript и CSS
+::tags gruntjs, javascript, coffeescript, uglify
+::body
+Пример базовой настройки **Grunt** для сборки и минификации **JavaScript**, **CoffeeScript** и **CSS**.
+
+**Устанавливаем grunt** (из под root)[[# npm install grunt-cli -g]]
+**Настраиваем приложение** (создается package.json)[[$ npm init]]
+**Устанавливаем необходимые пакеты**
+[[$ npm install grunt --save-dev
+$ npm install grunt-contrib-coffee grunt-contrib-concat grunt-contrib-uglify grunt-contrib-cssmin grunt-contrib-connect --save-dev]]
+
+Создаем **Gruntfile.js** файл и настраиваем, [https://bitbucket.org/lega911/scripts/raw/tip/grunt_sample/Gruntfile.js см. пример]
+
+**Сборка проекта**[[$ grunt]]
+**Запуск http тест-сервера**[[$ grunt connect:main:keepalive]]
+
+::html
+Пример базовой настройки <b>Grunt</b> для сборки и минификации <b>JavaScript</b>, <b>CoffeeScript</b> и <b>CSS</b>.<br />
+<br />
+<b>Устанавливаем grunt</b> (из под root)<div class="codebox"><div class="highlight"><pre><span class="c"># npm install grunt-cli -g</span>
+</pre></div>
+</div><br />
+<b>Настраиваем приложение</b> (создается package.json)<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">npm</span> <span class="n">init</span>
+</pre></div>
+</div><br />
+<b>Устанавливаем необходимые пакеты</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">npm</span> <span class="n">install</span> <span class="n">grunt</span> <span class="o">--</span><span class="n">save</span><span class="o">-</span><span class="n">dev</span>
+<span class="err">$</span> <span class="n">npm</span> <span class="n">install</span> <span class="n">grunt</span><span class="o">-</span><span class="n">contrib</span><span class="o">-</span><span class="n">coffee</span> <span class="n">grunt</span><span class="o">-</span><span class="n">contrib</span><span class="o">-</span><span class="n">concat</span> <span class="n">grunt</span><span class="o">-</span><span class="n">contrib</span><span class="o">-</span><span class="n">uglify</span> <span class="n">grunt</span><span class="o">-</span><span class="n">contrib</span><span class="o">-</span><span class="n">cssmin</span> <span class="n">grunt</span><span class="o">-</span><span class="n">contrib</span><span class="o">-</span><span class="n">connect</span> <span class="o">--</span><span class="n">save</span><span class="o">-</span><span class="n">dev</span>
+</pre></div>
+</div><br />
+<br />
+Создаем <b>Gruntfile.js</b> файл и настраиваем, <a target=_blank href="https://bitbucket.org/lega911/scripts/raw/tip/grunt_sample/Gruntfile.js">см. пример</a><br />
+<br />
+<b>Сборка проекта</b><div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">grunt</span>
+</pre></div>
+</div><br />
+<b>Запуск http тест-сервера</b><div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">grunt</span> <span class="n">connect</span><span class="p">:</span><span class="n">main</span><span class="p">:</span><span class="n">keepalive</span>
+</pre></div>
+</div><br />

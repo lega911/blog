@@ -1,0 +1,34 @@
+::id 4d34854a1d41c819a7000006
+::date 2011-01-17
+::title Свежий nginx на ubuntu
+::tags nginx, ubuntu, web, server, linux, install
+::body
+//Пример установки для ubuntu maverick (10.10)//
+ 
+Добавляем 2 строки в файл **/etc/apt/sources.list**
+[[deb http://ppa.launchpad.net/nginx/stable/ubuntu maverick main
+deb-src http://ppa.launchpad.net/nginx/stable/ubuntu maverick main]]
+Добавляем ключ
+[[
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C300EE8C]]
+Устанавливаем
+[[sudo apt-get update
+sudo apt-get install nginx-full]]
+
+::html
+<i>Пример установки для ubuntu maverick (10.10)</i><br />
+ <br />
+Добавляем 2 строки в файл <b>/etc/apt/sources.list</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">deb</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">ppa</span><span class="o">.</span><span class="n">launchpad</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">stable</span><span class="o">/</span><span class="n">ubuntu</span> <span class="n">maverick</span> <span class="n">main</span>
+<span class="n">deb</span><span class="o">-</span><span class="n">src</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">ppa</span><span class="o">.</span><span class="n">launchpad</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">stable</span><span class="o">/</span><span class="n">ubuntu</span> <span class="n">maverick</span> <span class="n">main</span>
+</pre></div>
+</div><br />
+Добавляем ключ<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">key</span> <span class="n">adv</span> <span class="o">--</span><span class="n">keyserver</span> <span class="n">keyserver</span><span class="o">.</span><span class="n">ubuntu</span><span class="o">.</span><span class="n">com</span> <span class="o">--</span><span class="n">recv</span><span class="o">-</span><span class="n">keys</span> <span class="n">C300EE8C</span>
+</pre></div>
+</div><br />
+Устанавливаем<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">nginx</span><span class="o">-</span><span class="n">full</span>
+</pre></div>
+</div><br />

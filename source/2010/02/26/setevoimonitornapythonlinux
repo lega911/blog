@@ -1,0 +1,100 @@
+::id 4bfb3c691d41c846bc00007a
+::date 2010-02-26
+::title Сетевой монитор на python (linux)
+::tags python, tcpdump, linux
+::body
+Простой сетевой монитор, парсит лог tcpdump, нужно запускать от рута
+
+!Вывод
+[[$ sudo python sample.py 
+0.0kb/sec, full: 0.0kb
+0.2kb/sec, full: 2.3kb
+0.1kb/sec, full: 3.6kb
+9.9kb/sec, full: 64.5kb
+13.0kb/sec, full: 133.4kb
+22.8kb/sec, full: 256.2kb]]
+!Исходник
+[[# coding: utf-8
+
+import re
+import time
+
+rel = re.compile(r'length (\d+?)$')
+
+cmd = 'tcpdump'
+import subprocess
+PIPE = subprocess.PIPE
+p = subprocess.Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE,
+        stderr=subprocess.STDOUT, close_fds=True)
+try:
+    full = 0
+    size = 0
+    t1 = time.time()
+    t2 = t1 + 5
+    while True:
+        s = p.stdout.readline()
+        if not s: break  
+        
+        d = rel.findall(s)
+        if d: size += int(d[0])
+        
+        if time.time() > t2:
+            t2 = time.time() - t1
+            full += size
+            print '%.1fkb/sec, full: %.1fkb' % (size/t2/1024,full/1024.0)
+            size = 0
+            t1 = time.time()
+            t2 = t1 + 5
+        
+except Exception as e:
+    print e
+
+p.terminate()]]
+::html
+Простой сетевой монитор, парсит лог tcpdump, нужно запускать от рута<br />
+<h3>Вывод</h3><div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">sudo</span> <span class="n">python</span> <span class="n">sample</span><span class="o">.</span><span class="n">py</span> 
+<span class="mf">0.0</span><span class="n">kb</span><span class="o">/</span><span class="n">sec</span><span class="p">,</span> <span class="n">full</span><span class="p">:</span> <span class="mf">0.0</span><span class="n">kb</span>
+<span class="mf">0.2</span><span class="n">kb</span><span class="o">/</span><span class="n">sec</span><span class="p">,</span> <span class="n">full</span><span class="p">:</span> <span class="mf">2.3</span><span class="n">kb</span>
+<span class="mf">0.1</span><span class="n">kb</span><span class="o">/</span><span class="n">sec</span><span class="p">,</span> <span class="n">full</span><span class="p">:</span> <span class="mf">3.6</span><span class="n">kb</span>
+<span class="mf">9.9</span><span class="n">kb</span><span class="o">/</span><span class="n">sec</span><span class="p">,</span> <span class="n">full</span><span class="p">:</span> <span class="mf">64.5</span><span class="n">kb</span>
+<span class="mf">13.0</span><span class="n">kb</span><span class="o">/</span><span class="n">sec</span><span class="p">,</span> <span class="n">full</span><span class="p">:</span> <span class="mf">133.4</span><span class="n">kb</span>
+<span class="mf">22.8</span><span class="n">kb</span><span class="o">/</span><span class="n">sec</span><span class="p">,</span> <span class="n">full</span><span class="p">:</span> <span class="mf">256.2</span><span class="n">kb</span>
+</pre></div>
+</div><h3>Исходник</h3><div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf-8</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">rel</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;length (\d+?)$&#39;</span><span class="p">)</span>
+
+<span class="n">cmd</span> <span class="o">=</span> <span class="s">&#39;tcpdump&#39;</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="n">PIPE</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">close_fds</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">full</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">t1</span> <span class="o">+</span> <span class="mi">5</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="p">:</span> <span class="k">break</span>  
+        
+        <span class="n">d</span> <span class="o">=</span> <span class="n">rel</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">d</span><span class="p">:</span> <span class="n">size</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        
+        <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">t2</span><span class="p">:</span>
+            <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span>
+            <span class="n">full</span> <span class="o">+=</span> <span class="n">size</span>
+            <span class="k">print</span> <span class="s">&#39;</span><span class="si">%.1f</span><span class="s">kb/sec, full: </span><span class="si">%.1f</span><span class="s">kb&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">size</span><span class="o">/</span><span class="n">t2</span><span class="o">/</span><span class="mi">1024</span><span class="p">,</span><span class="n">full</span><span class="o">/</span><span class="mf">1024.0</span><span class="p">)</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">t2</span> <span class="o">=</span> <span class="n">t1</span> <span class="o">+</span> <span class="mi">5</span>
+        
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">e</span>
+
+<span class="n">p</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+</pre></div>
+</div>

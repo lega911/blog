@@ -1,0 +1,63 @@
+::id 50883606bbddbd5e9e000001
+::date 2012-10-25
+::title Lock file python
+::tags python, lock, file, ubuntu
+::body
+Монопольный доступ к файлу (lockfile) часто применяется когда нужно предотвратить запуск нескольких копий приложения, либо просто монопольный доступ на запись, проверено на ubuntu + python 2.7
+
+**Пример использования lockfile**
+[[def lock_file(fname):
+    import fcntl
+    _lock_file = open(fname, 'a+')
+    try:
+        fcntl.flock(_lock_file.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except IOError:
+        return None
+    return _lock_file
+
+lock = lock_file('/tmp/test')
+print 1, lock
+lock2 = lock_file('/tmp/test')
+print 2, lock2
+
+del lock
+
+lock3 = lock_file('/tmp/test')
+print 3, lock3
+]]
+**Результат**[[1 <open file '/tmp/test', mode 'a+' at 0xb73003e8>
+2 None
+3 <open file '/tmp/test', mode 'a+' at 0xb73003e8>
+]]
+"Отпустить" lockfile можно вызвав "del lockfile", либо он сам "освободится" при выходе из функции или программы - когда переменная будет не нужна.
+
+::html
+Монопольный доступ к файлу (lockfile) часто применяется когда нужно предотвратить запуск нескольких копий приложения, либо просто монопольный доступ на запись, проверено на ubuntu + python 2.7<br />
+<br />
+<b>Пример использования lockfile</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="k">def</span> <span class="nf">lock_file</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">fcntl</span>
+    <span class="n">_lock_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s">&#39;a+&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fcntl</span><span class="o">.</span><span class="n">flock</span><span class="p">(</span><span class="n">_lock_file</span><span class="o">.</span><span class="n">fileno</span><span class="p">(),</span> <span class="n">fcntl</span><span class="o">.</span><span class="n">LOCK_EX</span> <span class="o">|</span> <span class="n">fcntl</span><span class="o">.</span><span class="n">LOCK_NB</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+    <span class="k">return</span> <span class="n">_lock_file</span>
+
+<span class="n">lock</span> <span class="o">=</span> <span class="n">lock_file</span><span class="p">(</span><span class="s">&#39;/tmp/test&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="mi">1</span><span class="p">,</span> <span class="n">lock</span>
+<span class="n">lock2</span> <span class="o">=</span> <span class="n">lock_file</span><span class="p">(</span><span class="s">&#39;/tmp/test&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="mi">2</span><span class="p">,</span> <span class="n">lock2</span>
+
+<span class="k">del</span> <span class="n">lock</span>
+
+<span class="n">lock3</span> <span class="o">=</span> <span class="n">lock_file</span><span class="p">(</span><span class="s">&#39;/tmp/test&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="mi">3</span><span class="p">,</span> <span class="n">lock3</span>
+</pre></div>
+</div><br />
+<b>Результат</b><div class="codebox"><div class="highlight"><pre><span class="mi">1</span> <span class="o">&lt;</span><span class="nb">open</span> <span class="nb">file</span> <span class="s">&#39;/tmp/test&#39;</span><span class="p">,</span> <span class="n">mode</span> <span class="s">&#39;a+&#39;</span> <span class="n">at</span> <span class="mh">0xb73003e8</span><span class="o">&gt;</span>
+<span class="mi">2</span> <span class="bp">None</span>
+<span class="mi">3</span> <span class="o">&lt;</span><span class="nb">open</span> <span class="nb">file</span> <span class="s">&#39;/tmp/test&#39;</span><span class="p">,</span> <span class="n">mode</span> <span class="s">&#39;a+&#39;</span> <span class="n">at</span> <span class="mh">0xb73003e8</span><span class="o">&gt;</span>
+</pre></div>
+</div><br />
+"Отпустить" lockfile можно вызвав "del lockfile", либо он сам "освободится" при выходе из функции или программы - когда переменная будет не нужна.<br />

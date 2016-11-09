@@ -1,0 +1,99 @@
+::id 5325d8ee94fa041285d9ff70
+::date 2014-03-16
+::title PostgreSQL, установка + доступ из Python
+::tags python, postgresql, sql
+::body
+//Проверено на ubuntu 13.04 x64, Python 2.7//
+ 
+Создаем apt файл **/etc/apt/sources.list.d/pgdg.list**
+[[deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main]]
+ 
+Добавляем ключ:
+[[$ wget -O psql.key https://www.postgresql.org/media/keys/ACCC4CF8.asc
+$ sudo apt-key add psql.key
+$ sudo apt-get update]]
+ 
+Устанавливаем необходимые компоненты:
+[[$ sudo apt-get install postgresql-9.3  python-psycopg2]]
+
+Открываем консоль PostgreSQL:
+[[sudo -u postgres psql]]
+
+Создаем базу и пользователя:
+[[postgres=# CREATE DATABASE test_base;
+CREATE DATABASE
+postgres=# CREATE USER test_user WITH password 'test_password';
+CREATE ROLE
+postgres=# GRANT ALL privileges ON DATABASE test_base TO test_user;
+GRANT]]
+
+Тестируем из Python 2.7:
+[[import psycopg2
+
+connect = psycopg2.connect(database='test_base', user='test_user', host='localhost', password='test_password')
+cursor = connect.cursor()
+
+cursor.execute("CREATE TABLE tbl(id INT, data JSON);")
+
+cursor.execute('INSERT INTO tbl VALUES (1, \'{ "name":"Tester" }\');')
+connect.commit()
+
+cursor.execute("SELECT * FROM tbl;")
+for row in cursor:
+    print(row)
+
+connect.close()]]
+
+::html
+<i>Проверено на ubuntu 13.04 x64, Python 2.7</i><br />
+ <br />
+Создаем apt файл <b>/etc/apt/sources.list.d/pgdg.list</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">deb</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">apt</span><span class="o">.</span><span class="n">postgresql</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">pub</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="n">apt</span><span class="o">/</span> <span class="n">precise</span><span class="o">-</span><span class="n">pgdg</span> <span class="n">main</span>
+</pre></div>
+</div><br />
+ <br />
+Добавляем ключ:<br />
+<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">wget</span> <span class="o">-</span><span class="n">O</span> <span class="n">psql</span><span class="o">.</span><span class="n">key</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">postgresql</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">keys</span><span class="o">/</span><span class="n">ACCC4CF8</span><span class="o">.</span><span class="n">asc</span>
+<span class="err">$</span> <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">key</span> <span class="n">add</span> <span class="n">psql</span><span class="o">.</span><span class="n">key</span>
+<span class="err">$</span> <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+</pre></div>
+</div><br />
+ <br />
+Устанавливаем необходимые компоненты:<br />
+<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">postgresql</span><span class="o">-</span><span class="mf">9.3</span>  <span class="n">python</span><span class="o">-</span><span class="n">psycopg2</span>
+</pre></div>
+</div><br />
+<br />
+Открываем консоль PostgreSQL:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="o">-</span><span class="n">u</span> <span class="n">postgres</span> <span class="n">psql</span>
+</pre></div>
+</div><br />
+<br />
+Создаем базу и пользователя:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">postgres</span><span class="o">=</span><span class="c"># CREATE DATABASE test_base;</span>
+<span class="n">CREATE</span> <span class="n">DATABASE</span>
+<span class="n">postgres</span><span class="o">=</span><span class="c"># CREATE USER test_user WITH password &#39;test_password&#39;;</span>
+<span class="n">CREATE</span> <span class="n">ROLE</span>
+<span class="n">postgres</span><span class="o">=</span><span class="c"># GRANT ALL privileges ON DATABASE test_base TO test_user;</span>
+<span class="n">GRANT</span>
+</pre></div>
+</div><br />
+<br />
+Тестируем из Python 2.7:<br />
+<div class="codebox"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">psycopg2</span>
+
+<span class="n">connect</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="s">&#39;test_base&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s">&#39;test_user&#39;</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s">&#39;test_password&#39;</span><span class="p">)</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">connect</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;CREATE TABLE tbl(id INT, data JSON);&quot;</span><span class="p">)</span>
+
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&#39;INSERT INTO tbl VALUES (1, </span><span class="se">\&#39;</span><span class="s">{ &quot;name&quot;:&quot;Tester&quot; }</span><span class="se">\&#39;</span><span class="s">);&#39;</span><span class="p">)</span>
+<span class="n">connect</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT * FROM tbl;&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cursor</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+<span class="n">connect</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div><br />

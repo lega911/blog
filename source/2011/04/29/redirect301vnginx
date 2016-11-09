@@ -1,0 +1,20 @@
+::id 4dba7b3e1d41c87d24000000
+::date 2011-04-29
+::title Redirect 301 в nginx
+::tags nginx, redirect
+::body
+В примере, страница **py-my.ru** перенаправляет на **www.py-my.ry**, свойство **permanent** задает перенаправление с кодом 301.
+[[server {
+        listen 80;
+        server_name py-my.ru;
+        rewrite ^ http://www.py-my.ru$request_uri? permanent; # redirect 301
+}]]
+::html
+В примере, страница <b>py-my.ru</b> перенаправляет на <b>www.py-my.ry</b>, свойство <b>permanent</b> задает перенаправление с кодом 301.<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">server</span> <span class="p">{</span>
+        <span class="n">listen</span> <span class="mi">80</span><span class="p">;</span>
+        <span class="n">server_name</span> <span class="n">py</span><span class="o">-</span><span class="n">my</span><span class="o">.</span><span class="n">ru</span><span class="p">;</span>
+        <span class="n">rewrite</span> <span class="o">^</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">py</span><span class="o">-</span><span class="n">my</span><span class="o">.</span><span class="n">ru</span><span class="err">$</span><span class="n">request_uri</span><span class="err">?</span> <span class="n">permanent</span><span class="p">;</span> <span class="c"># redirect 301</span>
+<span class="p">}</span>
+</pre></div>
+</div>

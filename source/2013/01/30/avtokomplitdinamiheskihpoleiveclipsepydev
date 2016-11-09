@@ -1,0 +1,29 @@
+::id 5108c09071144856d0000004
+::date 2013-01-30
+::title Автокомплит динамических полей в Eclipse (pydev)
+::tags pydev, eclipse, autocomplite
+::body
+Не редко в python используются объекты с динамическими полями, которые не видит autocomplite pydev, для того что-бы авто дополнение выдавало нужные поля, можно использовать //Predefined Completions//.
+Для этого нужно создать файл рядом с модулем //modulename//**.pypredef**, где //modulename// - имя модуля. Пример содержимого:
+[[class MyClass:
+    def myMethod(param0, param1):
+        '''
+        
+        @type param0: int
+        @type param1: MyClass
+        '''
+        return int]]
+
+::html
+Не редко в python используются объекты с динамическими полями, которые не видит autocomplite pydev, для того что-бы авто дополнение выдавало нужные поля, можно использовать <i>Predefined Completions</i>.<br />
+Для этого нужно создать файл рядом с модулем <i>modulename</i><b>.pypredef</b>, где <i>modulename</i> - имя модуля. Пример содержимого:<br />
+<div class="codebox"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">myMethod</span><span class="p">(</span><span class="n">param0</span><span class="p">,</span> <span class="n">param1</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        </span>
+<span class="sd">        @type param0: int</span>
+<span class="sd">        @type param1: MyClass</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="nb">int</span>
+</pre></div>
+</div><br />

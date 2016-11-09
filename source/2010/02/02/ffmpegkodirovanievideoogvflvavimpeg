@@ -1,0 +1,62 @@
+::id 4bfb3c691d41c846bc00003e
+::date 2010-02-02
+::title ffmpeg: кодирование видео ( ogv, flv, avi, mpeg )
+::tags ffmpeg, видео, кодирование
+::body
+!Установка
+[[sudo apt-get install ffmpeg]]
+!Общий вид команды
+[[ffmpeg -i input.ogv [options] output.flv]]
+
+!Опции
+#|
+||**-i input.ogv**|исходный видео файл
+||**-r 20**|фпс, кол-во кадров в секунду
+||**-b 200k**|битрейт, 200кбит в сек
+||**-s vga, -s 400x300**|разрешение экрана, vga соответствует разрешению 640х480, др. разрешения можно найти на [http://ffmpeg.org/ffmpeg-doc.html#SEC6 оф.сайте]
+||**-ar 22050**|частота дискретизации звука (должна быть кратна 11кГц)
+||**-ab 32k**|битрейт звука
+||**-ac 1**|количество каналов звука
+||**-f flv**|формат видео на выходе;
+||**-g 25**|плотность опорных кадров (по умолчанию каждый 25-й кадр опорный)
+||**-vframes 100**|ограничение на количество кадров видео
+||**-y**|перезаписать файл, если он уже существует
+||**-acodec libvorbis**|Выбор аудио-кодека
+**libvorbis** - vorbis/ogg
+**libmp3lame** - mp3|#
+!Обрезать видео
+указывается в пикселях
+#|
+||**-cropleft 0**|слева
+||**-cropbottom 0**|снизу
+||**-croptop 0**|сверху
+||**-cropright 0**|справа
+|#
+
+**Пример**
+[[
+ffmpeg -i input.mpg -r 25 -ar 44100 -ab 128k -ac 1 -f avi -b 700k -s 4cif -y output.avi
+ffmpeg -i input.mkv -acodec libvorbis -vcodec copy output.mkv]]
+другие возможности читайте в [http://ffmpeg.org/ffmpeg-doc.html документации] либо man ffmpeg
+
+
+см. [4caf4bf41d41c81169000005 ffmpeg2theora (theora + vorbis)]
+::html
+<h3>Установка</h3><br />
+<div class="codebox"><pre><code>sudo apt-get install ffmpeg</code></pre></div><h3>Общий вид команды</h3><br />
+<div class="codebox"><pre><code>ffmpeg -i input.ogv [options] output.flv</code></pre></div><br />
+<h3>Опции</h3><br />
+<table class="pymark_table"><tr><td></td></tr><tr><td><b>-i input.ogv</b></td><td>исходный видео файл</td></tr><tr><td><b>-r 20</b></td><td>фпс, кол-во кадров в секунду</td></tr><tr><td><b>-b 200k</b></td><td>битрейт, 200кбит в сек</td></tr><tr><td><b>-s vga, -s 400x300</b></td><td>разрешение экрана, vga соответствует разрешению 640х480, др. разрешения можно найти на <a target=_blank href="http://ffmpeg.org/ffmpeg-doc.html#SEC6">оф.сайте</a></td></tr><tr><td><b>-ar 22050</b></td><td>частота дискретизации звука (должна быть кратна 11кГц)</td></tr><tr><td><b>-ab 32k</b></td><td>битрейт звука</td></tr><tr><td><b>-ac 1</b></td><td>количество каналов звука</td></tr><tr><td><b>-f flv</b></td><td>формат видео на выходе;</td></tr><tr><td><b>-g 25</b></td><td>плотность опорных кадров (по умолчанию каждый 25-й кадр опорный)</td></tr><tr><td><b>-vframes 100</b></td><td>ограничение на количество кадров видео</td></tr><tr><td><b>-y</b></td><td>перезаписать файл, если он уже существует</td></tr><tr><td><b>-acodec libvorbis</b></td><td>Выбор аудио-кодека<br />
+<b>libvorbis</b> - vorbis/ogg<br />
+<b>libmp3lame</b> - mp3</td></tr></table><h3>Обрезать видео</h3><br />
+указывается в пикселях<br />
+<table class="pymark_table"><tr><td></td></tr><tr><td><b>-cropleft 0</b></td><td>слева</td></tr><tr><td><b>-cropbottom 0</b></td><td>снизу</td></tr><tr><td><b>-croptop 0</b></td><td>сверху</td></tr><tr><td><b>-cropright 0</b></td><td>справа</td></tr></table><br />
+<br />
+<b>Пример</b><br />
+<div class="codebox"><pre><code>
+ffmpeg -i input.mpg -r 25 -ar 44100 -ab 128k -ac 1 -f avi -b 700k -s 4cif -y output.avi
+ffmpeg -i input.mkv -acodec libvorbis -vcodec copy output.mkv</code></pre></div><br />
+другие возможности читайте в <a target=_blank href="http://ffmpeg.org/ffmpeg-doc.html">документации</a> либо man ffmpeg<br />
+<br />
+<br />
+см. <a href="4caf4bf41d41c81169000005">ffmpeg2theora (theora + vorbis)</a>
