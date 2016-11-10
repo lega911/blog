@@ -1,13 +1,11 @@
 ::title Key binding in linux
 ::date 2016-11-09
-::tags linux, key binding
+::tags linux, key binding, keys
 ::link /2016/11/09/key_binding.html
 ::body
 
-Title
------
+Set Alt+w for operation "show all windows", 
 
-```python
-def foo():
-    print('Hello!')
+```bash
+dconf write /org/compiz/profiles/unity/plugins/scale/initiate-key "'<Alt>w'"
 ```
