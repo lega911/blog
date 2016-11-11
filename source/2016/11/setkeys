@@ -4,8 +4,44 @@
 ::link /2016/11/09/key_binding.html
 ::body
 
-Set Alt+w for operation "show all windows", 
+**Change key bindings**
+
+You can use utils *xev* to get key codes, syntax: **xmodmap -e "keycode KEYCODE = VALUES"**
+Values order: **Key, Shift+Key, mode_switch+Key, mode_switch+Shift+Key, AltGr+Key, AltGr+Shift+Key**
+
+**Examples**
 
 ```bash
+xmodmap -e "keycode 51 = apostrophe quotedbl NoSymbol NoSymbol grave asterisk"  # ' " ` *
+xmodmap -e "keycode 21 = slash bar NoSymbol NoSymbol backslash"
+
+xmodmap -e "keycode 11 = 2 at"
+xmodmap -e "keycode 13 = 4 dollar"
+
+xmodmap -e "keycode 34 = bracketleft braceleft NoSymbol NoSymbol aring Aring"
+xmodmap -e "keycode 35 = bracketright braceright"
+
+xmodmap -e "keycode 49 = asciicircum asciitilde NoSymbol NoSymbol grave"  # ^ ~ `
+xmodmap -e "keycode 59 = semicolon comma"  # ; ,
+```
+
+**Enter by capslock**
+```bash
+xmodmap -e 'keycode 66 = Return'  # enter by capslock
+xmodmap -e 'clear Lock'
+```
+
+**Reset mapping**
+```bash
+setxkbmap -layout se  # reset mapping
+```
+
+**Set Alt+w for operation "show all windows"**
+```bash
 dconf write /org/compiz/profiles/unity/plugins/scale/initiate-key "'<Alt>w'"
+```
+
+**Set mouse speed**
+```bash
+xset m 00  # mouse
 ```
