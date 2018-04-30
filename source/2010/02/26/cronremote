@@ -1,3 +1,4 @@
+::visible false
 ::id 4bfb3c691d41c846bc00007b
 ::date 2010-02-26
 ::title cron-remote
@@ -33,27 +34,39 @@ python cronr.py]]Теперь cron-remote должен быть доступен
 [image:%id%/cron.png]
 
 ::html
-<img src="/uploads/4bfb3c691d41c846bc00007b/cron_logo.png" />Планировщик задач с удаленным управлением для linux и windows ( + MacOS ), open-source проект с лицензией GPL<br />
-<h3>Функционал</h3>
+<img src="/uploads/4bfb3c691d41c846bc00007b/cron_logo.png" />Планировщик задач с удаленным управлением для linux и windows ( + MacOS ), open-source проект с лицензией GPL
+<br />
+<h3>Функционал
+</h3>
 <br />&nbsp;&#8226;&nbsp;Управление заданиями (добавление, изменение ...)
 <br />&nbsp;&#8226;&nbsp;Запуск, останов заданий
-<br />&nbsp;&#8226;&nbsp;Логирование (Запуски, остановы, ошибки, время выполнения ... )<br />
+<br />&nbsp;&#8226;&nbsp;Логирование (Запуски, остановы, ошибки, время выполнения ... )
+<br />
 
 <br />&nbsp;&#8226;&nbsp;Авторизация
 <br />&nbsp;&#8226;&nbsp;acl (роля)
-<br />&nbsp;&#8226;&nbsp;Запуск в виде сервиса<h3>Под вопросом</h3>
+<br />&nbsp;&#8226;&nbsp;Запуск в виде сервиса
+<h3>Под вопросом
+</h3>
 <br />&nbsp;&#8226;&nbsp;Парсинг логов заданий, результирующего текста
 <br />&nbsp;&#8226;&nbsp;Оповещение по почте, джаберу
 <br />&nbsp;&#8226;&nbsp;взаимодействие с cronr на других хостах
-<br />&nbsp;&#8226;&nbsp;пошаговое выполнение (цепочки)<br />
-<br />
-<h3>Установка cron-remote</h3><br />
+<br />&nbsp;&#8226;&nbsp;пошаговое выполнение (цепочки)
+<br />
+<br />
+<h3>Установка cron-remote
+</h3><br />
 <div class="codebox"><pre><code>hg clone http://bitbucket.org/lega911/cron-remote/ cronr
 cd cronr
 cp _cronr.cfg cronr.cfg
 cp _users.pwd users.pwd
-python cronr.py</code></pre></div>Теперь cron-remote должен быть доступен по адресу <a target=_blank href="http://localhost:8098/">http://localhost:8098/</a><br />
-Логин и пароль по умолчанию: admin, admin<br />
-Для того что-б cron-remote все время работал cronr.py нужно повесить на автозапуск, как сделать крон сервисом можно прочитать <a href="/page/27">тут</a><br />
-<h3>Скриншот</h3><br />
-<img src="/uploads/4bfb3c691d41c846bc00007b/cron.png" /><br />
+python cronr.py</code></pre></div>Теперь cron-remote должен быть доступен по адресу <a target=_blank href="http://localhost:8098/">http://localhost:8098/</a>
+<br />
+Логин и пароль по умолчанию: admin, admin
+<br />
+Для того что-б cron-remote все время работал cronr.py нужно повесить на автозапуск, как сделать крон сервисом можно прочитать <a href="/page/27">тут</a>
+<br />
+<h3>Скриншот
+</h3><br />
+<img src="/uploads/4bfb3c691d41c846bc00007b/cron.png" />
+<br />

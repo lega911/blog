@@ -6,8 +6,10 @@
 
 **Change key bindings**
 
-You can use utils *xev* to get key codes, syntax: **xmodmap -e "keycode KEYCODE = VALUES"**
-Values order: **Key, Shift+Key, mode_switch+Key, mode_switch+Shift+Key, AltGr+Key, AltGr+Shift+Key**
+You can use utils **xev** to get key codes, syntax: **xmodmap -e "keycode KEYCODE = VALUES"**, values order:
+```bash
+Key, Shift+Key, mode_switch+Key, mode_switch+Shift+Key, AltGr+Key, AltGr+Shift+Key
+```
 
 **Examples**
 
@@ -23,6 +25,16 @@ xmodmap -e "keycode 35 = bracketright braceright"
 
 xmodmap -e "keycode 49 = asciicircum asciitilde NoSymbol NoSymbol grave"  # ^ ~ `
 xmodmap -e "keycode 59 = semicolon comma"  # ; ,
+
+xmodmap -e "keycode 38 = a A aring Aring"
+xmodmap -e "keycode 32 = o O odiaeresis Odiaeresis"
+xmodmap -e "keycode 33 = p P adiaeresis Adiaeresis"
+
+```
+
+**Change right Alt to Mode_switch**
+```bash
+xmodmap -e 'keycode 108 = Mode_switch'
 ```
 
 **Enter by capslock**

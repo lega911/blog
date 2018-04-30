@@ -46,8 +46,6 @@ def parse(filename):
                 else:
                     result[key] = s
 
-    if 'active' not in result:
-        result['active'] = True
     return result
 
 
@@ -58,7 +56,9 @@ index = {
 
 
 def build(filename, data):
-    if not data['active']:
+    if data.get('active') is False:
+        return
+    if data.get('visible') is False:
         return
 
     data['tag_list'] = tags = []
