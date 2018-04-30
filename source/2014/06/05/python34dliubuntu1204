@@ -66,6 +66,7 @@ $ tar -xzf Python-3.4.0.tgz]]далее переходим в появившую
 </div><br />
 <b>5) Компилируем</b><br />
 <div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">make</span>
+# или make -j 4 для многопроцессорной компилляции
 </pre></div>
 </div><br />
 Ближе к концу компиляции может появится сообщение о том что каких-то пакетов не хватает:<br />
@@ -75,10 +76,12 @@ $ tar -xzf Python-3.4.0.tgz]]далее переходим в появившую
 <b>6) Устанавливаем Python и собираем пакет.</b><br />
 <div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">sudo</span> <span class="n">checkinstall</span> <span class="o">-</span><span class="n">D</span>
 </pre></div>
-</div>Тут нужно будет указать <i>Name [2] = python3.4</i>, что-бы не было конфликта с python2.<br />
+</div>Тут нужно будет указать <i>Name [2] = python3.4</i>, что-бы не было конфликта с python2, и установить версию [3].<br />
 <br />
 После успешного выполнения в текущей папке появится deb пакет (например <i>python3.4_3.4.0-1_amd64.deb</i>)<br />
 И сам <b>Python3.4</b> будет установлен<br />
 <div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">python3</span><span class="o">.</span><span class="mi">4</span> <span class="o">-</span><span class="n">V</span>
 </pre></div>
 </div>Python 3.4.0
+
+<div>Если будет проблема "Installing Debian package... FAILED!", можно исправить удалив /usr/lib/python3.4 /usr/local/lib/python3.4</div>
