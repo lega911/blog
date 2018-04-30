@@ -1,0 +1,37 @@
+::title Unix socket in asyncio
+::date 2018-05-01
+::tags python, asyncio
+::link /2018/05/01/unix_asyncio.html
+::body
+
+
+**Server**
+```python
+from aiohttp import web
+
+async def handle(request):
+    return web.Response(body=b'OK', status=200)
+
+app = web.Application()
+app.router.add_get('/test', handle)
+web.run_app(app, path='/tmp/server.sock')
+```
+
+**Client**
+```python
+import asyncio
+import aiohttp
+
+async def request():
+    conn = aiohttp.UnixConnector(path='/tmp/server.sock')
+    try:
+        async with aiohttp.request('GET', f'http://localhost/test', connector=conn) as resp:
+            assert resp.status == 200
+            print(await resp.text())
+    finally:
+        conn.close()
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(request())
+loop.close()
+```

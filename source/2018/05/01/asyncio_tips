@@ -1,0 +1,117 @@
+::title Asyncio tips
+::date 2018-05-01
+::tags python, asyncio
+::link /2018/05/01/asyncio.html
+::body
+
+**1. How to start async function without await**, functions:
+
+```python
+asyncio.ensure_future(func())  # returns Task
+loop.create_task(func())  # returns Task
+```
+
+Example:
+```python
+import asyncio
+
+async def nowait():
+    print('nowait start')
+    await asyncio.sleep(1)
+    print('nowait finished')
+
+async def main():
+    print('main: start')
+    asyncio.ensure_future(nowait())
+    await asyncio.sleep(0.6)
+    print('main: sleep')
+    await asyncio.sleep(0.6)
+    print('main: finished')
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
+loop.close()
+```
+
+**2. How to start a usual function asynchronously**, you can use:
+
+```python
+loop.call_soon(func)          # start on next tick
+loop.call_later(delay, func)  # wait some time before start
+loop.call_at(when, func)      # start at a time
+```
+
+**3. To await a usual function** you need to return *Future* object:
+
+```python
+import asyncio
+
+def basic():
+    fut = asyncio.Future()
+
+    def called_after_second(_):
+        fut.set_result(555)
+
+    asyncio.ensure_future(asyncio.sleep(1)).add_done_callback(called_after_second)
+
+    return fut
+
+async def main():
+    print('main: start')
+
+    result = await basic()
+    print(result)
+
+    print('main: finished')
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
+loop.close()
+```
+
+**4. How to wait async func from a usual function**
+
+```python
+import asyncio
+
+async def asyncfunc():
+    await asyncio.sleep(1)
+
+def basic():
+    def on_complete(task):
+        print('sleep finished')
+
+    task = asyncio.ensure_future(asyncfunc())
+    task.add_done_callback(on_complete)
+
+async def main():
+    print('main: start')
+
+    basic()
+
+    await asyncio.sleep(1.1)
+    print('main: finished')
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
+loop.close()
+```
+
+**5. Wait all tasks finish or wait any task finish**
+
+```python
+asyncio.wait(tasks, timeout, return_when=ALL_COMPLETED)
+asyncio.wait(tasks, timeout, return_when=FIRST_COMPLETED)
+```
+
+**6. Other popular function**
+
+```python
+loop.run_until_complete(<coro/future/task>)  # blocks loop until future is done
+loop.run_forever()  # block until loop is stopped
+
+asyncio.wait_for(<coro>, timeout)  # set timeout for a coro
+asyncio.gather(<list of coro>)  # returns coro, result = values in right order
+```
+
+*Note: You don't have to create Task object, it's "system" object which is used as result for async functions, use Future instead*

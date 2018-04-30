@@ -1,0 +1,45 @@
+::title Asyncio subprocess
+::date 2018-05-01
+::tags python, asyncio, subprocess
+::link /2018/05/01/asyncio_subprocess.html
+::body
+
+
+```python
+import asyncio
+
+async def main():
+    process = await asyncio.create_subprocess_shell('ping 8.8.8.8 -c 5', close_fds=True,
+        stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+
+    while process.returncode is None:
+        data = await process.stdout.read(1024)
+        if data:
+            print(data)
+        else:
+            await asyncio.sleep(0.001)  # returncode is set after sleep
+
+    print('code', process.returncode)
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
+loop.close()
+```
+
+**Wait when process finishes:**
+```python
+import asyncio
+
+async def main():
+    process = await asyncio.create_subprocess_shell('ping 8.8.8.8 -c 5', close_fds=True,
+        stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+    returncode = await process.wait()
+    data = await process.stdout.read()
+
+    print('code', returncode)
+    print('data', data)
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
+loop.close()
+```
