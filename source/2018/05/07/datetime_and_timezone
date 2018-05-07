@@ -1,0 +1,67 @@
+::title How to change datetime timezone in python
+::date 2018-05-07
+::tags python, datetime, timezone
+::link /2018/05/07/python_datetime_timezone.html
+::body
+
+
+```python
+from datetime import datetime
+import pytz
+
+tz = pytz.timezone('Europe/Stockholm')
+
+def show(local):
+    print('local naive:', local.strftime('%Y-%m-%d %H:%M:%S %z'))
+
+    # local naive -> local + tz
+    local_tz = tz.localize(local)
+    print('local + tz: ', local_tz.strftime('%Y-%m-%d %H:%M:%S %z'))
+
+    # local + tz -> utc + tz
+    utc_tz = local_tz.astimezone(pytz.UTC)
+    print('utc_tz:     ', utc_tz.strftime('%Y-%m-%d %H:%M:%S %z'))
+
+    # utc + tz -> utc naive
+    utc = utc_tz.replace(tzinfo=None)
+    print('utc naive:  ', utc.strftime('%Y-%m-%d %H:%M:%S %z'))
+
+    # utc naive -> utc + tz
+    utc_tz = pytz.UTC.localize(utc)
+    print('utc_tz:     ', utc_tz.strftime('%Y-%m-%d %H:%M:%S %z'))
+
+    # utc + tz -> local + tz
+    local_tz = utc_tz.astimezone(tz)
+    print('local + tz: ', local_tz.strftime('%Y-%m-%d %H:%M:%S %z'))
+
+    # local + tz -> local naive
+    local = local_tz.replace(tzinfo=None)
+    print('local naive:', local.strftime('%Y-%m-%d %H:%M:%S %z'))
+
+
+print('DST (daylight saving time)')
+show(datetime(2018, 5, 5, 10, 0, 0))
+
+print('\nNo DST')
+show(datetime(2018, 1, 5, 10, 0, 0))
+```
+**Result:**
+```
+DST (daylight saving time)
+local naive: 2018-05-05 10:00:00
+local + tz:  2018-05-05 10:00:00 +0200
+utc_tz:      2018-05-05 08:00:00 +0000
+utc naive:   2018-05-05 08:00:00
+utc_tz:      2018-05-05 08:00:00 +0000
+local + tz:  2018-05-05 10:00:00 +0200
+local naive: 2018-05-05 10:00:00
+
+No DST
+local naive: 2018-01-05 10:00:00
+local + tz:  2018-01-05 10:00:00 +0100
+utc_tz:      2018-01-05 09:00:00 +0000
+utc naive:   2018-01-05 09:00:00
+utc_tz:      2018-01-05 09:00:00 +0000
+local + tz:  2018-01-05 10:00:00 +0100
+local naive: 2018-01-05 10:00:00
+```
