@@ -118,6 +118,14 @@ newgrp docker]]
     "dns": ["8.8.8.8", "8.8.4.4"]
 }
 </pre></div></div>
+<br />
+
+<b>Изменить hotkey для detach контейнера</b> файл <i>~/.docker/config.json</i>
+<div class="codebox"><div class="highlight"><pre>
+{
+  "detachKeys": "ctrl-y,y"
+}
+</pre></div></div>
 
 <br />
 <b>Подключить папку к запущенному контейнеру</b><br />
