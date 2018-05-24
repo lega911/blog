@@ -1,7 +1,7 @@
-::id 54bece923ad2ff5abf082670
 ::date 2015-01-20
 ::title Шпаргалка по Docker
 ::tags docker, virtual
+::link /2015/01/20/docker.html
 ::body
 **Установка**
 [https://docs.docker.com/installation/ubuntulinux/#ubuntu-trusty-1404-lts-64-bit Документация], либо можно выполнить код:
@@ -53,7 +53,6 @@ newgrp docker]]
 <div class="codebox"><div class="highlight"><pre><span class="n">curl</span> <span class="o">-</span><span class="n">sSL</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">get</span><span class="o">.</span><span class="n">docker</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">ubuntu</span><span class="o">/</span> <span class="o">|</span> <span class="n">sudo</span> <span class="n">sh</span>
 </pre></div>
 </div><br />
-<br />
 <b>Запуск docker от пользователя:</b><br />
 <div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">groupadd</span> <span class="n">docker</span>
 <span class="n">sudo</span> <span class="n">gpasswd</span> <span class="o">-</span><span class="n">a</span> <span class="err">$</span><span class="p">{</span><span class="n">USER</span><span class="p">}</span> <span class="n">docker</span>
@@ -110,7 +109,17 @@ newgrp docker]]
 <b>Изменить путь хранения образов, данных</b> в ubuntu, для этого нужно в файл <b>/etc/default/docker</b> добавить опцию:<br />
 <div class="codebox"><div class="highlight"><pre><span class="n">DOCKER_OPTS</span><span class="o">=</span><span class="s">&quot;--dns 8.8.8.8 --dns 8.8.4.4 -g /new/location&quot;</span>
 </pre></div>
-</div><br />
+</div>
+Для Docker 17+, файл <b>/etc/docker/daemon.json</b>
+
+<div class="codebox"><div class="highlight"><pre>
+{
+    "data-root": "/home/docker",
+    "dns": ["8.8.8.8", "8.8.4.4"]
+}
+</pre></div></div>
+
+<br />
 <b>Подключить папку к запущенному контейнеру</b><br />
 1) Перейти в папку-корень нужного контейнера<br />
 <div class="codebox"><div class="highlight"><pre><span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">docker</span><span class="o">/</span><span class="n">aufs</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">c0a9f1c2d</span><span class="o">/</span>
