@@ -14,7 +14,7 @@ $ tar -xzf Python-3.4.0.tgz]]далее переходим в появившую
 **2) Устанавливаем инструменты для сборки**
 [[$ sudo apt-get install gcc g++ make checkinstall]]
 **3) Устанавливаем пакеты необходимые для Python**
-[[$ sudo apt-get install zlib1g-dev  libbz2-dev libncurses5-dev libreadline6-dev libsqlite3-dev libssl-dev libgdbm-dev liblzma-dev]]
+[[$ sudo apt-get install zlib1g-dev  libbz2-dev libncurses5-dev libreadline6-dev libsqlite3-dev libssl-dev libgdbm-dev liblzma-dev libffi-dev uuid-dev]]
 Так же вы можете поставить пакет tk, но для серверной ОС tk может быть бесполезен.
 [[$ sudo apt-get install tk-dev]]
 **4) Готовим к компиляции**
@@ -49,8 +49,7 @@ $ tar -xzf Python-3.4.0.tgz]]далее переходим в появившую
 </pre></div>
 </div><br />
 <b>3) Устанавливаем пакеты необходимые для Python</b><br />
-<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">zlib1g</span><span class="o">-</span><span class="n">dev</span>  <span class="n">libbz2</span><span class="o">-</span><span class="n">dev</span> <span class="n">libncurses5</span><span class="o">-</span><span class="n">dev</span> <span class="n">libreadline6</span><span class="o">-</span><span class="n">dev</span> <span class="n">libsqlite3</span><span class="o">-</span><span class="n">dev</span> <span class="n">libssl</span><span class="o">-</span><span class="n">dev</span> <span class="n">libgdbm</span><span class="o">-</span><span class="n">dev</span> <span class="n">liblzma</span><span class="o">-</span><span class="n">dev</span>
-libffi-dev uuid-dev
+<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">zlib1g</span><span class="o">-</span><span class="n">dev</span>  <span class="n">libbz2</span><span class="o">-</span><span class="n">dev</span> <span class="n">libncurses5</span><span class="o">-</span><span class="n">dev</span> <span class="n">libreadline6</span><span class="o">-</span><span class="n">dev</span> <span class="n">libsqlite3</span><span class="o">-</span><span class="n">dev</span> <span class="n">libssl</span><span class="o">-</span><span class="n">dev</span> <span class="n">libgdbm</span><span class="o">-</span><span class="n">dev</span> <span class="n">liblzma</span><span class="o">-</span><span class="n">dev</span> <span>libffi-dev uuid-dev</span>
 </pre></div>
 </div><br />
 Так же вы можете поставить пакет tk, но для серверной ОС tk может быть бесполезен.<br />
