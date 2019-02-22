@@ -11,4 +11,4 @@ build:
 upload:
 	rsync ./bin/ root@do2:/srv/pymy2/ -r
 serve:
-	cd ./bin; python3.6 -m http.server
+	cd ./docs; python3.7 -m http.server

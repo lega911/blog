@@ -88,7 +88,7 @@ def build(filename, data):
     os.makedirs(path, exist_ok=True)
     open(fullname, 'w').write(result)
 
-    data['link'] = fullname[5:]
+    data['link'] = fullname[6:]
     index['list'].append(data)
 
 
