@@ -120,13 +120,15 @@ def build_tags():
             'size': 10 + round(30/lmax*lcount)
         })
 
-    os.makedirs('bin/tags', exist_ok=True)
+    os.makedirs('docs/tags', exist_ok=True)
     tpl_index = Template(open('./base/tag_index.html', 'r').read())
     tpl = Template(open('./base/tag.html', 'r').read())
-    open('./bin/tags/index.html', 'w').write(tpl_index.render(list=tag_list))
+    open('./docs/tags/index.html', 'w').write(tpl_index.render(list=tag_list))
 
     for tag in st.keys():
         plist = sorted(pages[tag], key=lambda p:p['date'], reverse=True)
-        open('./bin/tags/' + encode(tag), 'w').write(tpl.render(list=plist, title=tag))
+        path = './docs/tags/' + encode(tag)
+        os.makedirs(path, exist_ok=True)
+        open(path + '/index.html', 'w').write(tpl.render(list=plist, title=tag))
 
 main()
