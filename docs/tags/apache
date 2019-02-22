@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/icon.ico">
+
+    <title>apache</title>
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container" style="height: 40px; margin-top: 20px;">
+      <div class="pull-right">
+        <table><tr>
+          <td style="padding-right: 30px;">
+            <a href="/"><h3>Home</h3></a>
+          </td>
+          <td>
+            <a href="/tags/"><h3>Tags</h3></a>
+          </td>
+        </tr></table>
+      </div>
+    </div>
+    <div class="container" style="margin-top: 40px;">
+
+        <h1>apache</h1>
+
+        <ul class="list-unstyled">
+        
+            <li>
+                [2011-04-24] <a style="font-size: 2rem;" href="/post/4db327631d41c816f2000001">Apache2 через nginx, проксирование.</a>
+            </li>
+        
+            <li>
+                [2010-12-02] <a style="font-size: 2rem;" href="/post/4cf78ee31d41c8731c000000">apache запрет просмотра папки/файлов (авто индекс)</a>
+            </li>
+        
+            <li>
+                [2010-11-08] <a style="font-size: 2rem;" href="/post/4cd836ae1d41c84046000003">Как посмотреть подключенные модули apache</a>
+            </li>
+        
+            <li>
+                [2010-06-04] <a style="font-size: 2rem;" href="/post/4c08ac431d41c81ce0000000">wsgi ssl (https) на apache</a>
+            </li>
+        
+            <li>
+                [2010-06-01] <a style="font-size: 2rem;" href="/post/4c0490811d41c8298f000002">Подключение и отключение виртуальных хостов apache</a>
+            </li>
+        
+            <li>
+                [2010-01-28] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc00000f">'hello world' на wsgi Apache</a>
+            </li>
+        
+            <li>
+                [2010-01-28] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc00001f">Проксирование сайта через Апаче</a>
+            </li>
+        
+        </ul>
+
+    </div>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2434245-2']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageLoadTime']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter18005740 = new Ya.Metrika({id:18005740, enableAll: true});
+        } catch(e) { }
+    });
+    
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/18005740" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+  </body>
+</html>

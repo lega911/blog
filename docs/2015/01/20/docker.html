@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/icon.ico">
+
+    <title>Шпаргалка по Docker</title>
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container" style="height: 40px; margin-top: 20px;">
+      <div class="pull-right">
+        <table><tr>
+          <td style="padding-right: 30px;">
+            <a href="/"><h3>Home</h3></a>
+          </td>
+          <td>
+            <a href="/tags/"><h3>Tags</h3></a>
+          </td>
+        </tr></table>
+      </div>
+    </div>
+    <div class="container" style="margin-top: 40px;">
+
+        <h1>Шпаргалка по Docker</h1>
+        <p>
+            2015-01-20
+            
+                <a href="/tags/docker">docker</a>
+            
+                <a href="/tags/virtual">virtual</a>
+            
+        </p>
+        <p class="lead"><b>Установка</b><br />
+<a target=_blank href="https://docs.docker.com/installation/ubuntulinux/#ubuntu-trusty-1404-lts-64-bit">Документация</a>, либо можно выполнить код:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">curl</span> <span class="o">-</span><span class="n">sSL</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">get</span><span class="o">.</span><span class="n">docker</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">ubuntu</span><span class="o">/</span> <span class="o">|</span> <span class="n">sudo</span> <span class="n">sh</span>
+</pre></div>
+</div><br />
+<b>Запуск docker от пользователя:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">groupadd</span> <span class="n">docker</span>
+<span class="n">sudo</span> <span class="n">gpasswd</span> <span class="o">-</span><span class="n">a</span> <span class="err">$</span><span class="p">{</span><span class="n">USER</span><span class="p">}</span> <span class="n">docker</span>
+<span class="n">sudo</span> <span class="n">service</span> <span class="n">docker</span> <span class="n">restart</span>
+<span class="ow">or</span>
+<span class="n">sudo</span> <span class="n">service</span> <span class="n">docker</span><span class="o">.</span><span class="n">io</span> <span class="n">restart</span>
+<span class="n">newgrp</span> <span class="n">docker</span>
+</pre></div>
+</div><br />
+<b>Собрать образ из текущей папки:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">t</span> <span class="n">Name</span> <span class="o">.</span>
+</pre></div>
+</div><br />
+<b>Список образов:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="n">images</span>
+</pre></div>
+</div><br />
+<b>Список контейнеров:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="n">ps</span> <span class="o">-</span><span class="n">a</span>
+</pre></div>
+</div><br />
+<b>Запуск команды в активном контейнере:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="k">exec</span> <span class="o">-</span><span class="n">d</span> <span class="n">Name</span> <span class="n">touch</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">new_file</span>
+</pre></div>
+</div><br />
+<b>Запуск bash в активном контейнере:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="k">exec</span> <span class="o">-</span><span class="n">it</span> <span class="n">Name</span> <span class="n">bash</span>
+</pre></div>
+</div><br />
+<b>Остановить контейнер:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="n">stop</span> <span class="n">Name</span>
+</pre></div>
+</div><br />
+<b>Удалить контейнер:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="n">rm</span> <span class="n">NameOrId</span>
+</pre></div>
+</div><br />
+<b>Удалить образ:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="n">rmi</span> <span class="n">NameOrId</span>
+</pre></div>
+</div><br />
+<b>Запустить контейнер:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">v</span> <span class="o">/</span><span class="n">hostDir</span><span class="p">:</span><span class="o">/</span><span class="n">contDir</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">t</span> <span class="o">--</span><span class="n">rm</span> <span class="o">-</span><span class="n">p</span> <span class="mi">8080</span><span class="p">:</span><span class="mi">8080</span> <span class="o">--</span><span class="n">name</span> <span class="n">Name</span> <span class="n">Image</span> <span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">bash</span>
+</pre></div>
+</div><b>-v /hostDir:/contDir</b> подключенине папки<br />
+<b>-i -t</b> интерактивное управление<br />
+<b>--rm</b> удалить контейнер после остановки<br />
+<b>-p hostPort:containerPort</b> пробросить порт<br />
+<b>--name Name</b> имя контейнера<br />
+<b>Image</b> имя образа<br />
+<b>/bin/bash</b> запускаемая команда при запуске контейнера<br />
+<b>--link db:db</b> прилинковать имяконтейнера:внутренее имя<br />
+<br />
+<b>Изменить путь хранения образов, данных</b> в ubuntu, для этого нужно в файл <b>/etc/default/docker</b> добавить опцию:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">DOCKER_OPTS</span><span class="o">=</span><span class="s">&quot;--dns 8.8.8.8 --dns 8.8.4.4 -g /new/location&quot;</span>
+</pre></div>
+</div>
+Для Docker 17+, файл <b>/etc/docker/daemon.json</b>
+
+<div class="codebox"><div class="highlight"><pre>
+{
+    "data-root": "/home/docker",
+    "dns": ["8.8.8.8", "8.8.4.4"]
+}
+</pre></div></div>
+<br />
+
+<b>Изменить hotkey для detach контейнера</b> файл <i>~/.docker/config.json</i>
+<div class="codebox"><div class="highlight"><pre>
+{
+  "detachKeys": "ctrl-y,y"
+}
+</pre></div></div>
+
+<br />
+<b>Подключить папку к запущенному контейнеру</b><br />
+1) Перейти в папку-корень нужного контейнера<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">docker</span><span class="o">/</span><span class="n">aufs</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">c0a9f1c2d</span><span class="o">/</span>
+</pre></div>
+</div>2) Создать папку и примонтировать<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">mkdir</span> <span class="o">/</span><span class="n">app</span><span class="p">;</span> <span class="n">mount</span> <span class="o">-</span><span class="n">o</span> <span class="n">bind</span> <span class="o">/</span><span class="n">host</span><span class="o">/</span><span class="n">path</span> <span class="o">./</span><span class="n">app</span>
+</pre></div>
+</div>3) Перезапустить контейнер<br /></p>
+
+        <div style="margin-top: 50px; margin-bottom: 50px;">
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                var disqus_shortname = 'pythonblog'; // required: replace example with your forum shortname
+
+                /* * * DON'T EDIT BELOW THIS LINE * * */
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+
+    </div>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2434245-2']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageLoadTime']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter18005740 = new Ya.Metrika({id:18005740, enableAll: true});
+        } catch(e) { }
+    });
+    
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/18005740" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+  </body>
+</html>

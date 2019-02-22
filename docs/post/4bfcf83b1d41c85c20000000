@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/icon.ico">
+
+    <title>Сграбить результат запроса поисковика</title>
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container" style="height: 40px; margin-top: 20px;">
+      <div class="pull-right">
+        <table><tr>
+          <td style="padding-right: 30px;">
+            <a href="/"><h3>Home</h3></a>
+          </td>
+          <td>
+            <a href="/tags/"><h3>Tags</h3></a>
+          </td>
+        </tr></table>
+      </div>
+    </div>
+    <div class="container" style="margin-top: 40px;">
+
+        <h1>Сграбить результат запроса поисковика</h1>
+        <p>
+            2010-05-26
+            
+                <a href="/tags/urllib">urllib</a>
+            
+        </p>
+        <p class="lead">Пример как сграбить и распарсить результат запроса поисковика nigma.ru<br />
+<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf8</span>
+
+<span class="kn">import</span> <span class="nn">urllib2</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="k">def</span> <span class="nf">doSearch</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="n">site</span><span class="p">):</span>
+    <span class="n">prms</span> <span class="o">=</span> <span class="s">&#39;http://www.nigma.ru/index.php?t=web&amp;yn=1&amp;gl=1&amp;rm=1&amp;ms=1&amp;yh=1&amp;av=1&amp;ap=1&amp;nm=1&amp;lang=all&amp;srt=0&amp;dp=on&amp;sf=1&amp;</span><span class="si">%s</span><span class="s">+site:</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">urllib</span><span class="o">.</span><span class="n">urlencode</span><span class="p">({</span><span class="s">&#39;s&#39;</span><span class="p">:</span><span class="n">query</span><span class="p">}),</span> <span class="n">site</span><span class="p">)</span>
+    <span class="n">req</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">prms</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span> <span class="s">&#39;Cookie&#39;</span><span class="p">:</span> <span class="s">&#39;docs_on_page=50&#39;</span> <span class="p">})</span>
+    <span class="n">buf</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="n">buf</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;&lt;div id=&quot;results&quot;&gt;&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">i</span><span class="p">:</span> <span class="n">buf</span> <span class="o">=</span> <span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span>
+
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">r&#39;&lt;div class=&quot;snippet_title&quot;&gt;.*?href=&quot;(.*?)&quot;.*?&quot;&gt;(.*?)&lt;/a&gt;&lt;/div&gt;\s*&lt;div class=&quot;snippet_text&quot;&gt;(.*?)&lt;/div&gt;&#39;</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">doSearch</span><span class="p">(</span><span class="s">&#39;Запуск&#39;</span><span class="p">,</span> <span class="s">&#39;www.py-my.ru&#39;</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&#39; | &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>Функция <b>doSearch</b> Возвращает "таблицу" с колонками: "Адресная строка", "Заголовок", "Часть контента"<br />
+<b>Результат</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">py</span><span class="o">-</span><span class="n">my</span><span class="o">.</span><span class="n">ru</span><span class="o">/</span><span class="n">page</span><span class="o">/</span><span class="mi">40</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">b</span><span class="o">&gt;</span><span class="err">Запуск</span><span class="o">&lt;/</span><span class="n">b</span><span class="o">&gt;</span> <span class="err">программ</span> <span class="err">из</span> <span class="n">Python</span> <span class="o">-</span> <span class="n">myBoard</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">b</span><span class="o">&gt;</span><span class="err">Запуск</span><span class="o">&lt;/</span><span class="n">b</span><span class="o">&gt;</span> <span class="err">программ</span> <span class="err">из</span> <span class="n">Python</span> <span class="o">..</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">py</span><span class="o">-</span><span class="n">my</span><span class="o">.</span><span class="n">ru</span><span class="o">/</span><span class="n">page</span><span class="o">/</span><span class="mi">90</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">b</span><span class="o">&gt;</span><span class="err">Запуск</span><span class="o">&lt;/</span><span class="n">b</span><span class="o">&gt;</span> <span class="err">полного</span> <span class="err">процессинга</span> <span class="n">OLAP</span> <span class="err">из</span> <span class="n">python</span> <span class="o">-</span> <span class="n">myBoard</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">b</span><span class="o">&gt;</span><span class="err">Запуск</span><span class="o">&lt;/</span><span class="n">b</span><span class="o">&gt;</span> <span class="err">полного</span> <span class="err">процессинга</span> <span class="n">OLAP</span> <span class="err">из</span> <span class="n">python</span><span class="o">...</span>
+</pre></div>
+</div><br /></p>
+
+        <div style="margin-top: 50px; margin-bottom: 50px;">
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                var disqus_shortname = 'pythonblog'; // required: replace example with your forum shortname
+
+                /* * * DON'T EDIT BELOW THIS LINE * * */
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+
+    </div>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2434245-2']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageLoadTime']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter18005740 = new Ya.Metrika({id:18005740, enableAll: true});
+        } catch(e) { }
+    });
+    
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/18005740" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+  </body>
+</html>

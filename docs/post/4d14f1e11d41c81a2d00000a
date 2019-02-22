@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/icon.ico">
+
+    <title>kvm + libvirt, Виртуализация на linux</title>
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container" style="height: 40px; margin-top: 20px;">
+      <div class="pull-right">
+        <table><tr>
+          <td style="padding-right: 30px;">
+            <a href="/"><h3>Home</h3></a>
+          </td>
+          <td>
+            <a href="/tags/"><h3>Tags</h3></a>
+          </td>
+        </tr></table>
+      </div>
+    </div>
+    <div class="container" style="margin-top: 40px;">
+
+        <h1>kvm + libvirt, Виртуализация на linux</h1>
+        <p>
+            2010-12-25
+            
+                <a href="/tags/virtualizacii">виртуализация</a>
+            
+                <a href="/tags/kvm">kvm</a>
+            
+                <a href="/tags/libvirt">libvirt</a>
+            
+                <a href="/tags/linux">linux</a>
+            
+        </p>
+        <p class="lead">В заметке описана установка kmv и создание виртуальной машины, все действия проделывались на ubuntu 10.10<br />
+<br />
+<h3>1. Установим необходимые пакеты</h3><div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">kvm</span> <span class="n">libvirt</span><span class="o">-</span><span class="nb">bin</span> <span class="n">bridge</span><span class="o">-</span><span class="n">utils</span> <span class="n">virtinst</span>
+</pre></div>
+</div><br />
+<h3>2. Проверяем существование интерфейса bridge</h3>После установки должен появиться сетевой интерфейс <b>virbr0</b>, проверить можно командой <b>ifconfig</b>, если его нет - перезагрузите машину.<br />
+<br />
+<h3>3. Создаем виртуальную машину</h3>Сначала проверим, запущен ли <b>kvm</b>, должен выйти пустой список<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">virsh</span> <span class="nb">list</span> <span class="o">--</span><span class="nb">all</span>
+</pre></div>
+</div><br />
+Создаем ВМ:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">virt</span><span class="o">-</span><span class="n">install</span> <span class="o">-</span><span class="n">n</span> <span class="n">vm1</span> <span class="o">-</span><span class="n">r</span> <span class="mi">512</span> <span class="o">-</span><span class="n">f</span> <span class="n">v1</span><span class="o">.</span><span class="n">img</span> <span class="o">-</span><span class="n">s</span> <span class="mi">7</span> <span class="o">-</span><span class="n">c</span> <span class="n">ubuntu</span><span class="o">-</span><span class="mf">10.10</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="n">amd64</span><span class="o">.</span><span class="n">iso</span> <span class="o">--</span><span class="n">accelerate</span> <span class="o">--</span><span class="n">os</span><span class="o">-</span><span class="nb">type</span><span class="o">=</span><span class="n">linux</span> <span class="o">--</span><span class="n">os</span><span class="o">-</span><span class="n">variant</span><span class="o">=</span><span class="n">generic26</span> <span class="o">-</span><span class="n">v</span> <span class="o">--</span><span class="n">vnc</span> <span class="o">-</span><span class="n">w</span> <span class="n">bridge</span><span class="p">:</span><span class="n">virbr0</span>
+</pre></div>
+</div>где:<br />
+<table class="pymark_table"><tr><td></td></tr><tr><td><b>-n</b> <i>vm1</i></td><td>имя ВМ</td></tr><tr><td><b>-r</b> <i>512</i></td><td>выделяемый объем ОЗУ для ВМ</td></tr><tr><td><b>-f</b> <i>v1.img</i></td><td>файл-образ жесткого диска</td></tr><tr><td><b>-s</b> <i>7</i></td><td>объем этого диска в гигабайтах</td></tr><tr><td><b>-c</b> <i>ubuntu-10.10-server-amd64.iso</i></td><td>образ cdrom</td></tr><tr><td><b>--accelerate --os-type=linux --os-variant=generic26 -v</b></td><td>указываем тип ОС для оптимизации и включаем аппаратную виртуализацию, параметры для других ОС см. в <b>man virt-install</b></td></tr><tr><td><b>--vnc</b></td><td>запускаем vnc-сервер для ВМ</td></tr><tr><td><b>-w bridge:</b><i>virbr0</i></td><td>использовать сетевой мост</td></tr></table><br />
+<h3>4. Запускаем</h3><div class="codebox"><div class="highlight"><pre><span class="n">virsh</span> <span class="n">start</span> <span class="n">vm1</span>
+</pre></div>
+</div>подключится к ВМ можно через VNC, у первой ВМ порт VNC = 5900, у последующих ВМ рядом, 5901, 5902...<h3>Основные команды</h3><table class="pymark_table"><tr><td></td></tr><tr><td><b>virsh help</b></td><td>Список команд</td></tr><tr><td><b>virsh list --all</b></td><td>Список ВМ и их состояние</td></tr><tr><td><b>virsh start</b> <i>vm1</i></td><td>Старт ВМ</td></tr><tr><td><b>virsh shutdown</b> <i>vm1</i></td><td>Послать команду завершения в ВМ</td></tr><tr><td><b>virsh destroy</b> <i>vm1</i></td><td>Выключить ВМ</td></tr><tr><td><b>virsh undefine</b> <i>vm1</i></td><td>Удалить ВМ</td></tr><tr><td><b>virsh edit</b> <i>vm1</i></td><td>Изменить конфигурацию ВМ, (редактор можно изменить: export EDITOR=/usr/bin/nano</td></tr></table><br />
+<br />
+<b>Примечание</b><br />
+Если у вас выскакивает ошибка: "qemu: could not open disk image ... : Permission denied",<br />
+для её решения можно приписать в файл <b>/etc/libvirt/qemu.conf</b> имя пользователя и группу используемые для открытия файла:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">user</span> <span class="o">=</span> <span class="s">&quot;root&quot;</span>
+<span class="n">group</span> <span class="o">=</span> <span class="s">&quot;root&quot;</span>
+</pre></div>
+</div><br />
+<br />
+Для простого управления ВМ, можно установить визуальный менеждер <b><a target=_blank href="http://virt-manager.org/">virt-manager</a></b><br />
+<br />
+см <a href="4d2304b81d41c81282000000">Настройка моста bridge для kvm</a><br /></p>
+
+        <div style="margin-top: 50px; margin-bottom: 50px;">
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                var disqus_shortname = 'pythonblog'; // required: replace example with your forum shortname
+
+                /* * * DON'T EDIT BELOW THIS LINE * * */
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+
+    </div>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2434245-2']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageLoadTime']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter18005740 = new Ya.Metrika({id:18005740, enableAll: true});
+        } catch(e) { }
+    });
+    
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/18005740" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+  </body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/icon.ico">
+
+    <title>mongodb</title>
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container" style="height: 40px; margin-top: 20px;">
+      <div class="pull-right">
+        <table><tr>
+          <td style="padding-right: 30px;">
+            <a href="/"><h3>Home</h3></a>
+          </td>
+          <td>
+            <a href="/tags/"><h3>Tags</h3></a>
+          </td>
+        </tr></table>
+      </div>
+    </div>
+    <div class="container" style="margin-top: 40px;">
+
+        <h1>mongodb</h1>
+
+        <ul class="list-unstyled">
+        
+            <li>
+                [2014-01-04] <a style="font-size: 2rem;" href="/post/52c82ada94fa041285d9ff69">Пробуем MongoDB Sharding на одном хосте</a>
+            </li>
+        
+            <li>
+                [2012-04-02] <a style="font-size: 2rem;" href="/post/4f7928ccbbddbd4f85000000">Replica set for mongodb</a>
+            </li>
+        
+            <li>
+                [2011-12-29] <a style="font-size: 2rem;" href="/post/4efc2f30bbddbd3e9e000000">Пример GridFS в Python</a>
+            </li>
+        
+            <li>
+                [2011-09-21] <a style="font-size: 2rem;" href="/post/4e78e5f01d41c8236c000000">Example: inline-callback asyncmongo in Tornado</a>
+            </li>
+        
+            <li>
+                [2011-04-16] <a style="font-size: 2rem;" href="/post/4da9d2b11d41c81c6a000000">MongoDB array, операции с массивами</a>
+            </li>
+        
+            <li>
+                [2010-12-22] <a style="font-size: 2rem;" href="/post/4d12448c1d41c81a2d000000">mongodb update результат выполнения (pymongo)</a>
+            </li>
+        
+            <li>
+                [2010-10-07] <a style="font-size: 2rem;" href="/post/4cad91bb1d41c81169000000">mongodb: реализация autoincrement</a>
+            </li>
+        
+            <li>
+                [2010-08-16] <a style="font-size: 2rem;" href="/post/4c6946ce1d41c81b86000000">MongoDB: фильтры запросов</a>
+            </li>
+        
+            <li>
+                [2010-07-29] <a style="font-size: 2rem;" href="/post/4c51556f1d41c818c5000000">MongoDB, update</a>
+            </li>
+        
+            <li>
+                [2010-07-17] <a style="font-size: 2rem;" href="/post/4c4191e71d41c82d48000009">Установка mongoDB на linux ubuntu 11.04 / 10.10 / 10.04</a>
+            </li>
+        
+            <li>
+                [2010-07-12] <a style="font-size: 2rem;" href="/post/4c3a91371d41c83d36000000">MongoDB, libmozjs.so: cannot open shared object file</a>
+            </li>
+        
+            <li>
+                [2010-05-28] <a style="font-size: 2rem;" href="/post/4bff54ee1d41c86fa3000000">MongoDB подсчет суммы</a>
+            </li>
+        
+            <li>
+                [2010-05-27] <a style="font-size: 2rem;" href="/post/4bfde6861d41c86651000001">MongoDB map_reduce, подсчет тегов</a>
+            </li>
+        
+            <li>
+                [2010-05-27] <a style="font-size: 2rem;" href="/post/4bfe7be71d41c86b60000000">MongoDB group</a>
+            </li>
+        
+            <li>
+                [2010-05-27] <a style="font-size: 2rem;" href="/post/4bfd80a91d41c86651000000">MongoDB map_reduce, подсчет количества</a>
+            </li>
+        
+            <li>
+                [2010-05-19] <a style="font-size: 2rem;" href="/post/4bfb3c6b1d41c846bc0000d8">MongoDB вложенные объекты</a>
+            </li>
+        
+            <li>
+                [2010-05-14] <a style="font-size: 2rem;" href="/post/4bfb3c6b1d41c846bc0000d5">MongoDB базовые функции под python ( pymongo )</a>
+            </li>
+        
+        </ul>
+
+    </div>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2434245-2']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageLoadTime']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter18005740 = new Ya.Metrika({id:18005740, enableAll: true});
+        } catch(e) { }
+    });
+    
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/18005740" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+  </body>
+</html>

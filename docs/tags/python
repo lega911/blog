@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/icon.ico">
+
+    <title>python</title>
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container" style="height: 40px; margin-top: 20px;">
+      <div class="pull-right">
+        <table><tr>
+          <td style="padding-right: 30px;">
+            <a href="/"><h3>Home</h3></a>
+          </td>
+          <td>
+            <a href="/tags/"><h3>Tags</h3></a>
+          </td>
+        </tr></table>
+      </div>
+    </div>
+    <div class="container" style="margin-top: 40px;">
+
+        <h1>python</h1>
+
+        <ul class="list-unstyled">
+        
+            <li>
+                [2018-05-07] <a style="font-size: 2rem;" href="/2018/05/07/python_datetime_timezone.html">How to change datetime timezone in python</a>
+            </li>
+        
+            <li>
+                [2018-05-01] <a style="font-size: 2rem;" href="/2018/05/01/unix_asyncio.html">Unix socket in asyncio</a>
+            </li>
+        
+            <li>
+                [2018-05-01] <a style="font-size: 2rem;" href="/2018/05/01/asyncio.html">Asyncio tips</a>
+            </li>
+        
+            <li>
+                [2018-05-01] <a style="font-size: 2rem;" href="/2018/05/01/asyncio_subprocess.html">Asyncio subprocess</a>
+            </li>
+        
+            <li>
+                [2014-06-05] <a style="font-size: 2rem;" href="/post/5369e9d63ad2ff436e0db3b9">Python3.4 для Ubuntu 12.04</a>
+            </li>
+        
+            <li>
+                [2014-03-16] <a style="font-size: 2rem;" href="/post/5325d8ee94fa041285d9ff70">PostgreSQL, установка + доступ из Python</a>
+            </li>
+        
+            <li>
+                [2013-06-16] <a style="font-size: 2rem;" href="/post/51bde91594fa041285d9ff57">Удобный перехват исключения используя with.</a>
+            </li>
+        
+            <li>
+                [2013-04-07] <a style="font-size: 2rem;" href="/post/516190b77114480f2b00000c">Пример Gevent + WebOb</a>
+            </li>
+        
+            <li>
+                [2013-03-12] <a style="font-size: 2rem;" href="/post/513f1c677114480f2b000008">Sandbox in Python, restricted execution</a>
+            </li>
+        
+            <li>
+                [2013-01-22] <a style="font-size: 2rem;" href="/post/50fe762371144856ca000006">Настраиваем pyodbc в linux ubuntu</a>
+            </li>
+        
+            <li>
+                [2013-01-21] <a style="font-size: 2rem;" href="/post/50fce46271144856d0000001">zip (zipfile) в python</a>
+            </li>
+        
+            <li>
+                [2013-01-14] <a style="font-size: 2rem;" href="/post/50f3ec6c71144856ca000001">Настройка для печати в openpyxl (excel)</a>
+            </li>
+        
+            <li>
+                [2012-11-27] <a style="font-size: 2rem;" href="/post/50b4448ebbddbd5c63000000">DefaultDict в Python</a>
+            </li>
+        
+            <li>
+                [2012-11-10] <a style="font-size: 2rem;" href="/post/509e3150bbddbd2f44000006">Захват изображения с камеры на javascript и сохранение на сервер</a>
+            </li>
+        
+            <li>
+                [2012-11-07] <a style="font-size: 2rem;" href="/post/50997be0bbddbd2f44000002">Пример ускорения python используя ctypes</a>
+            </li>
+        
+            <li>
+                [2012-11-06] <a style="font-size: 2rem;" href="/post/5098d8e3bbddbd2f44000000">python telnet, пример определения разрыва соединения</a>
+            </li>
+        
+            <li>
+                [2012-10-30] <a style="font-size: 2rem;" href="/post/508f6ebbbbddbd5e1d000000">Python кодировки, подмена stdout</a>
+            </li>
+        
+            <li>
+                [2012-10-25] <a style="font-size: 2rem;" href="/post/50883606bbddbd5e9e000001">Lock file python</a>
+            </li>
+        
+            <li>
+                [2012-10-15] <a style="font-size: 2rem;" href="/post/507c3f1ebbddbd6a6b000000">async mysql для tornado web</a>
+            </li>
+        
+            <li>
+                [2012-07-30] <a style="font-size: 2rem;" href="/post/501627e2bbddbd261e000000">Async subprocess for tornado</a>
+            </li>
+        
+            <li>
+                [2012-01-31] <a style="font-size: 2rem;" href="/post/4f278211bbddbd0322000000">Асинхронный загрузчик сайтов на tornado и curl</a>
+            </li>
+        
+            <li>
+                [2012-01-13] <a style="font-size: 2rem;" href="/post/4f105d0fbbddbd3a82000003">Запись в запущенный openoffice calc из python</a>
+            </li>
+        
+            <li>
+                [2012-01-05] <a style="font-size: 2rem;" href="/post/4f04a541bbddbd0836000000">python, прерывание цикла по нажатию клавиши (linux)</a>
+            </li>
+        
+            <li>
+                [2011-12-29] <a style="font-size: 2rem;" href="/post/4efc2f30bbddbd3e9e000000">Пример GridFS в Python</a>
+            </li>
+        
+            <li>
+                [2011-11-11] <a style="font-size: 2rem;" href="/post/4ebcb8b61d41c8676c000000">Получить результат поиска google на python</a>
+            </li>
+        
+            <li>
+                [2011-10-10] <a style="font-size: 2rem;" href="/post/4e92d0401d41c855db000000">Зумирование картинки на python</a>
+            </li>
+        
+            <li>
+                [2011-09-29] <a style="font-size: 2rem;" href="/post/4e8379981d41c821a8000004">Получение информации о товаре через Amazon API</a>
+            </li>
+        
+            <li>
+                [2011-09-27] <a style="font-size: 2rem;" href="/post/4e818bd81d41c821a9000003">soup клиент в python, установка, пример использования</a>
+            </li>
+        
+            <li>
+                [2011-08-02] <a style="font-size: 2rem;" href="/post/4e37737b1d41c8451b000002">Отладка в python через консоль</a>
+            </li>
+        
+            <li>
+                [2011-07-16] <a style="font-size: 2rem;" href="/post/4e20932f1d41c80eef00000b">Создание OpenOffice Calc (ods) из python</a>
+            </li>
+        
+            <li>
+                [2011-07-07] <a style="font-size: 2rem;" href="/post/4e15588e1d41c81105000003">Создание excel (xls) файла в python</a>
+            </li>
+        
+            <li>
+                [2011-07-01] <a style="font-size: 2rem;" href="/post/4e0d6c881d41c81104000007">Получение списка писем, subject, gmail, imap</a>
+            </li>
+        
+            <li>
+                [2011-07-01] <a style="font-size: 2rem;" href="/post/4e0d67091d41c81104000003">Получение списка писем, subject, gmail, pop</a>
+            </li>
+        
+            <li>
+                [2011-06-25] <a style="font-size: 2rem;" href="/post/4e04bc2c1d41c86c33000000">Metaclass python</a>
+            </li>
+        
+            <li>
+                [2011-05-12] <a style="font-size: 2rem;" href="/post/4dcb728c1d41c86edc000000">Скрипт переподключения соединения network manager</a>
+            </li>
+        
+            <li>
+                [2011-04-16] <a style="font-size: 2rem;" href="/post/4da9d2b11d41c81c6a000000">MongoDB array, операции с массивами</a>
+            </li>
+        
+            <li>
+                [2011-04-12] <a style="font-size: 2rem;" href="/post/4da42f8c1d41c87187000001">python, подмена стандартного вывода</a>
+            </li>
+        
+            <li>
+                [2011-03-24] <a style="font-size: 2rem;" href="/post/4d8b22b91d41c81f65000002">Ускорение сложения строк посредством join</a>
+            </li>
+        
+            <li>
+                [2011-03-23] <a style="font-size: 2rem;" href="/post/4d898acd1d41c85124000000">pyodbc, получение нескольких наборов данных с одного запроса MSSQL</a>
+            </li>
+        
+            <li>
+                [2011-02-27] <a style="font-size: 2rem;" href="/post/4d696e541d41c81a5b000001">Динамическое добавление/удаление роутов в Bottle</a>
+            </li>
+        
+            <li>
+                [2011-01-31] <a style="font-size: 2rem;" href="/post/4d46a5fc1d41c81ad6000005">Доступ к MSSQL из Python под linux</a>
+            </li>
+        
+            <li>
+                [2010-12-22] <a style="font-size: 2rem;" href="/post/4d12448c1d41c81a2d000000">mongodb update результат выполнения (pymongo)</a>
+            </li>
+        
+            <li>
+                [2010-12-13] <a style="font-size: 2rem;" href="/post/4d0527041d41c80dd9000000">web bottle + OpenID</a>
+            </li>
+        
+            <li>
+                [2010-12-10] <a style="font-size: 2rem;" href="/post/4d02746f1d41c818cf000004">python openid google</a>
+            </li>
+        
+            <li>
+                [2010-11-27] <a style="font-size: 2rem;" href="/post/4cf138b41d41c82851000000">FieldStorage получить имя временного файла</a>
+            </li>
+        
+            <li>
+                [2010-11-25] <a style="font-size: 2rem;" href="/post/4ced6ac11d41c87a97000006">jquery serializeArray + post на bottle</a>
+            </li>
+        
+            <li>
+                [2010-11-19] <a style="font-size: 2rem;" href="/post/4ce6bfe81d41c862f0000002">jquery serialize + python bottle</a>
+            </li>
+        
+            <li>
+                [2010-11-19] <a style="font-size: 2rem;" href="/post/4ce692431d41c862f0000000">Python Singleton</a>
+            </li>
+        
+            <li>
+                [2010-11-12] <a style="font-size: 2rem;" href="/post/4cdd6c0e1d41c84046000004">smtp сервер на python, twisted</a>
+            </li>
+        
+            <li>
+                [2010-10-10] <a style="font-size: 2rem;" href="/post/4cb16f611d41c84ac8000000">tuple vs list in python</a>
+            </li>
+        
+            <li>
+                [2010-10-08] <a style="font-size: 2rem;" href="/post/4cae490f1d41c81169000004">Как использовать локальную память потока</a>
+            </li>
+        
+            <li>
+                [2010-10-07] <a style="font-size: 2rem;" href="/post/4cad91bb1d41c81169000000">mongodb: реализация autoincrement</a>
+            </li>
+        
+            <li>
+                [2010-08-14] <a style="font-size: 2rem;" href="/post/4c65b4a01d41c85ded000001">Python datetime</a>
+            </li>
+        
+            <li>
+                [2010-07-09] <a style="font-size: 2rem;" href="/post/4c3725a81d41c87773000000">Получить traceback в python</a>
+            </li>
+        
+            <li>
+                [2010-06-09] <a style="font-size: 2rem;" href="/post/4c0f5e791d41c80f34000003">csv в python</a>
+            </li>
+        
+            <li>
+                [2010-06-08] <a style="font-size: 2rem;" href="/post/4c0e07b41d41c80f34000001">guid на python</a>
+            </li>
+        
+            <li>
+                [2010-06-07] <a style="font-size: 2rem;" href="/post/4c0c762f1d41c80f34000000">Простой скрипт создания репозиториев для mercurial сервера</a>
+            </li>
+        
+            <li>
+                [2010-05-19] <a style="font-size: 2rem;" href="/post/4bfb3c6b1d41c846bc0000d8">MongoDB вложенные объекты</a>
+            </li>
+        
+            <li>
+                [2010-05-14] <a style="font-size: 2rem;" href="/post/4bfb3c6b1d41c846bc0000d5">MongoDB базовые функции под python ( pymongo )</a>
+            </li>
+        
+            <li>
+                [2010-04-27] <a style="font-size: 2rem;" href="/post/4bfb3c6a1d41c846bc0000c9">random в python</a>
+            </li>
+        
+            <li>
+                [2010-04-23] <a style="font-size: 2rem;" href="/post/4bfb3c6a1d41c846bc0000c6">pymark, вики разметка</a>
+            </li>
+        
+            <li>
+                [2010-04-23] <a style="font-size: 2rem;" href="/post/4bfb3c6a1d41c846bc0000c8">regexp finditer в python</a>
+            </li>
+        
+            <li>
+                [2010-04-22] <a style="font-size: 2rem;" href="/post/4bfb3c6a1d41c846bc0000c4">Запуск полного процессинга OLAP из python</a>
+            </li>
+        
+            <li>
+                [2010-04-20] <a style="font-size: 2rem;" href="/post/4bfb3c6a1d41c846bc0000c2">Отправка письма нескольким отправителям и подключение файлов из Python</a>
+            </li>
+        
+            <li>
+                [2010-04-13] <a style="font-size: 2rem;" href="/post/4bfb3c6a1d41c846bc0000be">Использование lxml в python</a>
+            </li>
+        
+            <li>
+                [2010-04-07] <a style="font-size: 2rem;" href="/post/4bfb3c6a1d41c846bc0000b7">sitemap на jinja2 + bottle</a>
+            </li>
+        
+            <li>
+                [2010-04-06] <a style="font-size: 2rem;" href="/post/4bfb3c6a1d41c846bc0000b5">JSON в python, преобразование данных в текст</a>
+            </li>
+        
+            <li>
+                [2010-04-05] <a style="font-size: 2rem;" href="/post/4bfb3c6a1d41c846bc0000b2">Скрипт авто подключения к инету при его исчезновении</a>
+            </li>
+        
+            <li>
+                [2010-04-03] <a style="font-size: 2rem;" href="/post/4bfb3c6a1d41c846bc0000af">Свой shell для linux на python</a>
+            </li>
+        
+            <li>
+                [2010-03-31] <a style="font-size: 2rem;" href="/post/4bfb3c6a1d41c846bc0000a3">Отправка GET запроса (urllib, httplib, python)</a>
+            </li>
+        
+            <li>
+                [2010-03-27] <a style="font-size: 2rem;" href="/post/4bfb3c6a1d41c846bc00009b">Кодировки в python</a>
+            </li>
+        
+            <li>
+                [2010-03-27] <a style="font-size: 2rem;" href="/post/4bfb3c6a1d41c846bc000099">RSS на bottle + jinja2, python</a>
+            </li>
+        
+            <li>
+                [2010-03-25] <a style="font-size: 2rem;" href="/post/4bfb3c6a1d41c846bc000097">jinja2 in bottle, основы</a>
+            </li>
+        
+            <li>
+                [2010-03-24] <a style="font-size: 2rem;" href="/post/4bfb3c6a1d41c846bc00008f">regexp методы в python</a>
+            </li>
+        
+            <li>
+                [2010-03-24] <a style="font-size: 2rem;" href="/post/4bfb3c6a1d41c846bc00008c">Упрощение команд в python</a>
+            </li>
+        
+            <li>
+                [2010-03-22] <a style="font-size: 2rem;" href="/post/4bfb3c6a1d41c846bc00008a">послать BROADCAST пакет, python</a>
+            </li>
+        
+            <li>
+                [2010-03-22] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000087">telnet на python</a>
+            </li>
+        
+            <li>
+                [2010-03-21] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000085">Простая авторизация в web</a>
+            </li>
+        
+            <li>
+                [2010-02-28] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc00007e">Как убить дерево процессов, python</a>
+            </li>
+        
+            <li>
+                [2010-02-26] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc00007a">Сетевой монитор на python (linux)</a>
+            </li>
+        
+            <li>
+                [2010-02-23] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc00006e">python в gedit</a>
+            </li>
+        
+            <li>
+                [2010-02-22] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc00006c">Сжатие данных в python</a>
+            </li>
+        
+            <li>
+                [2010-02-21] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000068">ftp сервер на python</a>
+            </li>
+        
+            <li>
+                [2010-02-21] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc00006a">select в python</a>
+            </li>
+        
+            <li>
+                [2010-02-19] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000066">Очередь в python, (Queue)</a>
+            </li>
+        
+            <li>
+                [2010-02-19] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000064">multiprocessing в питоне</a>
+            </li>
+        
+            <li>
+                [2010-02-18] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000061">Запуск программ из Python</a>
+            </li>
+        
+            <li>
+                [2010-02-15] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc00005d">Exception в python</a>
+            </li>
+        
+            <li>
+                [2010-02-13] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000059">python thread</a>
+            </li>
+        
+            <li>
+                [2010-02-13] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000055">logging в python</a>
+            </li>
+        
+            <li>
+                [2010-02-13] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000057">Сохранение переменных, pickle, python</a>
+            </li>
+        
+            <li>
+                [2010-02-12] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000053">Доступ к MSSQL из python (win)</a>
+            </li>
+        
+            <li>
+                [2010-02-09] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000050">Python, базовые функции для списков, итераторов</a>
+            </li>
+        
+            <li>
+                [2010-02-07] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000049">Отправка писем из python</a>
+            </li>
+        
+            <li>
+                [2010-02-07] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc00004c">Как быстро расшарить любую папку по http без установки тяжелого веб сервера</a>
+            </li>
+        
+            <li>
+                [2010-02-05] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000047">Управление консолью, ввод пароля из python</a>
+            </li>
+        
+            <li>
+                [2010-02-04] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000042">captcha на python</a>
+            </li>
+        
+            <li>
+                [2010-02-04] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000044">Как python скрипт или любую программу сделать службой на windows</a>
+            </li>
+        
+            <li>
+                [2010-02-02] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc00003b">wiki на bottle (python) за 23 минуты</a>
+            </li>
+        
+            <li>
+                [2010-02-01] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000033">hello world на bottle, python web framework</a>
+            </li>
+        
+            <li>
+                [2010-01-31] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000030">Сортировка и группировка списков в python (groupby, sorted)</a>
+            </li>
+        
+            <li>
+                [2010-01-31] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc00002e">Информация об ОС, платформе. python</a>
+            </li>
+        
+            <li>
+                [2010-01-30] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc00002d">Подмена текста (функций) на регексах</a>
+            </li>
+        
+            <li>
+                [2010-01-30] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc00002b">Написание регексов (Regexp), примеры</a>
+            </li>
+        
+            <li>
+                [2010-01-28] <a style="font-size: 2rem;" href="/post/4bfb3c691d41c846bc000018">Разметка вики синтаксиса на регексах</a>
+            </li>
+        
+        </ul>
+
+    </div>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2434245-2']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageLoadTime']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter18005740 = new Ya.Metrika({id:18005740, enableAll: true});
+        } catch(e) { }
+    });
+    
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/18005740" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+  </body>
+</html>
