@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/icon.ico">
+
+    <title>MongoDB: фильтры запросов</title>
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container" style="height: 40px; margin-top: 20px;">
+      <div class="pull-right">
+        <table><tr>
+          <td style="padding-right: 30px;">
+            <a href="/"><h3>Home</h3></a>
+          </td>
+          <td>
+            <a href="/tags/"><h3>Tags</h3></a>
+          </td>
+        </tr></table>
+      </div>
+    </div>
+    <div class="container" style="margin-top: 40px;">
+
+        <h1>MongoDB: фильтры запросов</h1>
+        <p>
+            2010-08-16
+            
+                <a href="/tags/mongodb">mongodb</a>
+            
+        </p>
+        <p class="lead">Часто используемые фильтры<br />
+ <br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;x&quot;</span> <span class="p">:</span> <span class="n">value</span> <span class="p">}</span> <span class="p">);</span>   <span class="o">//</span> <span class="n">x</span> <span class="o">=</span> <span class="n">value</span>
+<span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;x&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$gt&quot;</span><span class="p">:</span> <span class="n">value</span> <span class="p">}</span> <span class="p">}</span> <span class="p">);</span> <span class="o">//</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">value</span>
+<span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;x&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$lt&quot;</span><span class="p">:</span> <span class="n">value</span> <span class="p">}</span> <span class="p">}</span> <span class="p">);</span> <span class="o">//</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">value</span>
+<span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;x&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$gte&quot;</span><span class="p">:</span> <span class="n">value</span> <span class="p">}</span> <span class="p">}</span> <span class="p">);</span> <span class="o">//</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">value</span>
+<span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;x&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$lte&quot;</span><span class="p">:</span> <span class="n">value</span> <span class="p">}</span> <span class="p">}</span> <span class="p">);</span> <span class="o">//</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">value</span>
+<span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;x&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$gt&quot;</span><span class="p">:</span> <span class="n">value1</span><span class="p">,</span> <span class="s">&quot;$lt&quot;</span><span class="p">:</span> <span class="n">value2</span> <span class="p">}</span> <span class="p">}</span> <span class="p">);</span> <span class="o">//</span> <span class="n">value1</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">value2</span>
+<span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">(</span> <span class="p">{</span> <span class="s">&quot;x&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$ne&quot;</span> <span class="p">:</span> <span class="n">value</span> <span class="p">}</span> <span class="p">}</span> <span class="p">);</span> <span class="o">//</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">value</span>
+</pre></div>
+</div><br />
+<br />
+Вхождение в список <b>$in</b> (Любой из подставленных значений должен присутствовать в массиве <b>j</b>)<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s">&quot;j&quot;</span><span class="p">:{</span><span class="s">&quot;$in&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">]}});</span>
+</pre></div>
+</div><br />
+Не входит в список <b>$nin</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s">&quot;j&quot;</span><span class="p">:{</span><span class="s">&quot;$nin&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">]}});</span>
+</pre></div>
+</div><br />
+Проверка вхождения всех элементов списка <b>$all</b> (Все подставленные значения должны присутствовать в массиве <b>j</b>)<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;j&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$all&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span> <span class="p">]</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div><br />
+Проверка размера списка <b>$size</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;j&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$size&quot;</span><span class="p">:</span> <span class="mi">3</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div><br />
+Проверка существования атрибута <b>$exists</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;j&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$exists&quot;</span> <span class="p">:</span> <span class="n">true</span> <span class="p">}</span> <span class="p">});</span>
+<span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;j&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$exists&quot;</span> <span class="p">:</span> <span class="n">false</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div><br />
+Логическое сложение <b>$or</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;$or&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s">&quot;j&quot;</span> <span class="p">:</span> <span class="mi">1</span> <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="s">&quot;j&quot;</span> <span class="p">:</span> <span class="mi">2</span> <span class="p">}</span> <span class="p">]</span> <span class="p">});</span>
+</pre></div>
+</div><br />
+Отрицание <b>$not</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="n">things</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="s">&quot;j&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$not&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="s">&quot;$mod&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="mi">10</span> <span class="p">,</span> <span class="mi">1</span> <span class="p">]</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div><br /></p>
+
+        <div style="margin-top: 50px; margin-bottom: 50px;">
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                var disqus_shortname = 'pythonblog'; // required: replace example with your forum shortname
+
+                /* * * DON'T EDIT BELOW THIS LINE * * */
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+
+    </div>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2434245-2']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageLoadTime']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter18005740 = new Ya.Metrika({id:18005740, enableAll: true});
+        } catch(e) { }
+    });
+    
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/18005740" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+  </body>
+</html>

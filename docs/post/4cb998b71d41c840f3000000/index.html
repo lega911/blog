@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/icon.ico">
+
+    <title>Получение smart информации с жесткого диска на linux</title>
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container" style="height: 40px; margin-top: 20px;">
+      <div class="pull-right">
+        <table><tr>
+          <td style="padding-right: 30px;">
+            <a href="/"><h3>Home</h3></a>
+          </td>
+          <td>
+            <a href="/tags/"><h3>Tags</h3></a>
+          </td>
+        </tr></table>
+      </div>
+    </div>
+    <div class="container" style="margin-top: 40px;">
+
+        <h1>Получение smart информации с жесткого диска на linux</h1>
+        <p>
+            2010-10-16
+            
+                <a href="/tags/smart">smart</a>
+            
+                <a href="/tags/linux">linux</a>
+            
+        </p>
+        <p class="lead">Устанавливаем <b>smartmontools</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">aptitude</span> <span class="n">install</span> <span class="n">smartmontools</span>
+</pre></div>
+</div><h3>Использование</h3><div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">smartctl</span> <span class="o">-</span><span class="n">a</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda</span>
+</pre></div>
+</div><br />
+Получение числа парковок головок<br />
+<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">sudo</span> <span class="n">smartctl</span> <span class="o">-</span><span class="n">a</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda</span> <span class="o">|</span> <span class="n">grep</span> <span class="n">Load_Cycle_Count</span> <span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">o</span> <span class="o">-</span><span class="n">P</span> <span class="s">&#39;\d+$&#39;</span>
+<span class="mi">830</span>
+</pre></div>
+</div><br />
+<br />
+<b>Основные показателти</b><br />
+<table class="pymark_table"><tr><td></td></tr><tr><td>Raw Read Error Rate</td><td>критичный атрибут, отражающий частоту появления ошибок при чтении данных, которые возникают в результате проблем с аппаратной частью жесткого диска.</td></tr><tr><td>Spin Up Time</td><td>критичный атрибут, отражающий время раскрутки шпинделя двигателя от состояния покоя до его рабочей частоты вращения.</td></tr><tr><td>Spin Up Retry Count</td><td>критичный атрибут, отражающий количество повторных попыток раскрутки шпинделя жесткого диска до его рабочей частоты вращения.</td></tr><tr><td>Seek Error Rate</td><td>критичный атрибут, отражающий частоту появления ошибок в позиционировании головок.</td></tr><tr><td>Reallocated Sector Count</td><td>пожалуй, самый критичный для жесткого диска атрибут, отражающий количество осуществленных операций переназначения секторов.</td></tr><tr><td>Start/Stop Count</td><td>некритичный атрибут, отражающий количество запусков и остановок двигателя HDD. Каждое механическое устройство имеет свой гарантированный срок работы. Аналогичный срок имеет и жесткий диск. Этот срок выражается в количестве тактов запуска и остановки двигателя, вращающего блок пластин.</td></tr><tr><td>Power On Hours</td><td>некритичный атрибут, отражающий общее время нахождения жесткого диска во включенном состоянии. В качестве эталонного времени работы производитель указывает паспортное время, которое составляет многие тысячи часов.</td></tr><tr><td>Drive Power Cycle Count</td><td>некритичный атрибут, отражающий количество циклов включения-выключения жесткого диска.</td></tr><tr><td>Temperature</td><td>некритичный атрибут, отражающий показания встроенного термодатчика (если он имеется).</td></tr><tr><td>Current Pending Sector Count</td><td>некритичный атрибут, отражающий количество секторов, занесенных во временную таблицу дефектов.</td></tr><tr><td>Uncorrectable Sector Count</td><td>некритичный атрибут, отражающий количество ошибок, возникших нри обращении к сектору, которые не были в дальнейшем исправлены.</td></tr><tr><td>UDMA CRC Error Rate</td><td>некритичный атрибут, отражающий количество ошибок, которые возникли в результате передачи данных по интерфейсу между контроллером диска и контроллером материнской платы.</td></tr><tr><td>Write Error Rate</td><td>некритичный атрибут, отражающий количество ошибок, появившихся во время записи информации.</td></tr></table></p>
+
+        <div style="margin-top: 50px; margin-bottom: 50px;">
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                var disqus_shortname = 'pythonblog'; // required: replace example with your forum shortname
+
+                /* * * DON'T EDIT BELOW THIS LINE * * */
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+
+    </div>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2434245-2']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageLoadTime']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter18005740 = new Ya.Metrika({id:18005740, enableAll: true});
+        } catch(e) { }
+    });
+    
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/18005740" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+  </body>
+</html>

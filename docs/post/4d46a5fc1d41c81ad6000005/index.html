@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/icon.ico">
+
+    <title>Доступ к MSSQL из Python под linux</title>
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container" style="height: 40px; margin-top: 20px;">
+      <div class="pull-right">
+        <table><tr>
+          <td style="padding-right: 30px;">
+            <a href="/"><h3>Home</h3></a>
+          </td>
+          <td>
+            <a href="/tags/"><h3>Tags</h3></a>
+          </td>
+        </tr></table>
+      </div>
+    </div>
+    <div class="container" style="margin-top: 40px;">
+
+        <h1>Доступ к MSSQL из Python под linux</h1>
+        <p>
+            2011-01-31
+            
+                <a href="/tags/linux">linux</a>
+            
+                <a href="/tags/python">python</a>
+            
+                <a href="/tags/mssql">mssql</a>
+            
+                <a href="/tags/odbc">odbc</a>
+            
+                <a href="/tags/pyodbc">pyodbc</a>
+            
+        </p>
+        <p class="lead"><i>Более свежая статья тут: <a href="/post/50fe762371144856ca000006">Настраиваем pyodbc в linux ubuntu</a></i><br />
+ <br />
+Доступ через <b>pyodbc</b>, устанавливаем необходимые компоненты:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">aptitude</span> <span class="n">install</span> <span class="n">unixodbc</span> <span class="n">unixodbc</span><span class="o">-</span><span class="n">dev</span> <span class="n">freetds</span><span class="o">-</span><span class="n">dev</span> <span class="n">tdsodbc</span> <span class="n">python</span><span class="o">-</span><span class="n">dev</span>
+<span class="n">sudo</span> <span class="n">easy_install</span> <span class="n">pyodbc</span>
+</pre></div>
+</div><br />
+<br />
+Правим <b>/etc/odbcinst.ini</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="p">[</span><span class="n">FreeTDS</span><span class="p">]</span>
+<span class="n">Description</span> <span class="o">=</span> <span class="n">TDS</span> <span class="n">driver</span> <span class="p">(</span><span class="n">Sybase</span><span class="o">/</span><span class="n">MS</span> <span class="n">SQL</span><span class="p">)</span>
+<span class="n">Driver</span> <span class="o">=</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">odbc</span><span class="o">/</span><span class="n">libtdsodbc</span><span class="o">.</span><span class="n">so</span>
+<span class="n">Setup</span> <span class="o">=</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">odbc</span><span class="o">/</span><span class="n">libtdsS</span><span class="o">.</span><span class="n">so</span>
+<span class="n">CPTimeout</span> <span class="o">=</span>
+<span class="n">CPReuse</span> <span class="o">=</span>
+</pre></div>
+</div><br />
+<br />
+Готово, можно использовать:<br />
+<div class="codebox"><div class="highlight"><pre>    <span class="kn">import</span> <span class="nn">pyodbc</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;DRIVER={FreeTDS};SERVER=__server_name__;</span><span class="se">\</span>
+<span class="s">        UID=__username__;PWD=__password__;DATABASE=__database__&quot;</span><span class="p">)</span>
+    <span class="n">crms</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">crms</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&#39;SELECT 1&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">crms</span><span class="p">:</span>
+        <span class="k">print</span> <span class="n">line</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>Вместо <i><u>server_name</u>, <u>username</u>, <u>password</u>, <u>database</u></i> подставте свои значения: имя или адрес сервера, имя пользователя, пароль, имя базы данных.<br /></p>
+
+        <div style="margin-top: 50px; margin-bottom: 50px;">
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                var disqus_shortname = 'pythonblog'; // required: replace example with your forum shortname
+
+                /* * * DON'T EDIT BELOW THIS LINE * * */
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+
+    </div>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2434245-2']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageLoadTime']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter18005740 = new Ya.Metrika({id:18005740, enableAll: true});
+        } catch(e) { }
+    });
+    
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/18005740" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+  </body>
+</html>

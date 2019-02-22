@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/icon.ico">
+
+    <title>jinja2, построение шаблонов</title>
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container" style="height: 40px; margin-top: 20px;">
+      <div class="pull-right">
+        <table><tr>
+          <td style="padding-right: 30px;">
+            <a href="/"><h3>Home</h3></a>
+          </td>
+          <td>
+            <a href="/tags/"><h3>Tags</h3></a>
+          </td>
+        </tr></table>
+      </div>
+    </div>
+    <div class="container" style="margin-top: 40px;">
+
+        <h1>jinja2, построение шаблонов</h1>
+        <p>
+            2010-05-19
+            
+                <a href="/tags/jinja">jinja</a>
+            
+        </p>
+        <p class="lead">В большинстве веб проектов используется один базовый шаблон, а все страницы этого проекта строятся на основе его с некоторыми изменениями, например отличается поле <i>title</i>, содержимое и др. С помощью <b>jinja2</b> такую структуру можно реализовать использую блоки ( <b>extends, block</b> ).<br />
+<br />
+Делаем базовый шаблон <b>base.html</b>, в котором будем подменять поля <i>title, head, content, footer</i><br />
+<div class="codebox"><div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    {% block head %}
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;style.css&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;title&gt;</span>{% block title %}{% endblock %} - My Webpage<span class="nt">&lt;/title&gt;</span>
+    {% endblock %}
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>{% block content %}{% endblock %}<span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;footer&quot;</span><span class="nt">&gt;</span>
+        {% block footer %}
+        <span class="ni">&amp;copy;</span> Copyright 2010 by <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http:/example.com/&quot;</span><span class="nt">&gt;</span>you<span class="nt">&lt;/a&gt;</span>.
+        {% endblock %}
+    <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/body&gt;&lt;/html&gt;</span>
+</pre></div>
+</div><br />
+Делаем страницу на основе <b>base.html</b><br />
+<div class="codebox"><div class="highlight"><pre>{% extends &quot;base.html&quot; %}
+{% block title %}Index{% endblock %}
+{% block head %}
+    {{ super() }}
+    <span class="nt">&lt;style </span><span class="na">type=</span><span class="s">&quot;text/css&quot;</span><span class="nt">&gt;</span>
+        <span class="nc">.important</span> <span class="p">{</span> <span class="k">color</span><span class="o">:</span> <span class="m">#336699</span><span class="p">;</span> <span class="p">}</span>
+    <span class="nt">&lt;/style&gt;</span>
+{% endblock %}
+{% block content %}
+    <span class="nt">&lt;h1&gt;</span>Index<span class="nt">&lt;/h1&gt;</span>
+    <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">&quot;important&quot;</span><span class="nt">&gt;</span>
+      Welcome on my awesome homepage.
+    <span class="nt">&lt;/p&gt;</span>
+{% endblock %}
+</pre></div>
+</div>тут мы подменяем блоки <i>title</i> и <i>content</i>, а блок <i>head</i> подменяем с сохранением содержимого с базовой страницы вызвав метод <b>{{ super() }}</b><br />
+<br />
+<br />
+В <b>jinja</b> есть возможность включать содержимое других файлов в указанное место, это делается методом <div class="codebox"><div class="highlight"><pre> <span class="p">{</span><span class="o">%</span> <span class="n">include</span> <span class="s">&#39;file.html&#39;</span> <span class="o">%</span><span class="p">}</span>
+</pre></div>
+</div><br /></p>
+
+        <div style="margin-top: 50px; margin-bottom: 50px;">
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                var disqus_shortname = 'pythonblog'; // required: replace example with your forum shortname
+
+                /* * * DON'T EDIT BELOW THIS LINE * * */
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+
+    </div>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2434245-2']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageLoadTime']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter18005740 = new Ya.Metrika({id:18005740, enableAll: true});
+        } catch(e) { }
+    });
+    
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/18005740" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+  </body>
+</html>

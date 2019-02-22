@@ -74,12 +74,15 @@ def build(filename, data):
     result = page_tpl.render(**data)
 
     if 'id' in data:
-        fullname = os.path.join('./bin/post', data['id'])
+        fullname = os.path.join('./docs/post', data['id'], 'index.html')
     else:
         if 'link' in data:
-            fullname = os.path.join('./bin', data['link'].lstrip('/'))
+            fullname = os.path.join('./docs', data['link'].lstrip('/'))
         else:
-            fullname = os.path.join('./bin', filename)
+            fullname = os.path.join('./docs', filename)
+
+    if not fullname.endswith('.html'):
+        print('Warning', fullname)
 
     path = os.path.dirname(fullname)
     os.makedirs(path, exist_ok=True)
@@ -94,7 +97,7 @@ def build_index():
     index['list'] = sorted(index['list'], key=lambda p:p.get('date', ''), reverse=True)
     result = tpl.render(**index)
 
-    open('./bin/index.html', 'w').write(result)
+    open('./docs/index.html', 'w').write(result)
 
 
 def build_tags():

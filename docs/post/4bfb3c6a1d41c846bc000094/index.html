@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/icon.ico">
+
+    <title>tor в ubuntu</title>
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container" style="height: 40px; margin-top: 20px;">
+      <div class="pull-right">
+        <table><tr>
+          <td style="padding-right: 30px;">
+            <a href="/"><h3>Home</h3></a>
+          </td>
+          <td>
+            <a href="/tags/"><h3>Tags</h3></a>
+          </td>
+        </tr></table>
+      </div>
+    </div>
+    <div class="container" style="margin-top: 40px;">
+
+        <h1>tor в ubuntu</h1>
+        <p>
+            2010-03-25
+            
+                <a href="/tags/tor">tor</a>
+            
+                <a href="/tags/firefox">firefox</a>
+            
+        </p>
+        <p class="lead"><a target="_blank" href="/uploads/4bfb3c6a1d41c846bc000094/tor.png"><img class="content" src="/uploads/4bfb3c6a1d41c846bc000094/tor.png" /></a> <b>Tor</b> (The Onion Router) - это система, позволяющая устанавливать анонимное сетевое соединение, защищённое от прослушивания. Рассматривается как анонимная сеть, предоставляющая передачу данных в зашифрованном виде.<br />
+<h3>Настройка</h3>1. В firefox устанавливаем расширение <b>Tor Button</b><br />
+2. Добавляем tor в список deb-пакетов, добавьте строку <i>"deb http:/ /deb.torproject.org/torproject.org maverick main"</i> в файл <b>/etc/apt/sources.list</b>, и выполните<div class="codebox"><div class="highlight"><pre><span class="n">gpg</span> <span class="o">--</span><span class="n">keyserver</span> <span class="n">keys</span><span class="o">.</span><span class="n">gnupg</span><span class="o">.</span><span class="n">net</span> <span class="o">--</span><span class="n">recv</span> <span class="mi">886</span><span class="n">DDD89</span>
+<span class="n">gpg</span> <span class="o">--</span><span class="n">export</span> <span class="n">A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89</span> <span class="o">|</span> <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">key</span> <span class="n">add</span> <span class="o">-</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+</pre></div>
+</div><br />
+3. Устанавливаем и настраиваем сам tor, выполнить от рута:<br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># apt-get -f install tor privoxy</span>
+<span class="c"># echo &quot;forward-socks4a / 127.0.0.1:9050 .&quot; &gt;&gt; /etc/privoxy/config</span>
+<span class="c"># /etc/init.d/privoxy restart</span>
+<span class="c"># /etc/init.d/tor restart</span>
+</pre></div>
+</div><br />
+<br />
+Готово. Теперь в firefox должна появиться кнопка tor, обычно в правом нижнем углу.</p>
+
+        <div style="margin-top: 50px; margin-bottom: 50px;">
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                var disqus_shortname = 'pythonblog'; // required: replace example with your forum shortname
+
+                /* * * DON'T EDIT BELOW THIS LINE * * */
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+
+    </div>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2434245-2']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageLoadTime']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter18005740 = new Ya.Metrika({id:18005740, enableAll: true});
+        } catch(e) { }
+    });
+    
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/18005740" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+  </body>
+</html>

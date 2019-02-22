@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/icon.ico">
+
+    <title>Настройка pptp сервера в ubuntu (vpn)</title>
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container" style="height: 40px; margin-top: 20px;">
+      <div class="pull-right">
+        <table><tr>
+          <td style="padding-right: 30px;">
+            <a href="/"><h3>Home</h3></a>
+          </td>
+          <td>
+            <a href="/tags/"><h3>Tags</h3></a>
+          </td>
+        </tr></table>
+      </div>
+    </div>
+    <div class="container" style="margin-top: 40px;">
+
+        <h1>Настройка pptp сервера в ubuntu (vpn)</h1>
+        <p>
+            2013-07-23
+            
+                <a href="/tags/pptp">pptp</a>
+            
+                <a href="/tags/vpn">vpn</a>
+            
+                <a href="/tags/ubuntu">ubuntu</a>
+            
+        </p>
+        <p class="lead"><h3>1) Установка</h3><div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">pptpd</span>
+</pre></div>
+</div><br />
+<h3>2) Настраиваем</h3><br />
+Файл <b>/etc/ppp/pptpd-options</b><br />
+<i>Включаем PAP авторизацию</i> и отключаем шифрование (временно)<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">require</span><span class="o">-</span><span class="n">pap</span>
+<span class="c">#refuse-pap</span>
+<span class="c">#require-mppe-128</span>
+</pre></div>
+</div><br />
+<br />
+Файл <b>/etc/pptpd.conf</b><br />
+Дописываем, ip "виртуального шлюза" и диапазон ip адресов для клиентов<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">localip</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">99.1</span>
+<span class="n">remoteip</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">99.224</span><span class="o">-</span><span class="mi">238</span>
+</pre></div>
+</div><br />
+<h3>3) Добавляем пользователей</h3>Файл <b>/etc/ppp/chap-secrets</b>, указываем <i>username</i> и <i>password</i><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">username</span> <span class="n">pptpd</span> <span class="n">password</span> <span class="o">*</span>
+</pre></div>
+</div><br />
+<br />
+Далее перезапустим vpn-сервер:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">pptpd</span> <span class="n">restart</span>
+</pre></div>
+</div><br />
+<h3>4) Пробрасываем интернет</h3>Выполнить от <b>root</b>:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">t</span> <span class="n">nat</span> <span class="o">-</span><span class="n">A</span> <span class="n">POSTROUTING</span> <span class="o">-</span><span class="n">o</span> <span class="n">eth0</span> <span class="o">-</span><span class="n">j</span> <span class="n">MASQUERADE</span>
+<span class="n">echo</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">net</span><span class="o">/</span><span class="n">ipv4</span><span class="o">/</span><span class="n">ip_forward</span>
+</pre></div>
+</div><br />
+<br />
+Что-бы работало после перезагрузки:<br />
+В файл <b>/etc/rc.local</b> добавить<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">iptables</span> <span class="o">-</span><span class="n">t</span> <span class="n">nat</span> <span class="o">-</span><span class="n">A</span> <span class="n">POSTROUTING</span> <span class="o">-</span><span class="n">o</span> <span class="n">eth0</span> <span class="o">-</span><span class="n">j</span> <span class="n">MASQUERADE</span>
+</pre></div>
+</div><br />
+Файл <b>/etc/sysctl.conf</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">net</span><span class="o">.</span><span class="n">ipv4</span><span class="o">.</span><span class="n">ip_forward</span><span class="o">=</span><span class="mi">1</span>
+</pre></div>
+</div><br />
+<br />
+На клиенте можно указать этот шлюз по умолчанию<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">route</span> <span class="n">add</span> <span class="n">default</span> <span class="n">gw</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">99.1</span> <span class="n">ppp0</span>
+</pre></div>
+</div><br />
+Как настроить подключение к pptp серверу из ubuntu <a href="/post/4c9772a41d41c86466000000">тут</a><br />
+<br />
+<h3>5) Включаем шифрование</h3>Для этого на сервере нужно переключить авторизацию и выбрать вид шифрования, файл <b>/etc/ppp/pptpd-options</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="c">#require-pap</span>
+<span class="n">refuse</span><span class="o">-</span><span class="n">pap</span>
+<span class="n">require</span><span class="o">-</span><span class="n">mschap</span><span class="o">-</span><span class="n">v2</span>
+<span class="n">require</span><span class="o">-</span><span class="n">mppe</span><span class="o">-</span><span class="mi">128</span>
+</pre></div>
+</div><br />
+<br />
+На клиенте указываем использование шифрования, файл из <b>/etc/ppp/peers/</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="n">require</span><span class="o">-</span><span class="n">mppe</span><span class="o">-</span><span class="mi">128</span>
+</pre></div>
+</div><br />
+<br />
+Итоговые файлы сервера:<br />
+<div class="codebox"><div class="highlight"><pre><span class="n">refuse</span><span class="o">-</span><span class="n">pap</span>
+<span class="n">refuse</span><span class="o">-</span><span class="n">chap</span>
+<span class="n">refuse</span><span class="o">-</span><span class="n">mschap</span>
+<span class="n">require</span><span class="o">-</span><span class="n">mschap</span><span class="o">-</span><span class="n">v2</span>
+<span class="n">require</span><span class="o">-</span><span class="n">mppe</span><span class="o">-</span><span class="mi">128</span>
+<span class="n">proxyarp</span>
+<span class="n">nodefaultroute</span>
+<span class="n">lock</span>
+<span class="n">nobsdcomp</span>
+</pre></div>
+</div><br />
+и клиента<div class="codebox"><div class="highlight"><pre><span class="n">remotename</span> <span class="o">&lt;</span><span class="n">name_of_connection</span><span class="o">&gt;</span>
+<span class="n">pty</span> <span class="s">&quot;pptp --loglevel 1 &lt;address_of_server&gt; --nolaunchpppd&quot;</span>
+<span class="n">name</span> <span class="o">&lt;</span><span class="n">username</span><span class="o">&gt;</span>
+<span class="n">noauth</span>
+<span class="n">debug</span>
+<span class="n">nodetach</span>
+<span class="n">lock</span>
+<span class="n">require</span><span class="o">-</span><span class="n">mppe</span><span class="o">-</span><span class="mi">128</span>
+</pre></div>
+</div></p>
+
+        <div style="margin-top: 50px; margin-bottom: 50px;">
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                var disqus_shortname = 'pythonblog'; // required: replace example with your forum shortname
+
+                /* * * DON'T EDIT BELOW THIS LINE * * */
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+
+    </div>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2434245-2']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageLoadTime']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter18005740 = new Ya.Metrika({id:18005740, enableAll: true});
+        } catch(e) { }
+    });
+    
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/18005740" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+  </body>
+</html>

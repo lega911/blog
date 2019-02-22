@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/icon.ico">
+
+    <title>Простая авторизация в web</title>
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container" style="height: 40px; margin-top: 20px;">
+      <div class="pull-right">
+        <table><tr>
+          <td style="padding-right: 30px;">
+            <a href="/"><h3>Home</h3></a>
+          </td>
+          <td>
+            <a href="/tags/"><h3>Tags</h3></a>
+          </td>
+        </tr></table>
+      </div>
+    </div>
+    <div class="container" style="margin-top: 40px;">
+
+        <h1>Простая авторизация в web</h1>
+        <p>
+            2010-03-21
+            
+                <a href="/tags/python">python</a>
+            
+                <a href="/tags/bottle">bottle</a>
+            
+        </p>
+        <p class="lead"><b>Предыдущая статья:</b> <a href="/page/30">Как быстро расшарить любую папку по http без установки тяжелого веб сервера</a>
+<br />
+В данной статье показано как можно прикрутить авторизацию, пароли пользователей хранятся в файле <i>.access</i> в двойном md5, данные об авторизации хранятся в файле <i>.login</i>.
+<br />
+
+<h3>Добавленные ф-ии (основные):
+</h3><br />
+testLogin() - Проверка авторизации
+<br />
+login() - Страница авторизации
+<br />
+logout() - Отлогинивание
+<br />
+loginpost() - Авторизация
+<br />
+
+<h3>Команды скрипта
+</h3><br />
+<b>script.py</b> adduser username - Добавить пользователя
+<br />
+<b>script.py</b> start - Запустить сервер
+<br />
+
+<h3>Исходник
+</h3><br />
+<div class="codebox"><pre><code># coding: utf-8
+
+from bottle import run, route, send_file, request, redirect, response
+import os
+import hashlib
+
+# Получить md5 хеш
+def getmd5(word,count=1):
+    for x in xrange(count):
+        a = hashlib.md5()
+        a.update(word)
+        word = a.hexdigest()
+    return word
+
+# Проверка доступа
+def testLogin():
+    if 'user' not in request.COOKIES: redirect('/login')
+    code = request.COOKIES['user']
+    for s in open('.login','r').readlines():
+        if code == s.rstrip(): return True
+    redirect('/login')
+
+# Страница логина
+@route('/login')
+def login():
+    return '&lt;html&gt;&lt;body&gt; &lt;form method=post &gt;login:&lt;input type=text name=user /&gt;&lt;br/&gt; password:&lt;input type=password name=pasw /&gt; &lt;br /&gt; &lt;input type=submit /&gt; &lt;/form&gt; &lt;/body&gt;&lt;/html&gt;'
+
+# Отлогинивание
+@route('/logout')
+def logout():
+    if 'user' not in request.COOKIES: redirect('/login')
+    code = request.COOKIES['user'] + '\n'
+    d = open('.login','r').readlines()
+    if code in d: d.remove(code)
+    open('.login','w').writelines(d)
+    response.set_cookie('user', '')
+    redirect('/login')
+
+# Залогинивание
+@route('/login', method='POST')
+def loginpost():
+    ok = False
+    try:
+        user = request.POST['user']
+        pasw = request.POST['pasw']
+        t = user + ':' + getmd5(pasw,2)
+        for s in open('.access','r').readlines():
+            if t == s.rstrip():
+                import random
+                code = user+':'+str(random.random())
+                open('.login','a').write(code+'\n')
+                response.set_cookie('user', code)
+                ok = True
+                break
+    except:
+        pass
+    if ok: redirect('/')
+    else: return 'Access denied&lt;br/&gt;&lt;a href="/"&gt;main&lt;/a&gt;'
+
+# список текущих файлов
+@route('/')
+def mainpage():
+    testLogin()
+    msg = ''
+    for file in os.listdir('.'):
+        if os.path.isfile(file):
+            if file[0] == '.': continue
+            msg += '&lt;a href="%s"&gt;%s&lt;/a&gt;&lt;br/&gt;\n' % (file,file)
+    return '&lt;html&gt;&lt;body&gt;&lt;div align=right&gt;&lt;a href="/logout"&gt;logout&lt;/a&gt;&lt;/div&gt;%s&lt;/body&gt;&lt;/html&gt;' % (msg,)
+
+# отправка файла
+@route('/:filename')
+def sendfile(filename):
+    testLogin()
+    send_file(filename, './')
+
+# Главная ф-ия
+def main():
+    import sys
+    if len(sys.argv) &lt; 2:
+        print 'commands: start, adduser &lt;username&gt;'
+        return
+    # Добавить пользователя
+    if sys.argv[1] == 'adduser' and len(sys.argv) == 3:
+        user = sys.argv[2]
+        pasw = raw_input('enter password: ')
+        hash = getmd5(pasw,2)
+        open('.access','a').write(user+':'+hash+'\n')
+        return
+    # Запуск сервера
+    if sys.argv[1] == 'start': run(host='', port=8080, reloader=True)
+    print 'error command'
+
+main()</code></pre></div>
+<br />
+
+<br />
+
+<br />
+<a href="/page/74">HTTP Авторизация на bottle</a></p>
+
+        <div style="margin-top: 50px; margin-bottom: 50px;">
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                var disqus_shortname = 'pythonblog'; // required: replace example with your forum shortname
+
+                /* * * DON'T EDIT BELOW THIS LINE * * */
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+
+    </div>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2434245-2']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageLoadTime']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter18005740 = new Ya.Metrika({id:18005740, enableAll: true});
+        } catch(e) { }
+    });
+    
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/18005740" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+  </body>
+</html>

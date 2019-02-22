@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/icon.ico">
+
+    <title>Knockout.js, биндинг "html" с привязываем внутри.</title>
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container" style="height: 40px; margin-top: 20px;">
+      <div class="pull-right">
+        <table><tr>
+          <td style="padding-right: 30px;">
+            <a href="/"><h3>Home</h3></a>
+          </td>
+          <td>
+            <a href="/tags/"><h3>Tags</h3></a>
+          </td>
+        </tr></table>
+      </div>
+    </div>
+    <div class="container" style="margin-top: 40px;">
+
+        <h1>Knockout.js, биндинг "html" с привязываем внутри.</h1>
+        <p>
+            2013-01-14
+            
+                <a href="/tags/javascript">javascript</a>
+            
+                <a href="/tags/knockoutjs">knockoutjs</a>
+            
+        </p>
+        <p class="lead">Иногда шаблоны для клиентских приложений хранятся на сервере и передаются клиенту в момент когда <b>knockout.js</b> уже работает (после вызова <i>ko.applyBindings</i>), при этом биндинг "html" выведет шаблон как есть, что-бы привязывание сработало внутри шаблона можно использовать биндинг <a target=_blank href="https://bitbucket.org/lega911/knockout-htmlbind">htmlbind</a>.<br />
+<br />
+Сам биндинг с комметариями:<br />
+<div class="codebox"><div class="highlight"><pre><span class="c1">// Размещаем новый биндинг</span>
+<span class="nx">ko</span><span class="p">.</span><span class="nx">bindingHandlers</span><span class="p">[</span><span class="s1">&#39;htmlbind&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="c1">// При инициализации</span>
+	<span class="s1">&#39;init&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">valueAccessor</span><span class="p">,</span> <span class="nx">allBindingsAccessor</span><span class="p">,</span> <span class="nx">viewModel</span><span class="p">,</span> <span class="nx">bindingContext</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c1">// Управление внудренними привязками самостоятельно</span>
+		<span class="k">return</span> <span class="p">{</span> <span class="s1">&#39;controlsDescendantBindings&#39;</span><span class="o">:</span> <span class="kc">true</span> <span class="p">};</span>
+	<span class="p">},</span>
+	<span class="c1">// При изменении значения переменой</span>
+	<span class="s1">&#39;update&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">valueAccessor</span><span class="p">,</span> <span class="nx">allBindingsAccessor</span><span class="p">,</span> <span class="nx">viewModel</span><span class="p">,</span> <span class="nx">bindingContext</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c1">// Получаем значение переменной</span>
+		<span class="kd">var</span> <span class="nx">dataValue</span> <span class="o">=</span> <span class="nx">ko</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">unwrapObservable</span><span class="p">(</span><span class="nx">valueAccessor</span><span class="p">());</span>
+		<span class="k">if</span><span class="p">(</span><span class="nx">dataValue</span><span class="p">)</span> <span class="p">{</span>
+			<span class="c1">// Переводим HTML строку в DOM элементы</span>
+			<span class="kd">var</span> <span class="nx">dom</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">);</span>
+			<span class="nx">dom</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="nx">dataValue</span><span class="p">;</span>
+			<span class="kd">var</span> <span class="nx">nodes</span> <span class="o">=</span> <span class="nx">ko</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">arrayMap</span><span class="p">(</span><span class="nx">dom</span><span class="p">.</span><span class="nx">childNodes</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">){</span> <span class="k">return</span> <span class="nx">d</span> <span class="p">})</span>
+			<span class="c1">// Устанавливаем DOM в документ</span>
+			<span class="nx">ko</span><span class="p">.</span><span class="nx">virtualElements</span><span class="p">.</span><span class="nx">setDomNodeChildren</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">nodes</span><span class="p">);</span>
+			<span class="c1">// Передаем контекст, модель, переменные</span>
+			<span class="nx">ko</span><span class="p">.</span><span class="nx">applyBindingsToDescendants</span><span class="p">(</span><span class="nx">bindingContext</span><span class="p">,</span> <span class="nx">element</span><span class="p">);</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="c1">// Очищаем DOM когда переменная пустая</span>
+			<span class="nx">ko</span><span class="p">.</span><span class="nx">virtualElements</span><span class="p">.</span><span class="nx">emptyNode</span><span class="p">(</span><span class="nx">element</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+<span class="nx">ko</span><span class="p">.</span><span class="nx">expressionRewriting</span><span class="p">.</span><span class="nx">bindingRewriteValidators</span><span class="p">[</span><span class="s1">&#39;htmlbind&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+<span class="c1">// Возможность использовать как виртуальный элемент</span>
+<span class="nx">ko</span><span class="p">.</span><span class="nx">virtualElements</span><span class="p">.</span><span class="nx">allowedBindings</span><span class="p">[</span><span class="s1">&#39;htmlbind&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</pre></div>
+</div><br />
+Используется так же как обычный биндинг "html",  <a target=_blank href="http://jsfiddle.net/lega911/D45aX/">пример использования</a>.<br />
+Взять последнюю версию можно тут <a target=_blank href="https://bitbucket.org/lega911/knockout-htmlbind">https://bitbucket.org/lega911/knockout-htmlbind</a><br /></p>
+
+        <div style="margin-top: 50px; margin-bottom: 50px;">
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                var disqus_shortname = 'pythonblog'; // required: replace example with your forum shortname
+
+                /* * * DON'T EDIT BELOW THIS LINE * * */
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+
+    </div>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2434245-2']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageLoadTime']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter18005740 = new Ya.Metrika({id:18005740, enableAll: true});
+        } catch(e) { }
+    });
+    
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/18005740" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+  </body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/icon.ico">
+
+    <title>Написание регексов (Regexp), примеры</title>
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container" style="height: 40px; margin-top: 20px;">
+      <div class="pull-right">
+        <table><tr>
+          <td style="padding-right: 30px;">
+            <a href="/"><h3>Home</h3></a>
+          </td>
+          <td>
+            <a href="/tags/"><h3>Tags</h3></a>
+          </td>
+        </tr></table>
+      </div>
+    </div>
+    <div class="container" style="margin-top: 40px;">
+
+        <h1>Написание регексов (Regexp), примеры</h1>
+        <p>
+            2010-01-30
+            
+                <a href="/tags/python">python</a>
+            
+                <a href="/tags/regexp">regexp</a>
+            
+                <a href="/tags/instrukcii">инструкция</a>
+            
+        </p>
+        <p class="lead"><h3>1. Выбор опорного текста</h3>Для начала нужно определить опорный текст, который лежит рядом с целевым и который не меняется.<br />
+<br />
+<b>Например:</b> нужно получить ссылку и текст ссылки из html страницы:<br />
+<b>&lt;a href="</b><i>http://google.com</i><b>"&gt;</b><i>this google</i><b>&lt;/a&gt;</b><br />
+жирным выделен опорный текст, вписываем его в шаблон: &lt;a href="!"&gt;!&lt;/a&gt;, вместо восклицательных знаков нужно вписать шаблон целевого текста. Опорный текст можно тоже описывать шаблонами, например если неизвестно сколько пробелов между "&lt;a" и "href" - можно использовать шаблон "\s+?" который означает что тут должны быть символы разделители, 1 или несколько, и выражение будет таким: &lt;a\s+?href="!"&gt;!&lt;/a&gt;<h3>2. Выбор целевого текста (тот который нужно получить)</h3>в данном случае можно по простому, выбрать весь текст: "(.+?)", "." означает любой символ, "+" - символов один или несколько, "?" - означает что текст не жадный. Подставляем в наше выражение: "&lt;a href="(.+?)"&gt;(.+?)&lt;/a&gt;"<br />
+<b>Пример:</b><br />
+<div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf-8</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s">&#39;&lt;body&gt; &lt;a href=&quot;http://google.com&quot;&gt;this google&lt;/a&gt; &lt;br/&gt; &lt;a href=&quot;http://yandex.ru&quot;&gt;yandex&lt;/a&gt; &lt;/body&gt; &#39;</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">r&#39;&lt;a href=&quot;(.+?)&quot;&gt;(.+?)&lt;/a&gt;&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">d</span>
+</pre></div>
+</div><br />
+<b>Результат:</b><br />
+<div class="codebox"><div class="highlight"><pre> <span class="p">[(</span><span class="s">&#39;http://google.com&#39;</span><span class="p">,</span> <span class="s">&#39;this google&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;http://yandex.ru&#39;</span><span class="p">,</span> <span class="s">&#39;yandex&#39;</span><span class="p">)]</span>
+</pre></div>
+</div><br />
+<br />
+Если мы хотим что-б 1 группа (ссылка) начиналась с текста "http://", то так и пишем: "(http:/ /.+?)"<br />
+<h3> (.+?) и (.*?) - любой текст</h3>Что-бы выбрать "любой текст", нужно что-б этот паттерн был окружен текстом с обоих сторон, и было видно от куда до куда выбирать. По умолчанию этот паттерн выбирает любой текст кроме символа переноса строки, что-бы символ переноса строки подчинялся этому паттерну нужно использовать флаг DOTALL.<br />
+<b>Отличие (.+?) от (.*?)</b>, "+" указывает на то что количество символов должно быть 1 или более, "*" - 0 или более. Например если попадет такой текст <i>'... &lt;a href=""&gt;google&lt;/a&gt;'</i>, то он не попадет в результат, т.к. у него href пустой, а в регексе условие ".+?" = 1 или более.<br />
+см <a href="/page/56">паттерны regexp</a><br />
+<h3>Примеры и заметки</h3><a href="/page/63">regexp методы в python</a><br />
+<a href="/page/56">паттерны regexp</a><br />
+<a href="/page/9">Рендер вики синтаксиса на регексах</a><br />
+<a href="/page/17">Подмена функций на регексах</a><br /></p>
+
+        <div style="margin-top: 50px; margin-bottom: 50px;">
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                var disqus_shortname = 'pythonblog'; // required: replace example with your forum shortname
+
+                /* * * DON'T EDIT BELOW THIS LINE * * */
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+
+    </div>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2434245-2']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageLoadTime']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter18005740 = new Ya.Metrika({id:18005740, enableAll: true});
+        } catch(e) { }
+    });
+    
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/18005740" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+  </body>
+</html>

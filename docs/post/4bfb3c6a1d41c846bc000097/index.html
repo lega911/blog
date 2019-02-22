@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/icon.ico">
+
+    <title>jinja2 in bottle, основы</title>
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container" style="height: 40px; margin-top: 20px;">
+      <div class="pull-right">
+        <table><tr>
+          <td style="padding-right: 30px;">
+            <a href="/"><h3>Home</h3></a>
+          </td>
+          <td>
+            <a href="/tags/"><h3>Tags</h3></a>
+          </td>
+        </tr></table>
+      </div>
+    </div>
+    <div class="container" style="margin-top: 40px;">
+
+        <h1>jinja2 in bottle, основы</h1>
+        <p>
+            2010-03-25
+            
+                <a href="/tags/python">python</a>
+            
+                <a href="/tags/jinja">jinja</a>
+            
+                <a href="/tags/bottle">bottle</a>
+            
+        </p>
+        <p class="lead"><b>jinja2</b> - Популярная и многофункциональная система темплейтов, <a target=_blank href="http://jinja.pocoo.org/2/documentation/">оф. документация</a><br />
+<h3>Установка</h3><div class="codebox"><div class="highlight"><pre><span class="n">easy_install</span> <span class="n">jinja2</span>
+</pre></div>
+</div><br />
+<h3>Примеры использования</h3><div class="codebox"><div class="highlight"><pre><span class="c"># coding: utf-8</span>
+
+<span class="kn">from</span> <span class="nn">bottle</span> <span class="kn">import</span> <span class="n">jinja2_template</span> <span class="k">as</span> <span class="n">template</span>
+
+<span class="c"># Вывод параметров</span>
+<span class="k">print</span> <span class="n">template</span><span class="p">(</span><span class="s">&#39;hello {{name}}&#39;</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;world&#39;</span><span class="p">)</span>
+<span class="c"># hello world</span>
+
+<span class="c"># Словари</span>
+<span class="k">print</span> <span class="n">template</span><span class="p">(</span><span class="s">&quot;hello {{dim[&#39;name&#39;]}}, age = {{dim[&#39;age&#39;]}}&quot;</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span><span class="s">&#39;User&#39;</span><span class="p">,</span> <span class="s">&#39;age&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">})</span>
+<span class="c"># hello User, age = 20</span>
+
+<span class="c"># Классы</span>
+<span class="k">class</span> <span class="nc">User</span><span class="p">:</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;noname&#39;</span>
+    <span class="n">age</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">template</span><span class="p">(</span><span class="s">&#39;hello {{user.name}}, age = {{user.age}}&#39;</span><span class="p">,</span> <span class="n">user</span> <span class="o">=</span> <span class="n">user</span><span class="p">)</span>
+<span class="c"># hello noname, age = 20</span>
+
+<span class="c"># Циклы</span>
+<span class="k">print</span> <span class="n">template</span><span class="p">(</span><span class="s">&#39;System: {</span><span class="si">% f</span><span class="s">or sys in dim %}{{sys}}, {</span><span class="si">% e</span><span class="s">ndfor %}&#39;</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;linux&#39;</span><span class="p">,</span><span class="s">&#39;windows&#39;</span><span class="p">,</span><span class="s">&#39;mac&#39;</span><span class="p">])</span>
+<span class="c"># System: linux, windows, mac, </span>
+
+<span class="c"># Уловия</span>
+<span class="k">print</span> <span class="n">template</span><span class="p">(</span><span class="s">&#39;this if: {</span><span class="si">% i</span><span class="s">f name: %}name exsist, this {{name}}{</span><span class="si">% e</span><span class="s">ndif %}&#39;</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;world&#39;</span><span class="p">)</span>
+<span class="c"># this if: name exsist, this world</span>
+</pre></div>
+</div><br />
+<br />
+Вместо шаблона в ф-ию <b>template</b> можно вставлять имя файла: <i>template('index')</i><br />
+При этом файл должен будет находиться в текущей папке или в ./views с расширением файла *.tpl: <i>index.tpl</i> либо <i>./views/index.tpl</i><br />
+<br />
+<br />
+<i>продолжение следует...</i></p>
+
+        <div style="margin-top: 50px; margin-bottom: 50px;">
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                var disqus_shortname = 'pythonblog'; // required: replace example with your forum shortname
+
+                /* * * DON'T EDIT BELOW THIS LINE * * */
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+
+    </div>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2434245-2']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageLoadTime']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter18005740 = new Ya.Metrika({id:18005740, enableAll: true});
+        } catch(e) { }
+    });
+    
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/18005740" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+  </body>
+</html>
