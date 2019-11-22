@@ -71,8 +71,8 @@
 <div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="o">./</span><span class="n">configure</span>
 </pre></div>
 </div><br />
-Так же можете выбрать путь для установки<br />
-<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="o">./</span><span class="n">configure</span> <span class="o">--</span><span class="n">prefix</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span>
+Так же можете выбрать путь для установки и оптимизацию<br />
+<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="o">./</span><span class="n">configure</span> <span class="o">--</span><span class="n">prefix</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="n"> --enable-optimizations</span>
 </pre></div>
 </div><br />
 <b>5) Компилируем</b><br />
@@ -91,11 +91,18 @@
 <br />
 После успешного выполнения в текущей папке появится deb пакет (например <i>python3.4_3.4.0-1_amd64.deb</i>)<br />
 И сам <b>Python3.4</b> будет установлен<br />
-<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">python3</span><span class="o">.</span><span class="mi">4</span> <span class="o">-</span><span class="n">V</span>
-</pre></div>
-</div>Python 3.4.0
+<div class="codebox">
+	<div class="highlight">
+		<pre><span class="err">$</span> <span class="n">python3</span><span class="o">.</span><span class="mi">4</span> <span class="o">-</span><span class="n">V</span>
+&gt; Python 3.4.0</pre>
+	</div>
+</div>
 
-<div>Если будет проблема "Installing Debian package... FAILED!", можно исправить удалив /usr/lib/python3.4 /usr/local/lib/python3.4</div></p>
+<div>Если будет проблема "Installing Debian package... FAILED!", можно исправить удалив /usr/lib/python3.4 /usr/local/lib/python3.4</div>
+<div>
+	Если будет проблема с соданием/удалением папок "No such file or directory", можно попробовать опцию "--fstrans=no"
+	<pre>$ checkinstall -D --fstrans=no</pre>
+</div></p>
 
         <div style="margin-top: 50px; margin-bottom: 50px;">
             <div id="disqus_thread"></div>

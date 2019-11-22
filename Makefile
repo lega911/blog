@@ -7,8 +7,8 @@ build:
 	mkdir -p ./docs
 	cp ./base/static ./docs -r
 	cp ./CNAME ./docs/
-	python3.5 build.py
+	python3 build.py
 upload:
 	rsync ./bin/ root@do2:/srv/pymy2/ -r
 serve:
-	cd ./docs; python3.7 -m http.server
+	cd ./docs; python3 -m http.server

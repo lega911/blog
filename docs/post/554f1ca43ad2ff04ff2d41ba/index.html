@@ -43,13 +43,31 @@
                 <a href="/tags/linux">linux</a>
             
         </p>
-        <p class="lead"><b>Шифруем:</b> <div class="codebox"><div class="highlight"><pre><span class="n">openssl</span> <span class="n">aes</span><span class="o">-</span><span class="mi">256</span><span class="o">-</span><span class="n">cbc</span> <span class="o">-</span><span class="ow">in</span> <span class="n">input_file</span> <span class="o">-</span><span class="n">out</span> <span class="n">output_file</span>
+        <p class="lead"><p><strong>Шифруем:</strong></p>
+<div class="highlight"><pre><span></span>openssl aes-256-cbc -in input_file -out output_file
 </pre></div>
-</div><b>Дешифруем:</b> <div class="codebox"><div class="highlight"><pre><span class="n">openssl</span> <span class="n">aes</span><span class="o">-</span><span class="mi">256</span><span class="o">-</span><span class="n">cbc</span> <span class="o">-</span><span class="n">d</span> <span class="o">-</span><span class="ow">in</span> <span class="n">input_file</span> <span class="o">-</span><span class="n">out</span> <span class="n">output_file</span>
+<p><strong>Дешифруем:</strong></p>
+<div class="highlight"><pre><span></span>openssl aes-256-cbc -d -in input_file -out output_file
 </pre></div>
-</div>При выполнении запрашивается пароль.<br />
-<br />
-<b>Возможные алгоритмы:</b> aes-256-cbc, aes-128-cbc, des, base64... Полный список можно посмотреть в разделе <b>Cipher commands</b> в `openssl --help`</p>
+<p>При выполнении запрашивается пароль.
+<strong>Возможные алгоритмы:</strong> aes-256-cbc, aes-128-cbc, des, base64... Полный список можно посмотреть в разделе <strong>Cipher commands</strong> в <code>openssl --help</code></p>
+<p><strong>Шифруем строку:</strong></p>
+<div class="highlight"><pre><span></span>$ <span class="nb">echo</span> -n Message <span class="p">|</span> openssl enc -aes-256-cbc -a -p -k password
+
+<span class="nv">salt</span><span class="o">=</span>6F1A49B42FA06EBB
+<span class="nv">key</span><span class="o">=</span>CCB786E186F34BB177B1652718A0CC65B459339469242E14253B4AF40C642412
+<span class="nv">iv</span> <span class="o">=</span>5435B7E55B62E4D11553532EA29B4132
+U2FsdGVkX19vGkm0L6BuuzwzBvgR/qLO4pOZCn5ELd0<span class="o">=</span>
+</pre></div>
+<p><strong>Дешифруем строку:</strong></p>
+<div class="highlight"><pre><span></span>$ <span class="nb">echo</span> U2FsdGVkX19vGkm0L6BuuzwzBvgR/qLO4pOZCn5ELd0<span class="o">=</span> <span class="p">|</span> openssl enc -d -a -aes-256-cbc -p -k password
+
+<span class="nv">salt</span><span class="o">=</span>6F1A49B42FA06EBB
+<span class="nv">key</span><span class="o">=</span>CCB786E186F34BB177B1652718A0CC65B459339469242E14253B4AF40C642412
+<span class="nv">iv</span> <span class="o">=</span>5435B7E55B62E4D11553532EA29B4132
+Message
+</pre></div>
+</p>
 
         <div style="margin-top: 50px; margin-bottom: 50px;">
             <div id="disqus_thread"></div>
