@@ -51,37 +51,37 @@
 <span class="n">tz</span> <span class="o">=</span> <span class="n">pytz</span><span class="o">.</span><span class="n">timezone</span><span class="p">(</span><span class="s1">&#39;Europe/Stockholm&#39;</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="n">local</span><span class="p">):</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;local naive:&#39;</span><span class="p">,</span> <span class="n">local</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S %z&#39;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;local naive:&#39;</span><span class="p">,</span> <span class="n">local</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S %z&#39;</span><span class="p">))</span>
 
     <span class="c1"># local naive -&gt; local + tz</span>
     <span class="n">local_tz</span> <span class="o">=</span> <span class="n">tz</span><span class="o">.</span><span class="n">localize</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;local + tz: &#39;</span><span class="p">,</span> <span class="n">local_tz</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S %z&#39;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;local + tz: &#39;</span><span class="p">,</span> <span class="n">local_tz</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S %z&#39;</span><span class="p">))</span>
 
     <span class="c1"># local + tz -&gt; utc + tz</span>
     <span class="n">utc_tz</span> <span class="o">=</span> <span class="n">local_tz</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">pytz</span><span class="o">.</span><span class="n">UTC</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;utc_tz:     &#39;</span><span class="p">,</span> <span class="n">utc_tz</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S %z&#39;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;utc_tz:     &#39;</span><span class="p">,</span> <span class="n">utc_tz</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S %z&#39;</span><span class="p">))</span>
 
     <span class="c1"># utc + tz -&gt; utc naive</span>
-    <span class="n">utc</span> <span class="o">=</span> <span class="n">utc_tz</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;utc naive:  &#39;</span><span class="p">,</span> <span class="n">utc</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S %z&#39;</span><span class="p">))</span>
+    <span class="n">utc</span> <span class="o">=</span> <span class="n">utc_tz</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;utc naive:  &#39;</span><span class="p">,</span> <span class="n">utc</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S %z&#39;</span><span class="p">))</span>
 
     <span class="c1"># utc naive -&gt; utc + tz</span>
     <span class="n">utc_tz</span> <span class="o">=</span> <span class="n">pytz</span><span class="o">.</span><span class="n">UTC</span><span class="o">.</span><span class="n">localize</span><span class="p">(</span><span class="n">utc</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;utc_tz:     &#39;</span><span class="p">,</span> <span class="n">utc_tz</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S %z&#39;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;utc_tz:     &#39;</span><span class="p">,</span> <span class="n">utc_tz</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S %z&#39;</span><span class="p">))</span>
 
     <span class="c1"># utc + tz -&gt; local + tz</span>
     <span class="n">local_tz</span> <span class="o">=</span> <span class="n">utc_tz</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">tz</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;local + tz: &#39;</span><span class="p">,</span> <span class="n">local_tz</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S %z&#39;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;local + tz: &#39;</span><span class="p">,</span> <span class="n">local_tz</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S %z&#39;</span><span class="p">))</span>
 
     <span class="c1"># local + tz -&gt; local naive</span>
-    <span class="n">local</span> <span class="o">=</span> <span class="n">local_tz</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;local naive:&#39;</span><span class="p">,</span> <span class="n">local</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S %z&#39;</span><span class="p">))</span>
+    <span class="n">local</span> <span class="o">=</span> <span class="n">local_tz</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;local naive:&#39;</span><span class="p">,</span> <span class="n">local</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S %z&#39;</span><span class="p">))</span>
 
 
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;DST (daylight saving time)&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;DST (daylight saving time)&#39;</span><span class="p">)</span>
 <span class="n">show</span><span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">No DST&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">No DST&#39;</span><span class="p">)</span>
 <span class="n">show</span><span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 </pre></div>
 <p><strong>Result:</strong></p>
