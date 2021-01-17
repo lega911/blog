@@ -5,90 +5,65 @@
 ::body
 Собираем Python3.4 для Ubuntu 12.04.
  
-**1) Качаем исходники python 3.4 release**
-[[$ wget https://www.python.org/ftp/python/3.4.0/Python-3.4.0.tgz
-$ tar -xzf Python-3.4.0.tgz]]далее переходим в появившуюся папку.
- 
-Так же можно взять более свежие исходники с [https://www.python.org/downloads/source/ оф. сайта]
+#### 1) Качаем исходники python 3.4 release**
+```bash
+wget https://www.python.org/ftp/python/3.4.0/Python-3.4.0.tgz
+tar -xzf Python-3.4.0.tgz
+```
+далее переходим в появившуюся папку. Так же можно взять более свежие исходники с [оф. сайта](https://www.python.org/downloads/source/)
 
-**2) Устанавливаем инструменты для сборки**
-[[$ sudo apt-get install gcc g++ make checkinstall]]
-**3) Устанавливаем пакеты необходимые для Python**
-[[$ sudo apt-get install zlib1g-dev  libbz2-dev libncurses5-dev libreadline6-dev libsqlite3-dev libssl-dev libgdbm-dev liblzma-dev libffi-dev uuid-dev libgdbm-compat-dev]]
+#### 2) Устанавливаем инструменты для сборки**
+```bash
+sudo apt-get install gcc g++ make checkinstall
+```
+
+#### 3) Устанавливаем пакеты необходимые для Python**
+```bash
+sudo apt-get install zlib1g-dev  libbz2-dev libncurses5-dev libreadline6-dev libsqlite3-dev libssl-dev libgdbm-dev liblzma-dev libffi-dev uuid-dev libgdbm-compat-dev
+```
+
 Так же вы можете поставить пакет tk, но для серверной ОС tk может быть бесполезен.
-[[$ sudo apt-get install tk-dev]]
-**4) Готовим к компиляции**
-[[$ ./configure]]
+```bash
+sudo apt-get install tk-dev
+```
+
+#### 4) Готовим к компиляции**
+
+```bash
+./configure
+```
+
 Так же можете выбрать путь для установки и оптимизацию
-[[$ ./configure --prefix=/usr/local --enable-optimizations]]
-**5) Компилируем**
-[[$ make]]
+```bash
+./configure --prefix=/usr/local --enable-optimizations
+```
+
+#### 5) Компилируем**
+```bash
+make
+```
+
 Ближе к концу компиляции может появится сообщение о том что каких-то пакетов не хватает:
-//"the necessary bits to build these modules were not found:"//
+*"the necessary bits to build these modules were not found:"*
 их можно доустановить если они вам нужны, после чего нужно переконфигурировать заново.
 
-**6) Устанавливаем Python и собираем пакет.**
-[[$ sudo checkinstall -D]]Тут нужно будет указать //Name [2] = python3.4//, что-бы не было конфликта с python2.
+#### 6) Устанавливаем Python и собираем пакет.**
+```bash
+sudo checkinstall -D
+```
+Тут нужно будет указать `Name [2] = python3.4`, что-бы не было конфликта с python2, и установить версию [3].
 
-После успешного выполнения в текущей папке появится deb пакет (например //python3.4_3.4.0-1_amd64.deb//)
+После успешного выполнения в текущей папке появится deb пакет (например `python3.4_3.4.0-1_amd64.deb`)
 И сам **Python3.4** будет установлен
-[[$ python3.4 -V]]Python 3.4.0
-::html
-Собираем Python3.4 для Ubuntu 12.04.<br />
- <br />
-<b>1) Качаем исходники python 3.4 release</b><br />
-<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">python</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">ftp</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="mf">3.4</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="n">Python</span><span class="o">-</span><span class="mf">3.4</span><span class="o">.</span><span class="mf">0.</span><span class="n">tgz</span>
-<span class="err">$</span> <span class="n">tar</span> <span class="o">-</span><span class="n">xzf</span> <span class="n">Python</span><span class="o">-</span><span class="mf">3.4</span><span class="o">.</span><span class="mf">0.</span><span class="n">tgz</span>
-</pre></div>
-</div>далее переходим в появившуюся папку.<br />
- <br />
-Так же можно взять более свежие исходники с <a target=_blank href="https://www.python.org/downloads/source/">оф. сайта</a><br />
-<br />
-<b>2) Устанавливаем инструменты для сборки</b><br />
-<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">gcc</span> <span class="n">g</span><span class="o">++</span> <span class="n">make</span> <span class="n">checkinstall</span>
-</pre></div>
-</div><br />
-<b>3) Устанавливаем пакеты необходимые для Python</b><br />
-<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">zlib1g</span><span class="o">-</span><span class="n">dev</span>  <span class="n">libbz2</span><span class="o">-</span><span class="n">dev</span> <span class="n">libncurses5</span><span class="o">-</span><span class="n">dev</span> <span class="n">libreadline6</span><span class="o">-</span><span class="n">dev</span> <span class="n">libsqlite3</span><span class="o">-</span><span class="n">dev</span> <span class="n">libssl</span><span class="o">-</span><span class="n">dev</span> <span class="n">libgdbm</span><span class="o">-</span><span class="n">dev</span> <span class="n">liblzma</span><span class="o">-</span><span class="n">dev</span> <span>libffi-dev uuid-dev</span>
-</pre></div>
-</div><br />
-Так же вы можете поставить пакет tk, но для серверной ОС tk может быть бесполезен.<br />
-<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">tk</span><span class="o">-</span><span class="n">dev</span>
-</pre></div>
-</div><br />
-<b>4) Готовим к компиляции</b><br />
-<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="o">./</span><span class="n">configure</span>
-</pre></div>
-</div><br />
-Так же можете выбрать путь для установки и оптимизацию<br />
-<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="o">./</span><span class="n">configure</span> <span class="o">--</span><span class="n">prefix</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="n"> --enable-optimizations</span>
-</pre></div>
-</div><br />
-<b>5) Компилируем</b><br />
-<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">make</span>
-# или make -j 4 для многопроцессорной компилляции
-</pre></div>
-</div><br />
-Ближе к концу компиляции может появится сообщение о том что каких-то пакетов не хватает:<br />
-<i>"the necessary bits to build these modules were not found:"</i><br />
-их можно доустановить если они вам нужны, после чего нужно переконфигурировать заново.<br />
-<br />
-<b>6) Устанавливаем Python и собираем пакет.</b><br />
-<div class="codebox"><div class="highlight"><pre><span class="err">$</span> <span class="n">sudo</span> <span class="n">checkinstall</span> <span class="o">-</span><span class="n">D</span>
-</pre></div>
-</div>Тут нужно будет указать <i>Name [2] = python3.4</i>, что-бы не было конфликта с python2, и установить версию [3].<br />
-<br />
-После успешного выполнения в текущей папке появится deb пакет (например <i>python3.4_3.4.0-1_amd64.deb</i>)<br />
-И сам <b>Python3.4</b> будет установлен<br />
-<div class="codebox">
-	<div class="highlight">
-		<pre><span class="err">$</span> <span class="n">python3</span><span class="o">.</span><span class="mi">4</span> <span class="o">-</span><span class="n">V</span>
-&gt; Python 3.4.0</pre>
-	</div>
-</div>
+```bash
+python3.4 -V
 
-<div>Если будет проблема "Installing Debian package... FAILED!", можно исправить удалив /usr/lib/python3.4 /usr/local/lib/python3.4</div>
-<div>
-	Если будет проблема с соданием/удалением папок "No such file or directory", можно попробовать опцию "--fstrans=no"
-	<pre>$ checkinstall -D --fstrans=no</pre>
-</div>
+> Python 3.4.0
+```
+
+#### Дополнительно
+Если будет проблема `"Installing Debian package... FAILED!"`, можно исправить удалив **/usr/lib/python3.4** **/usr/local/lib/python3.4**
+Если будет проблема с соданием/удалением папок `"No such file or directory"`, можно попробовать опцию *"--fstrans=no"*
+```bash
+checkinstall -D --fstrans=no
+```
